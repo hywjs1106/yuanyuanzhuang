@@ -1,0 +1,21 @@
+import 'fake-indexeddb/auto';
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {terminalDb,saveEntry,exportSnapshot,restoreSnapshot,saveSettings} from '../src/terminal/data';
+import {makeBackup} from '../src/terminal/ledger';
+test('ledger mutations persist and rejected restore leaves existing data and credentials intact',async()=>{
+  await terminalDb.delete();await terminalDb.open();
+  await saveSettings({id:'main',budget:100,ai:{apiKey:'LOCAL',baseUrl:'https://example.com/v1',model:'test'}});
+  await saveEntry({id:'e',direction:'expense',amount:9.9,currency:'CNY',date:'2026-10-14',source:'manual',createdAt:new Date()});
+  let s=await exportSnapshot();assert.equal(s.entries.length,1);
+  const b=makeBackup(s);
+  await assert.rejects(()=>restoreSnapshot({...b,entries:[{...s.entries[0],amount:-1}]}));
+  assert.equal((await exportSnapshot()).entries.length,1);
+  await restoreSnapshot(b);
+  s=await exportSnapshot();assert.equal(s.settings.ai?.apiKey,'LOCAL');
+  await restoreSnapshot({...b,settings:{id:'main',budget:0}});
+  assert.equal((await exportSnapshot()).settings.ai?.apiKey,'LOCAL');
+  await terminalDb.close();await terminalDb.open();
+  assert.equal((await exportSnapshot()).entries[0].amount,9.9);
+  await terminalDb.delete();
+});

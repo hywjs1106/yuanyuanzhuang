@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">靛蓝色房间</string>
-    <string name="title_activity_main">靛蓝色房间</string>
-    <string name="package_name">com.pgt.app</string>
-    <string name="custom_url_scheme">com.pgt.app</string>
+    <string name="app_name">日常终端</string>
+    <string name="title_activity_main">日常终端</string>
+    <string name="package_name">com.qirui.dailyterminal</string>
+    <string name="custom_url_scheme">com.qirui.dailyterminal</string>
 
     <!-- 小组件（PRD_V2.6 §8）。description 显示在系统的组件选择器里 -->
     <string name="widget_daily_name">今日</string>
@@ -15,5 +15,5 @@
     <string name="widget_agenda_name">清单</string>
     <string name="widget_agenda_desc">未完成任务 · 完成进度 · BIG DEAL 倒计时（会显示任务标题）</string>
     <!-- 整块组件是一张位图，无障碍读屏靠这一条 -->
-    <string name="widget_face_desc">靛蓝色房间小组件</string>
+    <string name="widget_face_desc">日常终端小组件</string>
 </resources>

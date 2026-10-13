@@ -1,17 +1,20 @@
 {
-  "name": "persona-growth-tracker",
+  "name": "daily-terminal",
   "private": true,
   "license": "GPL-3.0-or-later",
-  "version": "2.8.2",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "node scripts/patch-terminal-notifications.mjs && tsc && vite build",
     "preview": "vite preview",
     "cap:sync": "cap sync",
     "cap:open:android": "cap open android",
     "cap:run:android": "cap run android",
-    "cap:build:android": "cap build android"
+    "cap:build:android": "cap build android",
+    "test": "tsx --test tests/*.test.ts",
+    "test:browser": "playwright test",
+    "postinstall": "node scripts/patch-terminal-notifications.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^5.6.0",
@@ -28,6 +31,7 @@
     "dompurify": "^3.3.3",
     "embla-carousel-react": "^8.6.0",
     "gsap": "^3.15.0",
+    "lunar-javascript": "^1.7.7",
     "motion": "^12.40.0",
     "pocketbase": "^0.26.8",
     "react": "^18.2.0",
@@ -38,6 +42,7 @@
   },
   "devDependencies": {
     "@capacitor/ios": "^5.7.8",
+    "@playwright/test": "^1.64.0",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
@@ -45,8 +50,10 @@
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.16",
     "eruda": "^3.4.3",
+    "fake-indexeddb": "^6.2.5",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.6",
+    "tsx": "^4.23.15",
     "tweakpane": "^4.0.5",
     "typescript": "^5.3.3",
     "vite": "^5.0.8",

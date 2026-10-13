@@ -1,123 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- 小组件零点闹钟：重启后要重新对表（VelvetWidgetClock） -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-
-        <activity
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBarLaunch"
-            android:launchMode="singleTask"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <application android:allowBackup="false" android:icon="@drawable/ic_terminal_launcher" android:label="@string/app_name" android:roundIcon="@drawable/ic_terminal_launcher" android:supportsRtl="true" android:theme="@style/AppTheme">
+        <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode" android:name="com.pgt.app.MainActivity" android:label="@string/title_activity_main" android:theme="@style/AppTheme.NoActionBarLaunch" android:launchMode="singleTask" android:exported="true">
+            <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
         </activity>
-
-        <!-- ── 桌面小组件（PRD_V2.6 §8）────────────────────────────────
-             exported="true" 是必须的：AppWidgetProvider 由系统的 AppWidgetHost
-             （启动器进程）发广播驱动，不导出就永远收不到 ACTION_APPWIDGET_UPDATE。
-             它们只读应用私有的 SharedPreferences 快照，不接受任何外部传入的数据。 -->
-        <receiver
-            android:name=".VelvetWidgetDaily"
-            android:label="@string/widget_daily_name"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_daily_info" />
-        </receiver>
-
-        <receiver
-            android:name=".VelvetWidgetTarot"
-            android:label="@string/widget_tarot_name"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_tarot_info" />
-        </receiver>
-
-        <receiver
-            android:name=".VelvetWidgetJourney"
-            android:label="@string/widget_journey_name"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_journey_info" />
-        </receiver>
-
-        <receiver
-            android:name=".VelvetWidgetAgenda"
-            android:label="@string/widget_agenda_name"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_agenda_info" />
-        </receiver>
-
-        <!-- 小组件的时钟（v2.7.0.6 第 5 轮）：零点闹钟 / 改时间时区 / 开机 → 重画 + 重新对表。
-             只响应系统广播与自己的闹钟；不导出给别的 App 调。 -->
-        <receiver
-            android:name=".VelvetWidgetClock"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.TIME_SET" />
-                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <!-- 一起进步 · 后台刷新（v2.7.0.6）：JobScheduler 周期任务的入口。
-             BIND_JOB_SERVICE 保证只有系统能绑定它；不导出。 -->
-        <service
-            android:name=".PactRefreshJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false" />
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+        <provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
     </application>
-
-    <!-- Permissions -->
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 精确闹钟（v2.7 用户裁决①「吞消息」对策）：Android 12+ 没有此权限时，
-         Capacitor 本地通知会静默退化为**不精确**排程（setAndAllowWhileIdle），
-         被系统合并/推迟——「后台没挂就吞/迟到」的另一半根因。
-         SCHEDULE_EXACT_ALARM 覆盖 Android 12（默认授予，可被用户回收）；
-         USE_EXACT_ALARM 覆盖 13+（安装即授予，闹钟/日程类用途合规；
-         本应用侧载分发，不受 Play 商店对该权限的品类审核限制）。 -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 </manifest>

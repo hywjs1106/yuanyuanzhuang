@@ -83,3 +83,6 @@ nginx.conf
 
 # 本机测试台（无头浏览器脚本、假 PB、本机 PocketBase 实例）：只放本地，不上 GitHub
 tests-local/
+test-results/
+playwright-report/
+.impeccable/
