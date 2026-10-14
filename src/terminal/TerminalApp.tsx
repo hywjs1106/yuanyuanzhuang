@@ -13,10 +13,13 @@ import type {Proposal} from './assistant';
 import {assistantConfigured} from './assistant';
 import './terminal.css';
 import './assistant-chat.css';
+import './overview-hub.css';
+import './reminder-missions.css';
+import {OverviewPanel} from './OverviewPanel';
 import {readWeatherCache,type WeatherBundle} from './weather';
 import {syncWeatherBriefing} from './weatherBriefing';
 import {BottomNavigation,type TerminalPage} from './BottomNavigation';
-import {TerminalStatusStrip,TerminalIcon} from './TerminalVisuals';
+import {TerminalStatusStrip} from './TerminalVisuals';
 const TerminalAlarms=registerPlugin<{check:()=>Promise<{granted:boolean}>;request:()=>Promise<{granted:boolean}>}>('TerminalAlarms');
 type Page=TerminalPage;
 const titles:Record<Page,string>={today:'今日总览',ledger:'记账',reminders:'提醒',weather:'天气',almanac:'黄历',assistant:'庄方宜',notes:'备忘',settings:'设置'};
@@ -55,7 +58,7 @@ export default function TerminalApp(){
     {page!=='assistant'&&<div className="page-route"><span className="route-code">{page.toUpperCase()}</span><span>{titles[page]}</span><span className="route-rule" aria-hidden="true"/></div>}
     {notice&&<div className="notice toast" role="status"><p>{notice}</p><button aria-label="关闭提示" onClick={()=>setNotice('')}>关闭</button></div>}
     <main className={`terminal-content page-${page}`}>
-    {page==='today'&&<><section className="overview"><div className="overview-topline"><h2>今日总览</h2><time className="overview-date" dateTime={date}><b>{date.slice(8)}</b><span>{date.slice(0,7).replace('-',' / ')}</span></time></div><button className="almanac-summary" onClick={()=>navigate('almanac')}>{getAlmanacSummary(date)}<TerminalIcon name="almanac"/></button><button className="overview-message" onClick={()=>navigate('assistant')}><span className="overview-avatar"><img src="/characters/fangyi-avatar.png" alt="庄方宜头像" width="64" height="64"/></span><span><strong>庄方宜</strong><span>管理员，今天过得怎么样？</span></span><TerminalIcon name="assistant"/></button><div className="overview-finance"><div className="overview-expense"><span>本月支出</span><strong><small>¥</small>{summary.expense.toFixed(2)}</strong></div><div className="overview-remaining"><span>{settings.budget>0?'预算剩余':'记录余额'}</span><strong>¥{(settings.budget>0?settings.budget-summary.expense:summary.balance).toFixed(2)}</strong></div><button className="overview-record" onClick={()=>navigate('ledger')}>记一笔账<TerminalIcon name="ledger"/></button></div></section>
+    {page==='today'&&<><OverviewPanel date={date} reminderCount={reminderCount} expense={summary.expense} balance={summary.balance} budget={settings.budget} almanacSummary={getAlmanacSummary(date)} onNavigate={navigate}/>
     <section className="overview-agenda"><div className="panel-heading"><h2>接下来</h2><button onClick={()=>navigate('reminders')}>管理提醒</button></div>{upcoming.length?upcoming.map(({r,at})=><button className="agenda-item" key={r.id} onClick={()=>navigate('reminders')}><span>{r.title}</span><time>{at.toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}</time></button>):<p className="muted">目前没有即将到来的提醒。</p>}</section><WeatherPanel compact onOpen={()=>navigate('weather')} config={settings.weather??{provider:'openmeteo'}} onConfigChange={weather=>updateSettings({...settings,weather})} onBundleChange={weatherUpdated}/></>}
     {page==='ledger'&&<LedgerPanel entries={entries??[]} onSave={saveEntry} onDelete={async id=>{await terminalDb.entries.delete(id);}}/>}
     {page==='reminders'&&<><ReminderPanel reminders={reminders??[]} onSave={async r=>{await saveReminder(r);await refreshNotifications();}} onDelete={async id=>{await terminalDb.reminders.delete(id);await refreshNotifications();}} notificationStatus={notif} onRequestPermission={async()=>{setNotif(await reminderNotifications.requestPermission());await refreshNotifications();}} onTestNotification={()=>reminderNotifications.test()}/>{Capacitor.isNativePlatform()&&<div className="notice"><p>准点提醒权限：{exact===undefined?'检查中':exact?'已允许':'尚未允许，提醒可能延迟'}</p>{exact===false&&<button onClick={()=>void TerminalAlarms.request().then(s=>setExact(s.granted)).catch(e=>setNotice(String(e)))}>允许准点提醒</button>}<p className="muted">手机强行停止应用、限制后台或省电设置可能影响通知。可用“测试通知”检查。</p></div>}</>}

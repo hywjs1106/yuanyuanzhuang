@@ -1,0 +1,46 @@
+/* Mission screen: a compact selection rail and one persistent detail surface. */
+.reminder-missions.terminal-panel{padding:0;background:var(--color-clear);border:0;margin-bottom:24px}
+.reminder-missions.terminal-panel::before,.reminder-missions.terminal-panel::after{display:none}
+.reminder-missions>.panel-heading{padding:0 0 17px;margin:0;border-bottom:2px solid var(--ink)}
+.reminder-missions>.panel-heading h2{font-size:26px}
+.reminder-missions>.panel-heading button{background:var(--color-paper-2);border-color:var(--color-rule-strong)}
+.reminder-missions .mission-help{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line)}
+.reminder-missions .mission-help summary{cursor:pointer;min-height:44px;padding:12px 0;line-height:20px}
+.reminder-missions .mission-help p{margin:0 0 12px}
+.reminder-missions>.notice{border:0;border-left:2px solid var(--color-rule-strong);padding:8px 12px;margin:14px 0 20px;background:var(--color-paper-2);font-size:12px}
+.reminder-missions>.notice p{margin-bottom:0}
+.reminder-missions>.notice button{margin-top:9px}
+.reminder-missions .mission-workspace{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;min-width:0}
+.reminder-missions .mission-list{min-width:0;display:flex;flex-direction:column;gap:5px}
+.reminder-missions .mission-list-caption{display:flex;justify-content:space-between;align-items:center;margin:0 0 5px;font-size:12px;padding:7px 0;border-bottom:1px solid var(--color-rule-strong);font-weight:650}
+.reminder-missions .mission-list-caption span{font-family:var(--font-mono);font-weight:400;color:var(--muted)}
+.reminder-missions .mission-row{position:relative;display:grid;gap:3px;text-align:left;min-width:0;min-height:76px;white-space:normal;padding:11px 16px;border:1px solid var(--line);background:var(--color-paper-2);border-radius:0;font-weight:500}
+.reminder-missions .mission-row::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:2px;background:var(--color-rule-strong)}
+.reminder-missions .mission-row:hover{background:var(--color-paper-3)}
+.reminder-missions .mission-row[aria-pressed=true]{border-color:var(--accent);background:var(--paper);box-shadow:inset 4px 0 var(--accent)}
+.reminder-missions .mission-row[aria-pressed=true]::before{background:var(--accent)}
+.reminder-missions .mission-row-title{font-weight:750;font-size:15px;line-height:1.45;overflow-wrap:anywhere}
+.reminder-missions .mission-row-meta,.reminder-missions .mission-row time{font-size:11px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
+.reminder-missions .mission-row time{font-family:var(--font-mono)}
+.reminder-missions .mission-detail{display:flex;flex-direction:column;min-width:0;padding:23px 20px 16px;background:var(--color-carbon);color:var(--color-on-carbon);border-top:2px solid var(--color-rule-strong);min-height:340px}
+.reminder-missions .mission-detail-header{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:14px;border-bottom:1px solid var(--color-on-carbon-muted);padding-bottom:15px}
+.reminder-missions .mission-status{grid-column:1/-1;font-size:11px;line-height:1.5;color:var(--color-on-carbon-muted);margin-bottom:8px}
+.reminder-missions .mission-detail h3{margin:0;font-size:24px;line-height:1.4;overflow-wrap:anywhere}
+.reminder-missions .toggle-label{min-height:44px;font-size:12px;align-self:start;white-space:nowrap;color:var(--color-on-carbon-muted)}
+.reminder-missions .toggle-label input{accent-color:var(--color-on-carbon)}
+.reminder-missions .mission-next{padding-top:23px}
+.reminder-missions .mission-next p{font-size:11px;color:var(--color-on-carbon-muted);margin:0 0 7px}
+.reminder-missions .mission-next time,.reminder-missions .mission-next strong{display:block;font-size:clamp(24px,4vw,32px);font-weight:650;line-height:1.35;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.reminder-missions .mission-recurrence{font-size:12px;color:var(--color-on-carbon-muted);margin:10px 0 22px}
+.reminder-missions .mission-body{font-size:14px;line-height:1.8;white-space:pre-wrap;margin:0 0 25px}
+.reminder-missions .mission-detail>.muted{color:var(--color-on-carbon-muted)}
+.reminder-missions .mission-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto;padding-top:18px;border-top:1px solid var(--color-on-carbon-muted)}
+.reminder-missions .mission-actions button{min-height:44px;padding:9px 12px;background:var(--color-clear);border-color:var(--color-on-carbon-muted);color:var(--color-on-carbon);font-size:12px}
+.reminder-missions .mission-actions button:first-child{background:var(--color-on-carbon);color:var(--color-carbon)}
+.reminder-missions .mission-actions button:hover{background:var(--color-paper-3);color:var(--color-ink)}
+.reminder-missions .mission-actions button.danger{border-style:dashed}
+.reminder-missions .mission-detail :focus-visible{outline-color:var(--color-on-carbon)}
+.reminder-missions .terminal-form{margin:18px 0}
+.reminder-missions .empty-state{padding:38px 12px;border-top:1px solid var(--line)}
+@media(min-width:600px){.reminder-missions .mission-workspace{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:18px;align-items:start}.reminder-missions .mission-detail{min-height:420px}}
+@media(max-width:350px){.reminder-missions .mission-detail{padding:20px 14px 14px}.reminder-missions .mission-detail-header{column-gap:8px}.reminder-missions .mission-detail h3{font-size:21px}.reminder-missions .mission-actions button{padding:9px 10px}}

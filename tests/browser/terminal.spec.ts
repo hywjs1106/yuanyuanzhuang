@@ -30,7 +30,7 @@ test('phone user can record, edit and persist ledger and reminders without game 
   await expect(page.getByText('-¥30.00',{exact:true})).toBeVisible();
   await page.getByRole('button',{name:'提醒',exact:true}).click();
   await page.getByRole('button',{name:'新增提醒',exact:true}).click();
-  await page.getByLabel('事项').fill('交电费');
+  await page.getByLabel('事项',{exact:true}).fill('交电费');
   await page.getByLabel('日期与时间').fill('2027-01-15T09:00');
   await page.getByLabel('重复').selectOption('monthly');
   await page.getByRole('button',{name:'保存提醒'}).click();
@@ -129,4 +129,17 @@ test('all eight surfaces fit narrow phones and new replies respect the reader',a
 test('expression controls cannot clip the composer in a short keyboard viewport',async({page})=>{
  await page.goto('/');await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'助手',exact:true}).click();await page.getByRole('button',{name:'方宜表情',exact:true}).click();await page.getByLabel('和方宜说说').focus();await page.setViewportSize({width:390,height:400});
  await expect(page.getByRole('navigation',{name:'功能导航',includeHidden:true})).toBeHidden();const panel=await page.getByRole('region',{name:'与庄方宜的对话'}).boundingBox();const composer=await page.getByLabel('和方宜说说').boundingBox();expect(composer!.y+composer!.height).toBeLessThanOrEqual(panel!.y+panel!.height);expect(composer!.y+composer!.height).toBeLessThanOrEqual(400);
+});
+
+test('mission selection follows current data through edits, completion and deletion',async({page})=>{
+ await page.goto('/');await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'提醒',exact:true}).click();
+ for(const title of ['交电费','寄快递']){await page.getByRole('button',{name:'新增提醒',exact:true}).click();await page.getByLabel('事项',{exact:true}).fill(title);await page.getByLabel('日期与时间').fill('2027-01-15T09:00');await page.getByRole('button',{name:'保存提醒',exact:true}).click();await expect(page.getByRole('heading',{name:title,exact:true})).toBeVisible();}
+ await page.getByRole('button',{name:'查看提醒：交电费',exact:true}).click();await expect(page.getByRole('heading',{name:'交电费',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'寄快递',exact:true})).toHaveCount(0);
+ await page.getByRole('button',{name:'编辑',exact:true}).click();await page.getByLabel('事项',{exact:true}).fill('交水电费');await page.getByRole('button',{name:'保存提醒',exact:true}).click();await expect(page.getByRole('button',{name:'查看提醒：交水电费',exact:true})).toHaveAttribute('aria-pressed','true');
+ await page.getByRole('button',{name:'完成',exact:true}).click();await expect(page.getByText('已完成',{exact:true}).last()).toBeVisible();await page.getByRole('button',{name:'删除',exact:true}).click();await expect(page.getByRole('heading',{name:'寄快递',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'查看提醒：交水电费',exact:true})).toHaveCount(0);await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'今日',exact:true}).click();await expect(page.getByRole('main').getByText('1 项待提醒',{exact:true})).toBeVisible();
+ await page.reload();await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'提醒',exact:true}).click();await expect(page.getByRole('heading',{name:'寄快递',exact:true})).toBeVisible();await page.screenshot({path:'test-results/reminders-04.png'});
+});
+test('radial overview shortcuts navigate to their real destinations',async({page})=>{
+ await page.goto('/');for(const [label,target] of [['打开记账','记账'],['打开提醒','提醒与生日'],['打开天气','天气'],['打开黄历','黄历']]){await page.getByRole('button',{name:label,exact:true}).click();await expect(page.getByRole('heading',{name:target,exact:true})).toBeVisible();await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'今日',exact:true}).click();}
+ await page.getByRole('button',{name:'与庄方宜对话',exact:true}).click();await expect(page.getByRole('heading',{name:'庄方宜',exact:true})).toBeVisible();
 });
