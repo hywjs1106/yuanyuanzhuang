@@ -26,14 +26,14 @@
 .page-route::before { width: 5px; height: 5px; }
 .route-code { font-size: 10px; letter-spacing: .07em; }
 .bottom-navigation { gap: 8px; padding: 7px 12px calc(7px + env(safe-area-inset-bottom)); border-top-width: 1px; }
-.bottom-navigation .bottom-destination { min-height: 60px; gap: 4px; padding: 7px 3px; clip-path: none; border-radius: 3px; font-size: 12px; font-weight: 500; }
+.bottom-navigation .bottom-destination { min-height: 60px; gap: 4px; padding: 7px 3px; clip-path: none; border-radius: 3px; font-size: 12px; font-weight: 500; transition: none; }
 .bottom-navigation .destination-icon { width: 32px; height: 26px; }
 .bottom-navigation .destination-icon svg { width: 24px; height: 24px; }
 .bottom-navigation .bottom-destination:hover { background: var(--color-clear); }
-.bottom-navigation .bottom-destination.active { background: var(--color-paper-2); color: var(--ink); }
+.bottom-navigation .bottom-destination.active { background: var(--color-carbon); color: var(--color-on-carbon); }
 .bottom-navigation .bottom-destination.active::after { left: 34%; right: 34%; bottom: 4px; width: auto; height: 3px; border-radius: 1px; background: var(--accent); }
-.bottom-navigation .bottom-destination.active .destination-icon { color: var(--ink); }
-.bottom-navigation .destination-assistant.active .destination-icon { color: var(--color-communication); }
+.bottom-navigation .bottom-destination.active .destination-icon { color: var(--color-on-carbon); }
+.bottom-navigation .destination-assistant.active .destination-icon { color: var(--color-on-carbon); }
 
 /* Shared work planes: one hairline edge, generous inset, small cut corner. */
 .terminal-content > .panel:not(.assistant-chat),
@@ -77,12 +77,12 @@
 .reminder-missions > .notice { border-left: 0; border-top: 1px solid var(--line); padding: 12px 14px; }
 .reminder-missions .mission-list { gap: 6px; }
 .reminder-missions .mission-list-caption { font-weight: 500; }
-.reminder-missions .mission-row { padding: 13px 16px; gap: 5px; border-radius: 3px; background: var(--paper); }
+.reminder-missions .mission-row { padding: 13px 16px; gap: 5px; border-radius: 3px; background: var(--paper); transition: none; }
 .reminder-missions .mission-row::before { display: none; }
-.reminder-missions .mission-row[aria-pressed=true] { background: var(--accent); border-color: var(--accent); box-shadow: none; color: var(--color-accent-ink); }
+.reminder-missions .mission-row[aria-pressed=true] { background: var(--color-carbon); border-color: var(--color-carbon); box-shadow: none; color: var(--color-on-carbon); }
 .reminder-missions .mission-row-title { font-weight: 600; font-size: 14px; }
 .reminder-missions .mission-row[aria-pressed=true] .mission-row-meta,
-.reminder-missions .mission-row[aria-pressed=true] time { color: var(--color-accent-ink); }
+.reminder-missions .mission-row[aria-pressed=true] time { color: var(--color-on-carbon-muted); }
 .reminder-missions .mission-detail { padding: 20px; border-top-width: 1px; border-radius: 4px; }
 .reminder-missions .mission-detail-header,
 .reminder-missions .mission-actions { border-color: var(--color-rule-strong); }
@@ -95,22 +95,22 @@
 
 /* Communication keeps its own cyan identity and a compact, readable frame. */
 .panel.assistant-chat { height: calc(100dvh - 166px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); border-radius: 5px; margin-top: 14px; }
-.assistant-chat .fangyi-contact { min-height: 82px; padding: 12px 16px; gap: 12px; }
+.assistant-chat .fangyi-contact { min-height: 82px; padding: 12px 16px; gap: 12px; background: var(--color-paper-2); color: var(--ink); }
 .fangyi-contact::after { height: 1px; left: 16px; right: 16px; background: var(--chat-rule); }
-.fangyi-portrait-frame { border-radius: 5px; padding: 2px; }
-.fangyi-portrait-frame img { width: 48px; height: 48px; border-radius: 3px; }
-.assistant-chat .fangyi-contact-copy h2 { font-size: 21px; font-weight: 550; letter-spacing: -.015em; }
-.fangyi-signal-stamp { width: 40px; height: 40px; align-self: center; margin: 0; border: 1px solid var(--chat-rule); border-radius: 4px; background: var(--chat-ground); color: var(--chat-cyan); display: grid; place-items: center; }
-.assistant-chat .fangyi-chat-notice { padding: 10px 16px; font-size: 12px; line-height: 1.7; }
+.fangyi-portrait-frame { border-radius: 50%; padding: 2px; border-color: var(--color-communication); }
+.fangyi-portrait-frame img { width: 48px; height: 48px; border-radius: 50%; }
+.assistant-chat .fangyi-contact-copy h2 { font-size: 23px; font-weight: 550; letter-spacing: -.015em; color: var(--ink); }
+.fangyi-signal-stamp { width: 36px; height: 36px; align-self: center; margin: 0; border: 0; border-radius: 50%; background: var(--color-paper); color: var(--color-communication); display: grid; place-items: center; }
+.assistant-chat .fangyi-chat-notice { padding: 9px 16px; font-size: 12px; line-height: 1.7; background: var(--color-paper); color: var(--muted); }
 .assistant-chat .chat-log { padding: 22px 16px 24px; gap: 24px; }
 .assistant-chat .chat-bubble { padding: 13px 15px; border-radius: 3px 12px 12px 12px; }
 .assistant-chat .user .chat-bubble { border-radius: 12px 3px 12px 12px; }
 .assistant-chat .chat-message small,
 .assistant-chat .chat-message time { font-size: 11px; }
 .assistant-chat .assistant-composer { padding: 10px; gap: 8px; background: var(--chat-raised); }
-.assistant-chat .assistant-composer textarea { border-radius: 5px; background: var(--chat-white); padding: 12px; font-size: 15px; }
-.assistant-chat .expression-toggle { width: 48px; height: 48px; border-radius: 5px; background: var(--chat-white); }
-.assistant-chat .send-message { min-width: 48px; min-height: 48px; border-radius: 5px; background: var(--accent); color: var(--color-accent-ink); }
+.assistant-chat .assistant-composer textarea { border-radius: 24px; background: var(--chat-white); padding: 12px 16px; font-size: 15px; }
+.assistant-chat .expression-toggle { width: 48px; height: 48px; border-radius: 50%; background: var(--chat-white); }
+.assistant-chat .send-message { min-width: 48px; min-height: 48px; border-radius: 50%; background: var(--accent); color: var(--color-accent-ink); }
 .assistant-chat .chat-latest { min-height: 48px; border-radius: 4px; }
 .keyboard-open .assistant-chat { height: calc(100dvh - 116px - env(safe-area-inset-top)); min-height: 0; }
 
@@ -180,3 +180,18 @@
 .terminal-content > .panel input:not([type=checkbox]), .terminal-content > .panel select, .terminal-content > .panel textarea { border-color: var(--line); }
 .terminal-content > .panel:not(.assistant-chat) .panel-heading > button,
 .reminder-missions > .panel-heading > button { background: var(--accent); color: var(--color-accent-ink); border-color: var(--accent); }
+
+/* Data-report hierarchy: recorded balance first, then income and expenses. */
+.ledger-panel .stat-row { grid-template-columns:repeat(2,minmax(0,1fr)); border:0; gap:16px 20px; padding:0; margin:20px 0 16px; }
+.ledger-panel .stat-row>div:first-child { grid-column:1/-1; padding:20px; background:var(--color-carbon); color:var(--color-on-carbon); border-radius:2px; gap:12px; }
+.ledger-panel .stat-row>div:first-child small { color:var(--color-on-carbon-muted); }
+.ledger-panel .stat-row>div:first-child strong { font-size:clamp(28px,7vw,40px); font-weight:500; line-height:1.3; }
+.ledger-panel .stat-row>div:not(:first-child) { padding:4px 0 12px; border-bottom:1px solid var(--line); }
+.ledger-panel .stat-row>div:not(:first-child) strong { font-size:21px; }
+.reminder-missions .mission-row[aria-pressed=true]::after { content:""; position:absolute; top:7px; left:7px; width:7px; height:7px; border-top:2px solid var(--accent); border-left:2px solid var(--accent); pointer-events:none; }
+.assistant-chat .fangyi-contact-copy p { color:var(--muted); }
+.assistant-chat .fangyi-config { color:var(--color-communication); }
+.weather-panel .temperature { color:var(--color-measure); }
+.almanac-panel .lunar-date { font-size:32px; padding:20px 0 12px; border-top:1px solid var(--line); }
+.almanac-activities>div:first-child h4 { color:var(--color-success); }
+.almanac-activities>div:last-child h4 { color:var(--color-error); }

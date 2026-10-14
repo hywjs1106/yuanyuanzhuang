@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {mkdirSync} from 'node:fs';
-mkdirSync('../references/ui-07',{recursive:true});
+mkdirSync('../references/ui-08',{recursive:true});
 
 test('corner controls and navigation remain readable and separated on small phones',async({page})=>{
  for(const width of [320,390,414]){
@@ -26,5 +26,5 @@ test('conversation body stays legible in both themes and when the keyboard reduc
  await page.setViewportSize({width:320,height:520});await page.locator('.terminal-shell').evaluate(el=>el.classList.add('keyboard-open'));
  const input=await page.getByRole('textbox',{name:'和方宜说说'}).boundingBox();const button=await page.getByRole('button',{name:'发送',exact:true}).boundingBox();
  expect(input!.y+input!.height).toBeLessThanOrEqual(520);expect(button!.y+button!.height).toBeLessThanOrEqual(520);expect(button!.height).toBeGreaterThanOrEqual(48);
- await page.getByRole('button',{name:'方宜表情',exact:true}).click();await expect(page.getByRole('textbox',{name:'和方宜说说'})).toBeVisible();await page.screenshot({path:'../references/ui-07/keyboard-chat-dark.png'});
+ await page.getByRole('button',{name:'方宜表情',exact:true}).click();await expect(page.getByRole('textbox',{name:'和方宜说说'})).toBeVisible();await page.screenshot({path:'../references/ui-08/keyboard-chat-dark.png'});
 });

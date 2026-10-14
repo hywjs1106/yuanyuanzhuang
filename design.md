@@ -216,3 +216,15 @@ The four external corner plates use a single edge and a small corner mark, with 
 Fangyi remains the chat identity. The oversized anonymous cyan stamp is replaced by one small communication glyph; character status is honest. Body text is15px with1.85 line-height, quiet12px status labels, softer incoming/outgoing bubble corners. Keyboard state compresses the header and hides only explanatory copy, preserving composer and scrollable sticker/gallery content.
 
 The five navigation destinations use24pxglyphs and12pxlabels with one selected surface/yellow indicator; hover does not create a second selected-looking tile. Primary business-page actions use signalyellow. Other functional rows, databases, native reminders and AI execution guards are unchanged.
+
+## 0.6.4 Endfield surface families
+
+References: Statrue/endfield-design-skill (SKILL.md, surface-families/app-ui), DSH theme previews, weepwood design atlas. These are community observations, not an official brand specification; official live-page rendering was blocked during reference study. No official logos, proprietary fonts or game screenshot assets were added.
+
+The home is a touch-first hub: four separate controls dock around ornamental terrain, static low-contrast connector geometry groups them, and the stronger Fangyi contact remains the primary conversational entry. Date/time stays at top right, terrain stays decorative, no fake route/connectivity metrics. Map168px/orbit308px leave readable64px externalcontrols and avoidoverlap down to320px.
+
+Ledger uses a data-report hierarchy: recorded balance is a single full-width carbon band with larger real digits; monthly income/expense are two subordinate data bands. The calculated-balance explanation stays visible. Reminders use a carbon selected row, white title and a small yellow corner hook; details/actions keep original logic.
+
+Communication uses a light character header, circular Fangyi portrait and honest configuration label above the dark reading plane. Capsule input/actions follow conversation semantics. Compact keyboard mode retains smallportrait and composer. Selected navigation is carbon/white withyellowmarker; selectionchanges applyimmediately to avoid lowcontrast white-on-light intermediateframes. Weather quantityblue is semantic; lunar date/宜忌 followquietfoliohierarchy.
+
+All database/action/AI/notification/TLS behavior remains unchanged. No new external assets or dependencies. Browser visual/responsive/interaction checks do not prove real Android system fontscale or notificationdelivery.
