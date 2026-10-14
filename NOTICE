@@ -48,3 +48,10 @@ PREVIOUS LICENSE
 
    Versions and commits published before this change of license (v2.7.0.6 and
    earlier) were released under the MIT License and remain available under it.
+
+Endfield UI opening adaptation
+Original SplashScreen layout, triangular geometry and fill/wipe/fade sequence
+adapted from https://github.com/icaruszezen/endfield-ui.
+Copyright (c) 2026 球球. MIT License; full text in
+terminal-public/licenses/endfield-ui-MIT.txt. Official-image Game assets are
+not included in this adaptation.

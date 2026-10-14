@@ -1,8 +1,12 @@
 import {useEffect,useRef,useState,type ReactNode} from 'react';
 import './startup.css';
 
+/* Original MIT SplashScreen layout, triangle and fill/wipe/fade adaptation.
+ * Copyright (c) 2026 球球; terminal-public/licenses/endfield-ui-MIT.txt.
+ * Source: github.com/icaruszezen/endfield-ui. No official-image Game assets. */
+
 export function StartupGate({children}:{children:ReactNode}) {
-  const [phase,setPhase]=useState<'intro'|'leaving'|'done'>(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches?'done':'intro');
+  const [phase,setPhase]=useState<'intro'|'wipe'|'leaving'|'done'>(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches?'done':'intro');
   const content=useRef<HTMLDivElement|null>(null);
   const skip=useRef<HTMLButtonElement>(null);
   useEffect(()=>{
@@ -11,7 +15,7 @@ export function StartupGate({children}:{children:ReactNode}) {
     const finish=()=>setPhase('done');
     const reduce=()=>{if(preference.matches)finish();};
     const back=(event:Event)=>{event.preventDefault();finish();};
-    const timer=window.setTimeout(()=>setPhase(phase==='intro'?'leaving':'done'),phase==='intro'?1050:170);
+    const timer=window.setTimeout(()=>setPhase(phase==='intro'?'wipe':phase==='wipe'?'leaving':'done'),phase==='intro'?900:phase==='wipe'?540:200);
     preference.addEventListener('change',reduce);window.addEventListener('terminal-back',back);
     if(phase==='intro')skip.current?.focus({preventScroll:true});
     return()=>{clearTimeout(timer);preference.removeEventListener('change',reduce);window.removeEventListener('terminal-back',back);};
@@ -26,8 +30,11 @@ export function StartupGate({children}:{children:ReactNode}) {
     <div ref={node=>{content.current=node;if(node)node.inert=phase!=='done';}} aria-hidden={phase!=='done'||undefined}>{children}</div>
     {phase!=='done'&&<div className={`startup-screen startup-${phase}`} role="dialog" aria-modal="true" aria-label="日常终端开场" onKeyDown={event=>{if(event.key==='Escape')setPhase('done');if(event.key==='Tab'){event.preventDefault();skip.current?.focus({preventScroll:true});}}}>
       <button ref={skip} type="button" className="startup-skip" onClick={()=>setPhase('done')}>跳过开场</button>
-      <div className="startup-brand"><svg className="startup-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 3h24v7H11v5h13v7H11v7H4zM25 25h3v4h-3z" fill="currentColor"/></svg><strong className="startup-name">日常终端</strong><p>你的生活，你来安排</p><div className="startup-rule" aria-hidden="true"/></div>
-      <div className="startup-sweep" aria-hidden="true"/>
+      <div className="startup-visual">
+        <div className="startup-brand"><svg className="startup-triangles" viewBox="0 0 24 21" aria-hidden="true"><path d="M0 0h11.6L5.8 10zM12.4 0H24l-5.8 10zM6.2 11h11.6L12 21z" fill="currentColor"/></svg><strong className="startup-name"><span>日常</span><span>终端</span></strong></div>
+        <div className="startup-foot"><div className="startup-rule" aria-hidden="true"><i/></div><div className="startup-decor" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22"/><path d="M6 12h12M12 6v12"/></svg><span>{Array.from({length:12},(_,i)=><i key={i}/>)}</span></div><p>你的生活，你来安排</p></div>
+        {phase!=='intro'&&<div className="startup-wipe-layer" aria-hidden="true"/>}
+      </div>
     </div>}
   </>;
 }

@@ -16,8 +16,11 @@ test('navigation starts a short passage while rapid taps leave only the final in
 test('floating surfaces move without moving touch targets and stop offscreen or under reduced motion',async({page})=>{
  await page.setViewportSize({width:320,height:740});await page.goto('/');
  const button=page.getByRole('button',{name:'打开记账',exact:true});const surface=button.locator('.hub-plate-surface');await expect(surface).toBeVisible();
- const target=await button.boundingBox();const start=await surface.boundingBox();await page.waitForTimeout(950);const later=await surface.boundingBox();
- expect(Math.abs(later!.y-start!.y)).toBeGreaterThan(.1);expect(await button.boundingBox()).toEqual(target);
+ const target=await button.boundingBox();const positions:number[]=[];
+ // A breathing cycle can return to the same height at two distinct times.
+ // Multiple samples catch a genuinely frozen surface without depending on its phase.
+ for(let i=0;i<5;i++){positions.push((await surface.boundingBox())!.y);if(i<4)await page.waitForTimeout(250);}
+ expect(Math.max(...positions)-Math.min(...positions)).toBeGreaterThan(.1);expect(await button.boundingBox()).toEqual(target);
  for(const child of await page.locator('.hub-plate-surface').all()){
   const parent=await child.locator('..').boundingBox();const rect=await child.boundingBox();expect(rect!.y).toBeGreaterThanOrEqual(parent!.y-.1);expect(rect!.y+rect!.height).toBeLessThanOrEqual(parent!.y+parent!.height+.1);
   const map=await page.locator('.hub-map-stage').boundingBox();expect(rect!.y+rect!.height<map!.y||rect!.y>map!.y+map!.height).toBeTruthy();

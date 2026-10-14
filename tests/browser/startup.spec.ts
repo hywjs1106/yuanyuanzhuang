@@ -1,5 +1,12 @@
 import {test,expect} from '@playwright/test';
 
+test('portrait opening retains its triangles and allows skipping during the full yellow wipe',async({page})=>{
+ await page.clock.install();await page.setViewportSize({width:320,height:740});await page.goto('/');
+ const opening=page.getByRole('dialog',{name:'日常终端开场'});await expect(opening.locator('.startup-triangles')).toBeVisible();
+ await page.clock.runFor(1000);await expect(page.locator('.startup-wipe-layer')).toBeVisible();
+ const button=page.getByRole('button',{name:'跳过开场',exact:true});await button.click();await expect(opening).toHaveCount(0);await expect(page.getByRole('navigation',{name:'功能导航'})).toBeVisible();
+});
+
 test('opening is immediately skippable and cannot intercept later navigation',async({page})=>{
  await page.goto('/');const opening=page.getByRole('dialog',{name:'日常终端开场'});await expect(opening).toBeVisible();
  await expect(page.getByRole('navigation',{name:'功能导航'})).toHaveCount(0);
