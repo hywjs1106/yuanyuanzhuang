@@ -1,18 +1,18 @@
 import React from 'react';
 export function TerminalIcon({name}:{name:string}){
   const shapes:Record<string,React.ReactNode>={
-    today:<><path d="M4 5h16v15H4zM4 10h16M8 3v4M16 3v4"/><path d="M8 14h3v3H8z"/></>,
-    ledger:<><path d="M5 3h14v18H5zM9 7h6M9 11h6M9 15h3"/><path d="m16 16 2 2 4-4"/></>,
-    assistant:<><path d="m12 2 8 5v10l-8 5-8-5V7z"/><path d="M8 10h8M8 14h5M12 2v4M12 18v4"/><circle cx="16" cy="14" r="1"/></>,
-    reminders:<><path d="M5 17h14l-2-4V9a5 5 0 0 0-10 0v4zM10 20h4M12 2v2"/></>,
-    more:<><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM17 14v6M14 17h6"/></>,
-    weather:<><path d="M8 6V3M3 8l2 1M12 4l-1 2M4 15a4 4 0 0 1 3-7 4 4 0 0 1 6 3"/><path d="M7 19h12a3 3 0 0 0 0-6 5 5 0 0 0-9-2 4 4 0 0 0-3 8z"/></>,
-    almanac:<><path d="M4 4h16v16H4zM4 9h16M8 2v4M16 2v4"/><path d="M14 12a4 4 0 1 0 2 5 4 4 0 0 1-2-5z"/></>,
-    notes:<><path d="M4 3h13v18H4zM8 8h5M8 12h5M8 16h3M17 6l4 4-6 6-4 1 1-4z"/></>,
-    settings:<><path d="m9 3-1 3-3 1v4l-2 1 2 1v4l3 1 1 3h6l1-3 3-1v-4l2-1-2-1V7l-3-1-1-3z"/><circle cx="12" cy="12" r="3"/></>,
-    close:<path d="m6 6 12 12M18 6 6 18"/>
+    today:<><path d="M4 6H20V20H4ZM4 10H20M8 4V7M16 4V7"/><path d="M8 14H11V17H8Z"/></>,
+    ledger:<><path d="M5 4H19V20H5ZM11 8H16M11 12H16M11 16H14"/><path d="M8 4V20"/></>,
+    assistant:<><path d="M8 4H16L20 8V16L16 20H8L4 16V8ZM8 10H16M8 14H13"/><path d="M12 4V6M12 18V20M16 14H16.2"/></>,
+    reminders:<><path d="M5 17H19L17 13V10C17 7 15 5 12 5C9 5 7 7 7 10V13ZM10 20H14M12 3V5"/></>,
+    more:<><path d="M4 4H10V10H4ZM14 4H20V10H14ZM4 14H10V20H4ZM17 14V20M14 17H20"/></>,
+    weather:<><path d="M8 3V4M3 8H4M4 4L5 5M12 4L11 5"/><path d="M5 11C4 7 7 5 10 7C12 8 12 10 12 11M7 20H17C20 20 21 17 20 15C19 13 17 13 16 14C16 10 11 9 9 13C5 12 3 15 4 18C4 19 5 20 7 20Z"/></>,
+    almanac:<><path d="M4 6H20V20H4ZM4 10H20M8 4V7M16 4V7"/><path d="M14 13C10 12 9 18 13 18C15 18 16 17 16 16C14 16 13 15 14 13Z"/></>,
+    notes:<><path d="M4 4H15V8M4 4V20H15M8 8H11M8 12H10"/><path d="M11 17L12 13L18 7L21 10L15 16ZM16 9L19 12"/></>,
+    settings:<><path d="M10 4H14L15 7L18 6L20 10L18 12L20 14L18 18L15 17L14 20H10L9 17L6 18L4 14L6 12L4 10L6 6L9 7Z"/><circle cx="12" cy="12" r="3"/></>,
+    close:<path d="M6 6L18 18M18 6L6 18"/>
   };
-  return <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" strokeLinejoin="miter" aria-hidden="true" focusable="false">{shapes[name]??shapes.more}</svg>;
+  return <svg className="terminal-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">{shapes[name]??shapes.more}</svg>;
 }
 
 export function TerminalStatusStrip({date,reminderCount,aiConfigured}:{date:string;reminderCount:number;aiConfigured:boolean}){

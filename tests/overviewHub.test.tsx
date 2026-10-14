@@ -52,6 +52,8 @@ test('date belongs to the heading and navigation is separate from the decorative
  const orbit=html.split('<div class="hub-orbit">')[1]?.split('<div class="hub-modules">')[0];
  assert.ok(orbit);
  assert.match(orbit,/class="hub-map-stage" aria-hidden="true"/);
- assert.doesNotMatch(orbit,/<time|<button/);
+ assert.doesNotMatch(orbit,/<button/);
+ assert.match(orbit,/class="hub-clock"/);
+ assert.doesNotMatch(orbit,/dateTime="2026-10-14"/);
  assert.match(html,/<div class="hub-modules"><button/);
 });

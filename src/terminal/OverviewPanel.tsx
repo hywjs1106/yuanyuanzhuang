@@ -1,5 +1,7 @@
 import type {TerminalPage} from './BottomNavigation';
 import {TerminalIcon} from './TerminalVisuals';
+import {LiveClock} from './LiveClock';
+import type {ReactNode} from 'react';
 
 export interface OverviewPanelProps {
   date:string;
@@ -9,6 +11,7 @@ export interface OverviewPanelProps {
   budget:number;
   almanacSummary:string;
   onNavigate:(page:TerminalPage)=>void;
+  agenda?:ReactNode;
 }
 
 /* Original abstract terrain: ornamental geometry, never a location or live map. */
@@ -37,22 +40,23 @@ const modules = [
 ] as const;
 const money=(amount:number)=>amount.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
 
-export function OverviewPanel({date,reminderCount,expense,balance,budget,almanacSummary,onNavigate}:OverviewPanelProps) {
+export function OverviewPanel({date,reminderCount,expense,balance,budget,almanacSummary,onNavigate,agenda}:OverviewPanelProps) {
   const remaining=budget-expense;
   return <section className="overview-hub" aria-labelledby="overview-hub-title">
     <header className="hub-heading"><h2 id="overview-hub-title">今日总览</h2><time className="overview-date" dateTime={date}><span>{date.slice(0,4)}</span><strong>{date.slice(5,7)}月{date.slice(8)}日</strong></time></header>
     <div className="hub-orbit">
       <div className="hub-map-stage" aria-hidden="true"><div className="hub-map-base"/><div className="hub-map-rim"><HubTerrain/></div><svg className="hub-rim-detail" viewBox="0 0 300 300" aria-hidden="true"><path d="M43 57A132 132 0 0 1 225 39M273 119A132 132 0 0 1 196 273M90 267A132 132 0 0 1 21 127"/><path d="M76 30A139 139 0 0 1 120 13M278 197A139 139 0 0 1 266 219"/></svg></div>
-      <p className="hub-reminder-count">{reminderCount} 项待提醒</p>
-    </div>
+      <LiveClock/>
     <div className="hub-modules">
       {modules.map(({page,label,detail})=><button key={page} type="button" className={`hub-plate hub-plate-${page}`} aria-label={`打开${label}`} onClick={()=>onNavigate(page)}>
-        <svg className="hub-plate-plane" viewBox="0 0 110 94" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path className="hub-plate-back" d="M13 8H106Q83 47 103 91H12Q3 91 3 80V18Q3 8 13 8Z"/><path className="hub-plate-face" d="M13 3H103Q80 43 100 85H12Q3 85 3 74V13Q3 3 13 3Z"/><path className="hub-plate-outline" d="M16 8H95Q75 44 93 80H15Q8 80 8 73V15Q8 8 16 8Z"/></svg>
         <span className="hub-plate-content"><TerminalIcon name={page}/><strong>{label}</strong><small>{detail}</small></span>
       </button>)}
     </div>
+    </div>
+    <button type="button" className="hub-contact" aria-label="与庄方宜对话" onClick={()=>onNavigate('assistant')}><span className="hub-contact-portrait"><img src="/characters/fangyi-avatar.png" width="64" height="64" alt=""/></span><span className="hub-contact-copy"><strong>庄方宜</strong><span>记账、安排提醒，或聊聊今天</span></span><TerminalIcon name="assistant"/></button>
+    <p className="hub-reminder-count">{reminderCount} 项待提醒</p>
+    {agenda}
     <div className="hub-finance"><div><span>本月支出</span><strong><small>¥</small>{money(expense)}</strong></div><div><span>{budget>0?(remaining<0?'预算超支':'预算剩余'):'记录余额'}</span><strong className={budget>0&&remaining<0?'hub-over-budget':undefined}><small>¥</small>{money(budget>0?Math.abs(remaining):balance)}</strong></div></div>
     <button type="button" className="hub-almanac" aria-label="查看今日黄历" onClick={()=>onNavigate('almanac')}><TerminalIcon name="almanac"/><span>{almanacSummary}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
-    <button type="button" className="hub-contact" aria-label="与庄方宜对话" onClick={()=>onNavigate('assistant')}><span className="hub-contact-portrait"><img src="/characters/fangyi-avatar.png" width="64" height="64" alt=""/></span><span className="hub-contact-copy"><strong>庄方宜</strong><span>管理员，今天过得怎么样？</span></span><TerminalIcon name="assistant"/></button>
   </section>;
 }

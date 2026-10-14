@@ -203,7 +203,11 @@ test('overview separates clickable modules and date from terrain and honors redu
  for(const width of [320,390,768]){
   await page.setViewportSize({width,height:844});const map=await page.locator('.hub-map-stage').boundingBox();const date=await page.locator('.overview-date').boundingBox();expect(map).not.toBeNull();expect(date).not.toBeNull();expect(date!.y+date!.height).toBeLessThanOrEqual(map!.y);
   const boxes=await page.locator('.hub-modules button').evaluateAll(elements=>elements.map(el=>{const r=el.getBoundingClientRect();return{x:r.x,y:r.y,right:r.right,bottom:r.bottom};}));expect(boxes).toHaveLength(4);
-  for(const box of boxes)expect(box.y).toBeGreaterThanOrEqual(map!.y+map!.height);
+  for(const box of boxes)expect(box.right<=map!.x||box.x>=map!.x+map!.width||box.bottom<=map!.y||box.y>=map!.y+map!.height).toBeTruthy();
+  expect(boxes[0].bottom).toBeLessThanOrEqual(map!.y);expect(boxes[1].bottom).toBeLessThanOrEqual(map!.y);
+  expect(boxes[2].y).toBeGreaterThanOrEqual(map!.y+map!.height);expect(boxes[3].y).toBeGreaterThanOrEqual(map!.y+map!.height);
+  expect(boxes[0].x).toBeLessThan(map!.x);expect(boxes[1].right).toBeGreaterThan(map!.x+map!.width);
+  for(const button of await page.locator('.hub-modules button').all()){const svg=await button.locator('.hub-plate-content>svg').boundingBox();const box=await button.boundingBox();expect(svg!.x).toBeGreaterThanOrEqual(box!.x+8);expect(svg!.x+svg!.width).toBeLessThanOrEqual(box!.x+box!.width-8);}
   for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++){const a=boxes[i],b=boxes[j];expect(a.right<=b.x||b.right<=a.x||a.bottom<=b.y||b.bottom<=a.y).toBeTruthy();}
  }
  const contours=page.locator('.hub-topographic-lines');expect(await contours.evaluate(el=>getComputedStyle(el).animationName)).not.toBe('none');

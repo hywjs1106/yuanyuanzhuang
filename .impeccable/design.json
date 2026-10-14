@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-14T08:52:52.9787998Z",
+  "title": "Design System: 日常终端",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "信号黄"
+      },
+      "communication": {
+        "role": "secondary",
+        "displayName": "通讯青"
+      },
+      "base": {
+        "role": "neutral",
+        "displayName": "暖纸底色"
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "纸色工作面"
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "纸色控件面"
+      },
+      "paper-3": {
+        "role": "neutral",
+        "displayName": "纸色悬停面"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "主墨色"
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "辅助墨色"
+      },
+      "carbon": {
+        "role": "neutral",
+        "displayName": "碳色阅读面"
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "面板标题",
+        "purpose": "最终共享标题，来自 terminal-polish.css。"
+      },
+      "body": {
+        "displayName": "中文正文",
+        "purpose": "既有本地字体与常规字重。"
+      },
+      "mono": {
+        "displayName": "等宽信息",
+        "purpose": "提醒列表时间和数量。"
+      }
+    },
+    "shadows": [
+      {
+        "name": "hub-map",
+        "value": "0 8px 20px #141e2226",
+        "purpose": "首页圆形地图的轻微投影。"
+      },
+      {
+        "name": "clock-face",
+        "value": "0 0 0 1px #93a9a562",
+        "purpose": "时钟中心阅读区轮廓。"
+      },
+      {
+        "name": "more-sheet",
+        "value": "0 -10px 40px var(--color-shadow)",
+        "purpose": "更多菜单上拉面。"
+      },
+      {
+        "name": "chat-latest",
+        "value": "0 3px 12px #0003",
+        "purpose": "回到最新消息浮动按钮。"
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "共享按钮状态过渡。"
+      },
+      {
+        "name": "dur-short",
+        "value": "140ms",
+        "purpose": "共享按钮颜色和按下位移过渡。"
+      },
+      {
+        "name": "hub-contour-flow",
+        "value": "6s ease-in-out infinite",
+        "purpose": "轮廓往返移动；减少动态时关闭。"
+      },
+      {
+        "name": "hub-line-flow",
+        "value": "5s linear infinite",
+        "purpose": "陆地虚线流动；减少动态时关闭。"
+      },
+      {
+        "name": "clock-tick-in",
+        "value": "240ms ease-out",
+        "purpose": "真实秒数字进入；减少动态时关闭。"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow",
+        "value": "350px"
+      },
+      {
+        "name": "phone",
+        "value": "420px"
+      },
+      {
+        "name": "mission-columns",
+        "value": "600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "表单主要提交操作；高度为最小触控高度。",
+      "html": "<button class=\"ds-primary\">保存</button>",
+      "css": ".ds-primary{font-family:var(--font-body);font-size:12px;font-weight:500;min-height:48px;padding:10px 13px;border:1px solid var(--color-accent);border-radius:var(--radius-input);background:var(--color-accent);color:var(--color-accent-ink);cursor:pointer;transition:background-color var(--dur-short) var(--ease-out),transform var(--dur-short) var(--ease-out)}.ds-primary:hover{background:var(--color-paper-3);border-color:var(--color-rule-strong)}.ds-primary:focus-visible{outline:2px solid var(--color-focus);outline-offset:3px}.ds-primary:active{transform:translateY(1px)}.ds-primary:disabled{opacity:.5;cursor:default;transform:none}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}.ds-primary:active{transform:none}}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "共享纸色次要控件。",
+      "html": "<button class=\"ds-secondary\">查看安排</button>",
+      "css": ".ds-secondary{font-family:var(--font-body);font-size:15px;font-weight:500;min-height:48px;padding:10px 14px;background:var(--color-paper-2);color:var(--color-ink);border:1px solid var(--color-rule);border-radius:var(--radius-input);cursor:pointer;transition:background-color var(--dur-short) var(--ease-out),transform var(--dur-short) var(--ease-out)}.ds-secondary:hover{background:var(--color-paper-3);border-color:var(--color-rule-strong)}.ds-secondary:focus-visible{outline:2px solid var(--color-focus);outline-offset:3px}.ds-secondary:active{transform:translateY(1px)}.ds-secondary:disabled{opacity:.5;cursor:default;transform:none}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none}.ds-secondary:active{transform:none}}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "本地业务表单的纸色输入面。",
+      "html": "<input class=\"ds-input\" aria-label=\"备注\" placeholder=\"备注\" />",
+      "css": ".ds-input{font-family:var(--font-body);font-size:15px;width:100%;min-width:0;min-height:48px;padding:11px 12px;border:1px solid var(--color-rule);border-radius:var(--radius-input);background:var(--color-paper);color:var(--color-ink);caret-color:var(--color-ink)}.ds-input::placeholder{color:var(--color-ink-2)}.ds-input:focus-visible{outline:2px solid var(--color-focus);outline-offset:3px}"
+    },
+    {
+      "name": "Active Navigation Destination",
+      "kind": "nav",
+      "refersTo": "navigation-active",
+      "description": "五项底部导航中的选中目的项。",
+      "html": "<button class=\"ds-nav\" aria-current=\"page\"><span class=\"ds-nav-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 6H20V20H4ZM4 10H20M8 4V7M16 4V7M8 14H11V17H8Z\"/></svg></span><span>总览</span></button>",
+      "css": ".ds-nav{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-family:var(--font-body);font-size:10px;font-weight:500;min-height:60px;padding:7px 3px;border:0;border-radius:var(--radius-input);background:var(--color-paper-2);color:var(--color-ink);cursor:pointer}.ds-nav-icon{display:grid;place-items:center;width:28px;height:24px}.ds-nav-icon svg{width:22px;height:22px;display:block}.ds-nav::after{content:'';position:absolute;left:30%;right:30%;bottom:2px;height:2px;background:var(--color-accent)}.ds-nav:hover{background:var(--color-paper-2)}.ds-nav:focus-visible{outline:2px solid var(--color-focus);outline-offset:3px}.ds-nav:active{transform:translateY(1px)}@media(prefers-reduced-motion:reduce){.ds-nav:active{transform:none}}"
+    },
+    {
+      "name": "Status Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "短状态标签，使用已有边框与小圆角。",
+      "html": "<span class=\"ds-tag\">已保存</span>",
+      "css": ".ds-tag{font-family:var(--font-body);font-size:11px;line-height:1.7;display:inline-block;padding:3px 7px;border:1px solid var(--color-rule);border-radius:2px;background:var(--color-paper-2);color:var(--color-ink-2);white-space:nowrap}"
+    },
+    {
+      "name": "Work Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "细线与小切角组成的普通工作面。",
+      "html": "<section class=\"ds-panel\"><h2>备忘</h2><p>保存今天想记住的事。</p></section>",
+      "css": ".ds-panel{position:relative;padding:20px;margin:0 0 20px;background:var(--color-paper);color:var(--color-ink);border-top:1px solid var(--color-rule-strong);border-bottom:1px solid var(--color-rule);border-radius:0;font-family:var(--font-body);font-size:15px;line-height:1.75}.ds-panel::before{content:'';position:absolute;top:0;right:0;width:8px;height:8px;background:var(--color-base);clip-path:polygon(100% 0,100% 100%,0 0)}.ds-panel::after{content:'';position:absolute;bottom:0;left:0;width:16px;height:1px;background:var(--color-ink)}.ds-panel h2{font-family:var(--font-display);font-size:22px;font-weight:600;line-height:1.35;letter-spacing:-.025em;margin:0 0 18px}.ds-panel p{margin:0;line-height:1.75}@media(max-width:420px){.ds-panel{padding:20px 16px}}"
+    },
+    {
+      "html": "<button class=\"ds-mission\" aria-pressed=\"true\"><span class=\"ds-mission-title\">晚间安排</span><span class=\"ds-mission-meta\">单次提醒</span><time>20:00</time></button>",
+      "name": "Selected Reminder Row",
+      "kind": "custom",
+      "css": ".ds-mission{display:grid;gap:5px;text-align:left;min-width:0;min-height:76px;padding:13px 16px;white-space:normal;font-family:var(--font-body);font-weight:500;background:var(--color-accent);color:var(--color-accent-ink);border:1px solid var(--color-accent);border-radius:3px;cursor:pointer}.ds-mission-title{font-size:14px;font-weight:600;line-height:1.45;overflow-wrap:anywhere}.ds-mission-meta,.ds-mission time{font-size:11px;line-height:1.5;color:var(--color-accent-ink)}.ds-mission time{font-family:var(--font-mono)}.ds-mission:hover{background:var(--color-accent)}.ds-mission:focus-visible{outline:2px solid var(--color-focus);outline-offset:3px}.ds-mission:active{transform:translateY(1px)}@media(prefers-reduced-motion:reduce){.ds-mission:active{transform:none}}",
+      "description": "单份提醒详情对应的选中列表行。"
+    }
+  ],
+  "narrative": {
+    "keyCharacteristics": [
+      "暖纸背景、碳色通讯和提醒详情、局部信号色。",
+      "真实本地时钟叠在原创圆形地形上，四个功能按钮独立位于外侧四角。",
+      "紧凑信息行、细线分区、舒适触控区域和五项底部导航。",
+      "浅深主题维持同一信息层级；减少动态时仍更新真实时间。"
+    ],
+    "donts": [
+      "**Don't** 让入口压住中心圆或让图标越出容器。",
+      "**Don't** 把装饰地形解释为真实定位、地图或遥测。",
+      "**Don't** 用首页重复摘要堆叠遮住联系人与最近安排。",
+      "**Don't** 将浏览器预览当作原生安装或通知送达验证。"
+    ],
+    "rules": [
+      {
+        "section": "colors",
+        "name": "The 信号色 Rule",
+        "body": "用信号黄标示操作或选中状态；底部导航的选中背景采用 paper-2，并以短黄色下划线确认当前位置。"
+      },
+      {
+        "section": "typography",
+        "name": "The 字重 Rule",
+        "body": "正文保留常规字重（400），共享标题使用半粗字重（600）；保留联系人等局部组件已有的中间字重。"
+      }
+    ],
+    "dos": [
+      "**Do** 复用现有共享令牌、字体和人物资产，并检查最终样式覆盖。",
+      "**Do** 保持圆外四角入口、真实本地时钟、标题栏日期和紧凑最近安排。",
+      "**Do** 保留清晰焦点、舒适触控区域，以及减少动态时的真实时间更新。",
+      "**Do** 用真实业务数据和实际权限状态呈现信息。"
+    ],
+    "overview": "中文安卓生活工具沿用《终末地》游戏内主菜单、BAKER通讯和任务页面的界面语法：暖纸工作面、碳色阅读面、克制的信号黄，以及清晰的细线和几何图标。参考的产品事实与来源见 [PRODUCT.md](PRODUCT.md) 和 [游戏内界面来源](docs/endfield-ingame-ui-sources.md)。图形为原创抽象地形，不表示真实定位或遥测。\n\n本文记录已经实现的界面。色值与共享字体来自 terminal-tokens.css；尺寸、字重和最终外观同时以最后导入的 terminal-polish.css 为准。保持已有字体、人物与表情资产，以及原有本地业务和原生通知语义。",
+    "northStar": "游戏内日常终端"
+  }
+}
