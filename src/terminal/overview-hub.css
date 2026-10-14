@@ -20,9 +20,14 @@
 .hub-clock-hand{position:absolute;inset:0;border-radius:50%}.hub-clock-hand i{position:absolute;width:3px;height:13px;left:calc(50% - 1.5px);top:4px;background:#e8ef20;border-radius:1px}
 @keyframes clock-tick-in{from{transform:translateY(3px);opacity:.6}to{transform:translateY(0);opacity:1}}
 .hub-modules{position:absolute;inset:0;pointer-events:none;z-index:2}
-.overview-hub .hub-plate{position:absolute;pointer-events:auto;width:116px;min-height:64px;max-width:42%;padding:10px 10px;border:1px solid var(--color-rule-strong);background:var(--paper);color:var(--ink);border-radius:2px;box-shadow:none;white-space:normal;text-align:left}
+.overview-hub .hub-plate{position:absolute;pointer-events:auto;width:116px;min-height:64px;max-width:42%;padding:10px 10px;border:1px solid var(--color-rule-strong);background:var(--paper);color:var(--ink);border-radius:12px 3px 12px 3px;box-shadow:none;white-space:normal;text-align:left;transition:none}
 .hub-plate-ledger{top:0;left:0}.hub-plate-reminders{top:0;right:0}.hub-plate-weather{bottom:0;left:0}.hub-plate-almanac{bottom:0;right:0}
-.hub-plate::after{content:'';position:absolute;right:5px;top:5px;width:5px;height:5px;border-top:1px solid var(--color-rule-strong);border-right:1px solid var(--color-rule-strong);pointer-events:none}
+.hub-plate::after{content:'';position:absolute;right:7px;top:7px;width:7px;height:7px;border-top:1px solid var(--color-rule-strong);border-right:1px solid var(--color-rule-strong);pointer-events:none;transition:transform 140ms ease-out}
+.overview-hub .hub-plate:active{transform:none;border-color:var(--ink);background:var(--color-paper-2)}
+.hub-plate-content>svg{transition:transform 140ms cubic-bezier(.16,1,.3,1)}
+.hub-plate:not(:disabled):active .hub-plate-content>svg{transform:translateY(1px) scale(.94)}
+.hub-plate:not(:disabled):active::after,.hub-plate:focus-visible::after{transform:translate(-2px,2px)}
+@media(hover:hover) and (pointer:fine){.hub-plate:hover::after{transform:translate(-2px,2px)}}
 .hub-plate-content{position:relative;display:grid;grid-template-columns:30px minmax(0,1fr);column-gap:8px;align-items:center}
 .hub-plate-content>svg{grid-row:1/3;width:30px;height:30px;display:block;flex-shrink:0;padding:4px;background:var(--color-carbon);color:var(--color-on-carbon);border-radius:2px}.hub-plate-content strong{font-size:15px;line-height:1.5;font-weight:550}.hub-plate-content small{font-size:12px;line-height:1.6;color:var(--muted);white-space:nowrap}
 .overview-hub .hub-plate:hover{background:var(--color-paper-2);border-color:var(--ink)}.overview-hub .hub-plate:focus-visible{outline:3px solid var(--color-focus);outline-offset:3px}
@@ -33,7 +38,7 @@
 .hub-finance{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:10px 0 14px;border-bottom:1px solid var(--line)}.hub-finance>div{min-width:0}.hub-finance>div>span{font-size:11px;color:var(--muted)}.hub-finance strong{display:block;font-size:21px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.7;overflow-wrap:anywhere}.hub-finance strong small{font-size:12px;font-weight:400;margin-right:3px}.hub-finance .hub-over-budget{color:var(--error)}
 .overview-hub .hub-almanac{display:flex;align-items:center;gap:10px;min-height:48px;width:100%;padding:10px 0;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;text-align:left;white-space:normal;color:var(--muted);font-size:11px;font-weight:400}.hub-almanac>span{flex:1;min-width:0;line-height:1.7}.hub-almanac>svg{width:17px;height:17px;flex-shrink:0}.hub-almanac>svg:last-child{fill:none;stroke:currentColor;stroke-width:1.5}
 @media(max-width:350px){.hub-orbit{height:308px}.overview-hub .hub-plate{width:110px;padding:10px 10px}.hub-contact-copy>span{font-size:12px}}
-@media(prefers-reduced-motion:reduce){.hub-topographic-lines,.hub-land-contours,.clock-second-value{animation:none!important}.hub-clock-hand{transform:none!important}}
+@media(prefers-reduced-motion:reduce){.hub-topographic-lines,.hub-land-contours,.clock-second-value{animation:none!important}.hub-clock-hand{transform:none!important}.hub-plate::after,.hub-plate-content>svg{transition:none!important;transform:none!important}}
 
 .overview-hub .overview-agenda{margin:0 0 16px;padding:0 0 8px;border-bottom:1px solid var(--line)}
 .overview-hub .overview-agenda .panel-heading{margin:0;gap:10px;flex-wrap:nowrap}

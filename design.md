@@ -228,3 +228,9 @@ Ledger uses a data-report hierarchy: recorded balance is a single full-width car
 Communication uses a light character header, circular Fangyi portrait and honest configuration label above the dark reading plane. Capsule input/actions follow conversation semantics. Compact keyboard mode retains smallportrait and composer. Selected navigation is carbon/white withyellowmarker; selectionchanges applyimmediately to avoid lowcontrast white-on-light intermediateframes. Weather quantityblue is semantic; lunar date/宜忌 followquietfoliohierarchy.
 
 All database/action/AI/notification/TLS behavior remains unchanged. No new external assets or dependencies. Browser visual/responsive/interaction checks do not prove real Android system fontscale or notificationdelivery.
+
+## 0.6.5 touch feedback
+
+Studied icaruszezen/endfield-ui motion documentation and README, LaoBiDeng321/Endfield-Style-Skill README, and Yue-plus/astro-endfield README/Header/Card source. Adopt short action-driven motion rather than delayed boot choreography. Their visual guidance is community interpretation; the React 19/Tailwind 4 component package is not imported into this React 18 app.
+
+The focal interaction is the independent yellow dock marker moving between five stable destinations in 200ms. Selected foreground/background remain atomic to preserve first-frame contrast. Home plate and contact hit regions stay fixed: icons compress, corner marks tuck inward, and the contact action responds separately. Asymmetric corners soften controls while retaining straight industrial edges. More and sticker panels enter once in 180–200ms; native dialog focus, dismiss behavior and business handlers remain unchanged. No new dependency, haptic permission or pointer-capture state. Reduced motion removes spatial feedback; disabled send controls cannot compress. Phone viewport and browser verification do not establish physical Android touch performance.

@@ -12,7 +12,9 @@ export function BottomNavigation({currentPage,onNavigate,keyboardOpen=false}:{cu
   useEffect(()=>{const back=(event:Event)=>{if(dialog.current?.open){event.preventDefault();close();}};window.addEventListener('terminal-back',back);return()=>window.removeEventListener('terminal-back',back);},[close]);
   useEffect(()=>{if(keyboardOpen&&dialog.current?.open)close();},[keyboardOpen,close]);
   const secondaryActive=secondary.some(([page])=>page===currentPage);
-  return <><nav className="bottom-navigation" aria-label="功能导航" hidden={keyboardOpen}>
+  const activeIndex=secondaryActive?4:primary.findIndex(([page])=>page===currentPage);
+  return <><nav className="bottom-navigation" aria-label="功能导航" hidden={keyboardOpen} style={{'--active-index':activeIndex} as React.CSSProperties}>
+    <span className="navigation-marker" aria-hidden="true"/>
     {primary.map(([page,label])=>{const active=page==='more'?secondaryActive:currentPage===page;return <button key={page} type="button" ref={page==='more'?more:undefined} className={`bottom-destination ${page==='assistant'?'destination-assistant ':''}${active?'active':''}`} aria-label={label} aria-current={active?'page':undefined} aria-haspopup={page==='more'?'dialog':undefined} aria-expanded={page==='more'?open:undefined} onClick={()=>page==='more'?setOpen(true):onNavigate(page)}><span className="destination-icon"><TerminalIcon name={page}/></span><span>{label}</span></button>;})}
   </nav><dialog ref={dialog} className="more-sheet" aria-label="更多功能" onCancel={event=>{event.preventDefault();close();}} onClose={()=>{setOpen(false);more.current?.focus({preventScroll:true});}} onClick={event=>{if(event.target===event.currentTarget){const r=event.currentTarget.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)close();}}}>
     <div className="sheet-header"><div><h2>更多功能</h2></div><button type="button" aria-label="关闭更多功能" onClick={close}><TerminalIcon name="close"/></button></div>
