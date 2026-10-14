@@ -1,15 +1,16 @@
+import {go} from './navigation';
 import {test,expect} from '@playwright/test';
 
 test('navigation starts a short passage while rapid taps leave only the final interactive page',async({page})=>{
  await page.goto('/');const nav=page.getByRole('navigation',{name:'功能导航'});
  expect(await page.locator('main.terminal-content').evaluate(el=>el.getAnimations().length)).toBe(0);
- await nav.getByRole('button',{name:'记账',exact:true}).click();
+ await go(page,'记账');
  expect(await page.locator('main.terminal-content').evaluate(el=>el.getAnimations().length)).toBeGreaterThan(0);
- await nav.getByRole('button',{name:'提醒',exact:true}).click();await nav.getByRole('button',{name:'助手',exact:true}).click();
+ await go(page,'提醒');await nav.getByRole('button',{name:'助手',exact:true}).click();
  await expect(page.locator('main.terminal-content')).toHaveCount(1);await expect(page.getByLabel('和方宜说说',{exact:true})).toBeVisible();
  await page.getByLabel('和方宜说说',{exact:true}).fill('过场过程中仍能输入');await page.waitForTimeout(300);
  expect(await page.locator('main.terminal-content').evaluate(el=>el.getAnimations().length)).toBe(0);
- await page.emulateMedia({reducedMotion:'reduce'});await nav.getByRole('button',{name:'记账',exact:true}).click();
+ await page.emulateMedia({reducedMotion:'reduce'});await go(page,'记账');
  expect(await page.locator('main.terminal-content').evaluate(el=>el.getAnimations().length)).toBe(0);await page.getByRole('button',{name:'记一笔',exact:true}).click();await expect(page.getByLabel('金额',{exact:true})).toBeVisible();
 });
 
@@ -34,13 +35,16 @@ test('floating surfaces move without moving touch targets and stop offscreen or 
 
 test('dock marker follows the last destination after rapid changes and resizing',async({page})=>{
  await page.goto('/');const nav=page.getByRole('navigation',{name:'功能导航'});
- await nav.getByRole('button',{name:'记账',exact:true}).click();await nav.getByRole('button',{name:'提醒',exact:true}).click();await nav.getByRole('button',{name:'助手',exact:true}).click();
+ await go(page,'记账');await go(page,'提醒');await nav.getByRole('button',{name:'助手',exact:true}).click();
  const marker=nav.locator('.navigation-marker');await expect(marker).toHaveCount(1);
  for(const width of [320,414,768]){
   await page.setViewportSize({width,height:844});
+  for(const name of ['今日','助手','设置']){
+  await nav.getByRole('button',{name,exact:true}).click();
   await expect.poll(async()=>{const a=await marker.boundingBox(),b=await nav.locator('[aria-current=page]').boundingBox();return Math.abs((a!.x+a!.width/2)-(b!.x+b!.width/2));}).toBeLessThan(2);
+  }
  }
  await page.emulateMedia({reducedMotion:'reduce'});await nav.getByRole('button',{name:'今日',exact:true}).click();
  expect(await marker.evaluate(el=>parseFloat(getComputedStyle(el).transitionDuration))).toBe(0);
- await nav.getByRole('button',{name:'更多',exact:true}).click();await expect(page.getByRole('dialog',{name:'更多功能'})).toBeVisible();await page.keyboard.press('Escape');await expect(nav.getByRole('button',{name:'更多',exact:true})).toBeFocused();
+ await nav.getByRole('button',{name:'设置',exact:true}).click();await expect(page.getByLabel('每月预算')).toBeVisible();
 });

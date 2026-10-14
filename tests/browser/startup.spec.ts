@@ -1,18 +1,14 @@
 import {test,expect} from '@playwright/test';
+import {go} from './navigation';
 
-test('portrait opening retains its triangles and allows skipping during the full yellow wipe',async({page})=>{
- await page.clock.install();await page.setViewportSize({width:320,height:740});await page.goto('/');
- const opening=page.getByRole('dialog',{name:'日常终端开场'});await expect(opening.locator('.startup-triangles')).toBeVisible();
- await page.clock.runFor(1000);await expect(page.locator('.startup-wipe-layer')).toBeVisible();
- const button=page.getByRole('button',{name:'跳过开场',exact:true});await button.click();await expect(opening).toHaveCount(0);await expect(page.getByRole('navigation',{name:'功能导航'})).toBeVisible();
+test('portrait opening retains triangles and contains no buttons during the yellow wipe',async({page})=>{
+ await page.clock.install();await page.clock.pauseAt(new Date());await page.setViewportSize({width:320,height:740});await page.goto('/');const opening=page.getByRole('dialog',{name:'日常终端开场'});await expect(opening.locator('.startup-triangles')).toBeVisible();expect(await opening.getByRole('button').count()).toBe(0);
+ await page.clock.runFor(1000);await expect(page.locator('.startup-wipe-layer')).toBeVisible();expect(await opening.getByRole('button').count()).toBe(0);await page.clock.runFor(800);await expect(opening).toHaveCount(0);await expect(page.getByRole('navigation',{name:'功能导航'})).toBeVisible();
 });
 
-test('opening is immediately skippable and cannot intercept later navigation',async({page})=>{
- await page.goto('/');const opening=page.getByRole('dialog',{name:'日常终端开场'});await expect(opening).toBeVisible();
- await expect(page.getByRole('navigation',{name:'功能导航'})).toHaveCount(0);
- await page.keyboard.press('Tab');await expect(page.getByRole('button',{name:'跳过开场',exact:true})).toBeFocused();
- await page.getByRole('button',{name:'跳过开场',exact:true}).click();await expect(opening).toHaveCount(0);
- const nav=page.getByRole('navigation',{name:'功能导航'});await nav.getByRole('button',{name:'记账',exact:true}).click();await expect(page.getByRole('button',{name:'记一笔',exact:true})).toBeVisible();await nav.getByRole('button',{name:'今日',exact:true}).click();await expect(opening).toHaveCount(0);
+test('opening preserves the existing back and Escape dismissal paths without a skip control',async({page})=>{
+ await page.goto('/');const opening=page.getByRole('dialog',{name:'日常终端开场'});await expect(opening).toBeVisible();expect(await page.evaluate(()=>{const event=new Event('terminal-back',{cancelable:true});window.dispatchEvent(event);return event.defaultPrevented;})).toBeTruthy();await expect(opening).toHaveCount(0);await go(page,'记账');await expect(page.getByRole('button',{name:'记一笔',exact:true})).toBeVisible();
+ await page.reload();await expect(opening).toBeVisible();await page.keyboard.press('Escape');await expect(opening).toHaveCount(0);await expect(page.getByRole('navigation',{name:'功能导航'})).toBeVisible();
 });
 
 test('changing motion preference during opening dismisses it without leaving a blocker',async({page})=>{
@@ -20,6 +16,5 @@ test('changing motion preference during opening dismisses it without leaving a b
 });
 
 test('opening leaves automatically and reduced motion bypasses it entirely',async({page})=>{
- await page.goto('/');await expect(page.getByRole('dialog',{name:'日常终端开场'})).toBeVisible();await expect(page.getByRole('dialog',{name:'日常终端开场'})).toHaveCount(0,{timeout:3000});await expect(page.getByRole('navigation',{name:'功能导航'})).toBeVisible();
- await page.emulateMedia({reducedMotion:'reduce'});await page.reload();await expect(page.getByRole('navigation',{name:'功能导航'})).toBeVisible();await expect(page.getByRole('dialog',{name:'日常终端开场'})).toHaveCount(0);
+ await page.goto('/');await expect(page.getByRole('dialog',{name:'日常终端开场'})).toBeVisible();await expect(page.getByRole('dialog',{name:'日常终端开场'})).toHaveCount(0,{timeout:3000});await expect(page.getByRole('navigation',{name:'功能导航'})).toBeVisible();await page.emulateMedia({reducedMotion:'reduce'});await page.reload();await expect(page.getByRole('navigation',{name:'功能导航'})).toBeVisible();await expect(page.getByRole('dialog',{name:'日常终端开场'})).toHaveCount(0);
 });

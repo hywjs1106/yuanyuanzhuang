@@ -1,34 +1,34 @@
+import {go} from './navigation';
 import { test, expect, type Page } from '@playwright/test';
-async function more(page:Page,name:string){await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'更多',exact:true}).click();await page.getByRole('dialog',{name:'更多功能'}).getByRole('button',{name,exact:true}).click();}
-test('all feature destinations are reachable from a fixed bottom bar',async({page})=>{
+async function more(page:Page,name:string){await go(page,name);}
+test('three fixed bottom destinations retain access to daily tools through Today',async({page})=>{
   await page.goto('/');await expect(page.getByRole('heading',{name:'日常终端',exact:true})).toBeVisible();
   const nav=page.getByRole('navigation',{name:'功能导航'});
   const position=await nav.boundingBox();expect(position).not.toBeNull();expect(position!.y).toBeGreaterThan(650);
-  await nav.getByRole('button',{name:'更多',exact:true}).click();
-  await expect(page.getByRole('dialog',{name:'更多功能'})).toBeVisible();
-  await page.getByRole('dialog',{name:'更多功能'}).getByRole('button',{name:'黄历',exact:true}).click();
+  await expect(nav.getByRole('button')).toHaveText(['今日','助手','设置']);
+  await go(page,'黄历');
   await expect(page.getByRole('heading',{name:'黄历',exact:true})).toBeVisible();
-  await nav.getByRole('button',{name:'更多',exact:true}).click();await page.keyboard.press('Escape');await expect(page.getByRole('dialog',{name:'更多功能'})).toHaveCount(0);await expect(nav.getByRole('button',{name:'更多',exact:true})).toBeFocused();
+  await go(page,'设置');await expect(page.getByLabel('每月预算')).toBeVisible();
 });
 test('phone user can record, edit and persist ledger and reminders without game onboarding',async({page})=>{
   await page.goto('/');
   await expect(page.getByRole('heading',{name:'日常终端',exact:true})).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
   await page.screenshot({path:'test-results/mobile-home.png',fullPage:true});
-  await page.getByRole('button',{name:'记账',exact:true}).click();
+  await go(page,'记账');
   await page.getByRole('button',{name:'记一笔',exact:true}).click();
   await page.getByLabel('金额').fill('28.50');
   await page.getByLabel('备注').fill('午饭');
   await page.getByRole('button',{name:'保存流水'}).click();
   await expect(page.getByText('午饭',{exact:true})).toBeVisible();
   await page.reload();
-  await page.getByRole('button',{name:'记账',exact:true}).click();
+  await go(page,'记账');
   await expect(page.getByText('午饭',{exact:true})).toBeVisible();
   await page.getByRole('button',{name:'编辑午饭'}).click();
   await page.getByLabel('金额').fill('30');
   await page.getByRole('button',{name:'保存流水'}).click();
   await expect(page.getByText('-¥30.00',{exact:true})).toBeVisible();
-  await page.getByRole('button',{name:'提醒',exact:true}).click();
+  await go(page,'提醒');
   await page.getByRole('button',{name:'新增提醒',exact:true}).click();
   await page.getByLabel('事项',{exact:true}).fill('交电费');
   await page.getByLabel('日期与时间').fill('2027-01-15T09:00');
@@ -36,7 +36,7 @@ test('phone user can record, edit and persist ledger and reminders without game 
   await page.getByRole('button',{name:'保存提醒'}).click();
   await expect(page.getByRole('heading',{name:'交电费',exact:true})).toBeVisible();
   await page.reload();
-  await page.getByRole('button',{name:'提醒',exact:true}).click();
+  await go(page,'提醒');
   await expect(page.getByRole('heading',{name:'交电费',exact:true})).toBeVisible();
   await more(page,'黄历');
   await page.getByLabel('查看日期').fill('2026-02-17');
@@ -50,10 +50,10 @@ test('offline assistant saves an explicit ledger command once and persists its r
   await expect(page.locator('.chat-message.assistant').last()).toContainText('已记账：');
   await expect(page.getByRole('button',{name:'确认保存',exact:true})).toHaveCount(0);
   await expect(page.getByText('已保存',{exact:true})).toBeVisible();
-  await page.getByRole('button',{name:'记账',exact:true}).click();
+  await go(page,'记账');
   await expect(page.getByText('帮我记一下午饭花了28元',{exact:true})).toHaveCount(1);
   await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(1);
-  await page.reload();await page.getByRole('button',{name:'记账',exact:true}).click();
+  await page.reload();await go(page,'记账');
   await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(1);
   await page.getByRole('button',{name:'助手',exact:true}).click();
   await expect(page.locator('.chat-message.assistant').last()).toContainText('已记账：');
@@ -122,7 +122,7 @@ test('long conversations remain readable at 320px with visible composer and redu
 
 test('all eight surfaces fit narrow phones and new replies respect the reader',async({page})=>{
  await page.goto('/');
- for(const width of [320,414]){await page.setViewportSize({width,height:740});for(const name of ['今日','记账','提醒','助手','天气','黄历','备忘','设置']){if(['天气','黄历','备忘','设置'].includes(name))await more(page,name);else await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name,exact:true}).click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${name} ${width}px`).toBeTruthy();}}
+ for(const width of [320,414]){await page.setViewportSize({width,height:740});for(const name of ['今日','记账','提醒','助手','天气','黄历','备忘','设置']){await go(page,name);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${name} ${width}px`).toBeTruthy();}}
  await page.setViewportSize({width:390,height:844});await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'助手',exact:true}).click();
  await page.getByLabel('和方宜说说').fill('这是一段历史消息。'.repeat(90));await page.getByRole('button',{name:'发送',exact:true}).click();await expect(page.locator('.chat-message.assistant')).toHaveCount(1);
  const log=page.getByRole('log',{name:'聊天记录'});await log.evaluate(el=>{el.scrollTop=0;el.dispatchEvent(new Event('scroll'));});
@@ -137,12 +137,12 @@ test('expression controls cannot clip the composer in a short keyboard viewport'
 });
 
 test('mission selection follows current data through edits, completion and deletion',async({page})=>{
- await page.goto('/');await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'提醒',exact:true}).click();
+ await page.goto('/');await go(page,'提醒');
  for(const title of ['交电费','寄快递']){await page.getByRole('button',{name:'新增提醒',exact:true}).click();await page.getByLabel('事项',{exact:true}).fill(title);await page.getByLabel('日期与时间').fill('2027-01-15T09:00');await page.getByRole('button',{name:'保存提醒',exact:true}).click();await expect(page.getByRole('heading',{name:title,exact:true})).toBeVisible();}
  await page.getByRole('button',{name:'查看提醒：交电费',exact:true}).click();await expect(page.getByRole('heading',{name:'交电费',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'寄快递',exact:true})).toHaveCount(0);
  await page.getByRole('button',{name:'编辑',exact:true}).click();await page.getByLabel('事项',{exact:true}).fill('交水电费');await page.getByRole('button',{name:'保存提醒',exact:true}).click();await expect(page.getByRole('button',{name:'查看提醒：交水电费',exact:true})).toHaveAttribute('aria-pressed','true');await page.screenshot({path:'../references/ui-08/reminders-populated.png'});
  await page.getByRole('button',{name:'完成',exact:true}).click();await expect(page.getByText('已完成',{exact:true}).last()).toBeVisible();await page.getByRole('button',{name:'删除',exact:true}).click();await expect(page.getByRole('heading',{name:'寄快递',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'查看提醒：交水电费',exact:true})).toHaveCount(0);await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'今日',exact:true}).click();await expect(page.getByRole('main').getByText('1 项待提醒',{exact:true})).toBeVisible();
- await page.reload();await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'提醒',exact:true}).click();await expect(page.getByRole('heading',{name:'寄快递',exact:true})).toBeVisible();await page.screenshot({path:'test-results/reminders-04.png'});
+ await page.reload();await go(page,'提醒');await expect(page.getByRole('heading',{name:'寄快递',exact:true})).toBeVisible();await page.screenshot({path:'test-results/reminders-04.png'});
 });
 test('radial overview shortcuts navigate to their real destinations',async({page})=>{
  await page.goto('/');for(const [label,target] of [['打开记账','记账'],['打开提醒','提醒与生日'],['打开天气','天气'],['打开黄历','黄历']]){await page.getByRole('button',{name:label,exact:true}).click();await expect(page.getByRole('heading',{name:target,exact:true})).toBeVisible();await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'今日',exact:true}).click();}
@@ -156,12 +156,12 @@ test('natural explicit reminders save while casual and ambiguous chat creates no
   await expect(page.locator('.chat-message.assistant')).toHaveCount(['午饭花了28元','明天九点提醒我寄快递','今天有点累'].indexOf(text)+1);
   await expect(page.getByRole('button',{name:'确认保存',exact:true})).toHaveCount(0);
  }
- await page.getByRole('button',{name:'记账',exact:true}).click();await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(0);
- await page.getByRole('button',{name:'提醒',exact:true}).click();await expect(page.getByRole('button',{name:/查看提醒：/})).toHaveCount(0);
+ await go(page,'记账');await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(0);
+ await go(page,'提醒');await expect(page.getByRole('button',{name:/查看提醒：/})).toHaveCount(0);
  await page.getByRole('button',{name:'助手',exact:true}).click();await page.getByLabel('和方宜说说').fill('明天上午九点提醒我交电费');await page.getByRole('button',{name:'发送',exact:true}).click();
  await expect(page.locator('.chat-message.assistant').last()).toContainText('已添加提醒：交电费');await expect(page.getByRole('button',{name:'确认保存',exact:true})).toHaveCount(0);
- await page.getByRole('button',{name:'提醒',exact:true}).click();await expect(page.getByRole('button',{name:'查看提醒：交电费',exact:true})).toHaveCount(1);
- await page.reload();await page.getByRole('button',{name:'提醒',exact:true}).click();await expect(page.getByRole('heading',{name:'交电费',exact:true})).toBeVisible();
+ await go(page,'提醒');await expect(page.getByRole('button',{name:'查看提醒：交电费',exact:true})).toHaveCount(1);
+ await page.reload();await go(page,'提醒');await expect(page.getByRole('heading',{name:'交电费',exact:true})).toBeVisible();
  await expect(page.getByRole('button',{name:/查看提醒：/})).toHaveCount(1);
 });
 
@@ -194,8 +194,8 @@ test('model metadata variations cannot turn one explicit command into duplicate 
  await page.route('https://example.invalid/**',async route=>{const date=new Date();const day=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({choices:[{message:{content:JSON.stringify({reply:'收到',actions:[{kind:'ledger',amount:28,direction:'expense',date:day,note:'午饭',type:'food'},{kind:'ledger',amount:28,direction:'expense',date:day,note:'午餐重复',type:'other'}]})}}]})});});
  await page.goto('/');await more(page,'设置');await page.getByLabel('服务地址').fill('https://example.invalid/v1');await page.getByLabel('模型名称').fill('test-model');await page.getByLabel('API Key',{exact:true}).fill('test-only-key');await page.getByRole('button',{name:'保存设置'}).click();
  await page.getByRole('button',{name:'助手',exact:true}).click();await page.getByLabel('和方宜说说').fill('帮我记一下午饭花了28元');await page.getByRole('button',{name:'发送',exact:true}).click();await expect(page.locator('.chat-message.assistant').last()).toContainText('额外重复操作已忽略，未执行。');await expect(page.getByRole('button',{name:'确认保存',exact:true})).toHaveCount(0);
- await page.getByRole('button',{name:'记账',exact:true}).click();await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(1);await expect(page.getByText('午饭',{exact:true})).toHaveCount(1);await expect(page.getByText('午餐重复',{exact:true})).toHaveCount(0);
- await page.reload();await page.getByRole('button',{name:'记账',exact:true}).click();await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(1);
+ await go(page,'记账');await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(1);await expect(page.getByText('午饭',{exact:true})).toHaveCount(1);await expect(page.getByText('午餐重复',{exact:true})).toHaveCount(0);
+ await page.reload();await go(page,'记账');await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(1);
 });
 
 test('overview separates clickable modules and date from terrain and honors reduced motion',async({page})=>{

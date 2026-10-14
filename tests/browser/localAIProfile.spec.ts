@@ -1,7 +1,8 @@
+import {go} from './navigation';
 import {test,expect,type Page} from '@playwright/test';
 const ai={baseUrl:'https://192.168.10.2:11435/v1',model:'qwen3.5-fast:latest',apiKey:'dt-local-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',provider:'custom',protocol:'openai'};
 const profile={format:'daily-terminal-local-ai',version:1,ai};
-async function settings(page:Page){await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'更多',exact:true}).click();await page.getByRole('dialog',{name:'更多功能'}).getByRole('button',{name:'设置',exact:true}).click();}
+async function settings(page:Page){await go(page,'设置');}
 async function upload(page:Page,value:unknown){await page.getByLabel('导入电脑连接',{exact:true}).setInputFiles({name:'电脑连接.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(value))});}
 test('connection import fills draft fields and persists only after Save',async({page})=>{
   await page.goto('/');await settings(page);await page.getByLabel('每月预算').fill('888');

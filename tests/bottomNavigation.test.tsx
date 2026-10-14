@@ -5,14 +5,15 @@ import {renderToStaticMarkup} from 'react-dom/server';
 import {BottomNavigation} from '../src/terminal/BottomNavigation';
 import {TerminalInstrument} from '../src/terminal/TerminalVisuals';
 
-test('five primary destinations keep secondary pages grouped under More',()=>{
+test('three primary destinations group daily tools under Today and directly expose Settings',()=>{
   const html=renderToStaticMarkup(<BottomNavigation currentPage="weather" onNavigate={()=>{}}/>);
   const nav=html.slice(html.indexOf('<nav'),html.indexOf('</nav>'));
-  assert.equal((nav.match(/<button/g)||[]).length,5);
+  assert.equal((nav.match(/<button/g)||[]).length,3);
   assert.match(nav,/aria-label="助手"/);
-  assert.match(nav,/aria-label="更多"[^>]*aria-current="page"/);
+  assert.match(nav,/aria-label="今日"[^>]*aria-current="location"/);
+  assert.match(nav,/aria-label="设置"/);
   assert.doesNotMatch(nav,/aria-label="天气"/);
-  assert.match(html,/aria-label="更多功能"/);
+  assert.doesNotMatch(html,/更多功能/);
 });
 
 test('budget instrument preserves overspend in visible and accessible value',()=>{

@@ -63,3 +63,4 @@
 /* Static navigation geometry groups the four controls; it represents no real route. */
 .hub-navigation-wires { position:absolute; inset:0; width:100%; height:100%; fill:none; stroke:var(--line); stroke-width:1; pointer-events:none; z-index:0; }
 @media (max-width:350px) { .hub-contact-action { padding:10px; } .hub-contact-action>span { display:none; } .hub-contact-copy strong { font-size:20px; } }
+.overview-hub .hub-notes{font-size:14px;font-weight:500;color:var(--ink)}

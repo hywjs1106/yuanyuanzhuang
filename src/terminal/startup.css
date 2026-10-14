@@ -1,5 +1,5 @@
 /* MIT SplashScreen layout/motion adaptation; see licenses/endfield-ui-MIT.txt. */
-.startup-screen{position:fixed;inset:0;z-index:100;color:#f5f5eb;overflow:hidden}
+.startup-screen{position:fixed;inset:0;z-index:100;color:#f5f5eb;overflow:hidden;outline:none}
 .startup-visual{position:absolute;inset:0;background:#1c201d;overflow:hidden}
 .startup-brand{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:min(70%,300px);display:flex;flex-direction:column;align-items:flex-start;gap:26px}
 .startup-triangles{display:block;width:42px;height:37px;color:#e8ef20;animation:startup-mark-reveal 600ms cubic-bezier(.16,1,.3,1)}
@@ -11,9 +11,6 @@
 .startup-decor svg{width:20px;height:20px;stroke:#c3c8ba;stroke-width:1;fill:none}
 .startup-decor>span{display:grid;grid-template-columns:repeat(6,4px);gap:3px}.startup-decor i{width:4px;height:4px;background:#c3c8ba}.startup-decor i:nth-child(n+10){opacity:.35}
 .startup-foot p{margin:0;font-size:13px;color:#c3c8ba}
-.startup-screen .startup-skip{position:absolute;top:calc(20px + env(safe-area-inset-top));right:20px;z-index:3;min-height:48px;padding:10px 16px;color:#f5f5eb;background:#1c201d;border:1px solid #c3c8ba;border-radius:24px;font-size:13px}
-.startup-screen .startup-skip:hover{background:#f5f5eb;color:#1c201d}
-.startup-screen .startup-skip:focus-visible{outline:2px solid #e8ef20;outline-offset:4px}
 .startup-wipe-layer{position:absolute;inset:0;background:#e8ef20;transform-origin:left;pointer-events:none;animation:startup-yellow-fill 540ms cubic-bezier(1,0,.7,1) both}
 .startup-leaving .startup-visual{animation:startup-exit 200ms ease-out both}
 .startup-focus-target:focus{outline:none}
@@ -23,5 +20,5 @@
 @keyframes startup-exit{to{opacity:0}}
 @media(min-aspect-ratio:1/1){.startup-brand{left:64.45%;top:45%;transform:translateY(-50%);width:28%;gap:18px}.startup-name{font-size:clamp(36px,8vw,66px)}.startup-triangles{width:32px;height:28px}.startup-foot{left:64.45%;right:5%;bottom:6%}.startup-rule{position:fixed;top:0;bottom:0;left:0;width:8px;height:auto;margin:0}.startup-rule i{transform-origin:top;animation-name:startup-line-reveal-vertical}.startup-decor{margin-bottom:8px}}
 @keyframes startup-line-reveal-vertical{from{transform:scaleY(0)}to{transform:scaleY(1)}}
-@media(max-height:420px){.startup-brand{gap:12px}.startup-name{font-size:36px}.startup-triangles{width:26px;height:23px}.startup-decor{display:none}.startup-foot p{font-size:12px}.startup-screen .startup-skip{top:12px;right:12px}}
+@media(max-height:420px){.startup-brand{gap:12px}.startup-name{font-size:36px}.startup-triangles{width:26px;height:23px}.startup-decor{display:none}.startup-foot p{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.startup-screen,.startup-screen *{animation:none!important}}

@@ -1,11 +1,11 @@
 import {test,expect} from '@playwright/test';
+import {go} from './navigation';
 import {mkdirSync,copyFileSync} from 'node:fs';
 const out='../references/ui-08';
 test('eight surfaces retain task entry points in the new visual system',async({page,browser})=>{
  mkdirSync(out,{recursive:true});await page.goto('/');
  await page.screenshot({path:`${out}/home.png`});const agenda=await page.locator('.overview-agenda').boundingBox();const dock=await page.locator('.bottom-navigation').boundingBox();expect(agenda!.y+agenda!.height).toBeLessThan(dock!.y);
- for(const [name,file] of [['记账','ledger'],['提醒','reminders'],['助手','assistant']] as const){await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name,exact:true}).click();await page.screenshot({path:`${out}/${file}.png`});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();}
- for(const [name,file] of [['天气','weather'],['黄历','almanac'],['备忘','notes'],['设置','settings']] as const){await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'更多',exact:true}).click();await page.getByRole('dialog',{name:'更多功能'}).getByRole('button',{name,exact:true}).click();await page.screenshot({path:`${out}/${file}.png`});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();}
+ for(const [name,file] of [['记账','ledger'],['提醒','reminders'],['助手','assistant'],['天气','weather'],['黄历','almanac'],['备忘','notes'],['设置','settings']] as const){await go(page,name);await page.screenshot({path:`${out}/${file}.png`});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();}
  await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'今日',exact:true}).click();await page.getByRole('button',{name:'切换深浅模式'}).click();await expect(page.locator('html')).toHaveAttribute('data-terminal-theme','dark');await page.mouse.move(1,1);await page.screenshot({path:`${out}/home-dark.png`,animations:'disabled'});
  await page.getByRole('button',{name:'助手',exact:true}).click();await page.screenshot({path:`${out}/assistant-dark.png`});
  await page.getByRole('button',{name:'今日',exact:true}).click();await page.setViewportSize({width:320,height:844});await page.screenshot({path:`${out}/home-320.png`});const narrowAgenda=await page.locator('.overview-agenda').boundingBox();const narrowDock=await page.locator('.bottom-navigation').boundingBox();expect(narrowAgenda!.y+narrowAgenda!.height).toBeLessThan(narrowDock!.y);

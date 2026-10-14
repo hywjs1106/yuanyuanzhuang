@@ -73,5 +73,6 @@ export function OverviewPanel({date,reminderCount,expense,balance,budget,almanac
     {agenda}
     <div className="hub-finance"><div><span>本月支出</span><strong><small>¥</small>{money(expense)}</strong></div><div><span>{budget>0?(remaining<0?'预算超支':'预算剩余'):'记录余额'}</span><strong className={budget>0&&remaining<0?'hub-over-budget':undefined}><small>¥</small>{money(budget>0?Math.abs(remaining):balance)}</strong></div></div>
     <button type="button" className="hub-almanac" aria-label="查看今日黄历" onClick={()=>onNavigate('almanac')}><TerminalIcon name="almanac"/><span>{almanacSummary}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+    <button type="button" className="hub-almanac hub-notes" aria-label="打开备忘" onClick={()=>onNavigate('notes')}><TerminalIcon name="notes"/><span>备忘</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
   </section>;
 }
