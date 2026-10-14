@@ -12,6 +12,7 @@
  */
 import { CapacitorHttp, type HttpOptions, type HttpResponse } from '@capacitor/core';
 import { isNative } from '@/utils/native';
+import {assertLocalCredentialTarget} from '@/terminal/localAI';
 
 let nativeHosts = new Set<string>();
 let forceNativeForTest = false;
@@ -55,6 +56,12 @@ function normalizeHeaders(h: HeadersInit | undefined): Record<string, string> {
   for (const [k, v] of Object.entries(h)) out[k] = String(v);
   return out;
 }
+function localCredentialRequest(url:string,headers:Record<string,string>):boolean{
+  const authorization=Object.entries(headers).find(([name])=>name.toLowerCase()==='authorization')?.[1]??'';
+  if(!authorization.startsWith('Bearer dt-local-'))return false;
+  assertLocalCredentialTarget(url.replace(/\/(?:chat\/completions|models)$/,''),authorization.slice(7));
+  return true;
+}
 
 /**
  * 用原生层发一次请求并包成标准 Response：调用方的 resp.ok / status / text() / json() / headers.get() 照用。
@@ -65,6 +72,7 @@ export async function nativeFetch(url: string, init: RequestInit = {}): Promise<
   if (init.signal?.aborted) throw abortError();
   const method = (init.method ?? 'GET').toUpperCase();
   const headers = normalizeHeaders(init.headers);
+  const local=localCredentialRequest(url,headers);
   const contentType = Object.entries(headers).find(([k]) => k.toLowerCase() === 'content-type')?.[1] ?? '';
   let data: unknown = undefined;
   if (typeof init.body === 'string') {
@@ -74,7 +82,7 @@ export async function nativeFetch(url: string, init: RequestInit = {}): Promise<
   } else if (init.body != null) {
     throw new TypeError('Load failed (native): 原生通道只支持文本请求体');
   }
-  const req = nativeRequest({ url, method, headers, data, responseType: 'text', readTimeout: 180_000, connectTimeout: 30_000 });
+  const req = nativeRequest({ url, method, headers, data, responseType: 'text', readTimeout: 180_000, connectTimeout: 30_000,...(local?{disableRedirects:true}:{}) });
   let res: HttpResponse;
   try {
     res = init.signal
@@ -95,5 +103,6 @@ export async function nativeFetch(url: string, init: RequestInit = {}): Promise<
 
 /** fetch 的替身：原生主机（或 force）走原生通道，其余照旧 */
 export function aiFetch(url: string, init: RequestInit = {}, force?: boolean): Promise<Response> {
+  if(localCredentialRequest(url,normalizeHeaders(init.headers)))init={...init,redirect:'error'};
   return (force ?? isNativeHost(url)) ? nativeFetch(url, init) : fetch(url, init);
 }

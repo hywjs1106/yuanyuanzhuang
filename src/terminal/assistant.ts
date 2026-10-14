@@ -2,8 +2,9 @@ import { chatComplete, type AIConfig, type AIMessage } from '@/utils/aiClient';
 import { characterPersona, offlineConversation } from './persona';
 import { syncNativeHosts } from '@/utils/aiTransport';
 import { localDateKey, validDateKey, parseMoney } from './ledger';
-import { hasLedgerIntent, hasReminderIntent, parseLocalLedger, parseLocalReminder, unsafeCommand } from './assistantCommands';
+import { hasLedgerIntent, hasReminderIntent, parseLocalLedger, parseLocalReminder, unsafeCommand, shouldAutoExecute } from './assistantCommands';
 import { isKnownStickerId, stickerPromptCandidates, chooseOfflineSticker } from './stickerCatalog';
+import {assertLocalCredentialTarget} from './localAI';
 export { shouldAutoExecute } from './assistantCommands';
 export type Proposal = { kind: 'ledger'; direction:'income'|'expense'; amount:number; date:string; note?:string; type?:string } | {kind:'reminder';title:string;at:string;repeat:'none'|'daily'|'weekly'|'monthly'|'yearly'} | {kind:'note';text:string};
 export interface AssistantReply {reply:string;actions:Proposal[];stickerId?:string;}
@@ -55,8 +56,24 @@ export function buildAssistantMessages(text:string,context:string,history:AIMess
 export async function askAssistant(text:string,config:AIConfig|undefined,context:string,history:AIMessage[],signal:AbortSignal,transport:typeof chatComplete=chatComplete):Promise<AssistantReply> {
   if(signal.aborted) throw new DOMException('已停止','AbortError');
   if(!assistantConfigured(config)) return localAssistantReply(text);
+  assertLocalCredentialTarget(config.baseUrl,config.apiKey);
   syncNativeHosts([new URL(config.baseUrl).host]);
   const result=await transport({...config,provider:'custom',protocol:config.protocol??'openai'},buildAssistantMessages(text,context,history),{signal,timeoutMs:60000,maxTokens:2000,jsonMode:false});
   if(signal.aborted) throw new DOMException('已停止','AbortError');
-  return parseAssistantReply(result);
+  const reply=parseAssistantReply(result);
+  // A small local model may rephrase a task. Preserve the user's explicit title
+  // only when the local parser independently confirms the same date and repeat.
+  if(config.apiKey.startsWith('dt-local-')){
+    if(unsafeCommand(text))reply.actions=[];
+    const expected=parseLocalReminder(text);
+    if(expected)reply.actions=reply.actions.map(action=>action.kind==='reminder'&&action.at===expected.at&&action.repeat===expected.repeat?{...action,title:expected.title}:action);
+    // Do not depend on the small model remembering the action field. The same
+    // conservative parser used offline can recover a single explicit command;
+    // execution and completion receipts still belong to the application.
+    if(reply.actions.length===0&&!unsafeCommand(text)){
+      const local=localAssistantReply(text);
+      if(local.actions.length===1&&shouldAutoExecute(text,local.actions[0]))reply.actions=local.actions;
+    }
+  }
+  return reply;
 }
