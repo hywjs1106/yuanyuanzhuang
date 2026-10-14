@@ -9,14 +9,21 @@ try {
     if (-not (Get-NetIPAddress -InterfaceAlias 'WLAN' -AddressFamily IPv4 | Where-Object IPAddress -eq '192.168.10.2')) {throw 'Wi-Fi address changed'}
     $ruleName='DailyTerminal-LocalModel-TLS-11435'
     if (Get-NetFirewallRule -Name $ruleName -ErrorAction SilentlyContinue) {throw 'A rule with this name already exists; inspect it before changing anything'}
-    New-NetFirewallRule -Name $ruleName -DisplayName 'DailyTerminal local model (Wi-Fi only)' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 11435 -LocalAddress '192.168.10.2' -RemoteAddress '192.168.10.0/24' -InterfaceAlias 'WLAN' -Program 'C:/Program Files/nodejs/node.exe' -Profile Any | Out-Null
+    $nodeProgram=(Resolve-Path -LiteralPath 'C:\Program Files\nodejs\node.exe').ProviderPath
+    New-NetFirewallRule -Name $ruleName -DisplayName 'DailyTerminal local model (Wi-Fi only)' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 11435 -LocalAddress '192.168.10.2' -RemoteAddress '192.168.10.0/24' -InterfaceAlias 'WLAN' -Program $nodeProgram -Profile Any | Out-Null
     $createdRule=$true
     & (Join-Path $bridgeDir 'Start-LocalModel.ps1') -AllowLan
-    [IO.File]::WriteAllText($statusPath,'{"ok":true,"address":"192.168.10.2","port":11435}')
+    $rule=Get-NetFirewallRule -Name $ruleName
+    $portFilter=$rule | Get-NetFirewallPortFilter
+    $addressFilter=$rule | Get-NetFirewallAddressFilter
+    $interfaceFilter=$rule | Get-NetFirewallInterfaceFilter
+    $applicationFilter=$rule | Get-NetFirewallApplicationFilter
+    $status=@{ok=$true;address='192.168.10.2';port=11435;rule=@{name=$rule.Name;enabled=[string]$rule.Enabled;direction=[string]$rule.Direction;action=[string]$rule.Action;localPort=$portFilter.LocalPort;protocol=$portFilter.Protocol;localAddress=$addressFilter.LocalAddress;remoteAddress=$addressFilter.RemoteAddress;interfaceAlias=$interfaceFilter.InterfaceAlias;program=$applicationFilter.Program}}
+    [IO.File]::WriteAllText($statusPath,($status | ConvertTo-Json -Depth 6))
 } catch {
     $activationError=$_.Exception.Message
     if ($createdRule) {Remove-NetFirewallRule -Name $ruleName -ErrorAction SilentlyContinue}
     if ($createdRule) {try {& (Join-Path $bridgeDir 'Start-LocalModel.ps1')} catch {Write-Warning 'Localhost restart failed; no phone access was enabled'}}
-    [IO.File]::WriteAllText($statusPath,(@{ok=$false;error=$activationError} | ConvertTo-Json))
+    [IO.File]::WriteAllText($statusPath,(@{ok=$false;error=$activationError;line=$_.InvocationInfo.ScriptLineNumber} | ConvertTo-Json))
     throw
 }

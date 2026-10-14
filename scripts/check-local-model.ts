@@ -14,7 +14,7 @@ const profile=parseLocalAIConnection(JSON.parse(readFileSync('../电脑模型连
 const ca=readFileSync(privateConfig.tls.caPath);
 async function call(path:string,body:unknown,options:{trusted?:boolean;wrongName?:boolean;authorized?:boolean}={}){
   return new Promise<{status:number;data:any}>((resolve,reject)=>{
-    const req=request({hostname:'127.0.0.1',port:11435,path,agent:false,rejectUnauthorized:true,method:body?'POST':'GET',...(options.trusted===false?{}:{ca}),...(options.wrongName?{checkServerIdentity:(_host,cert)=>checkServerIdentity('wrong.invalid',cert)}:{}),headers:{'content-type':'application/json',...(options.authorized===false?{}:{Authorization:`Bearer ${profile.apiKey}`})}},res=>{
+    const req=request({hostname:privateConfig.listenHost,port:11435,path,agent:false,rejectUnauthorized:true,method:body?'POST':'GET',...(options.trusted===false?{}:{ca}),...(options.wrongName?{checkServerIdentity:(_host,cert)=>checkServerIdentity('wrong.invalid',cert)}:{}),headers:{'content-type':'application/json',...(options.authorized===false?{}:{Authorization:`Bearer ${profile.apiKey}`})}},res=>{
       const chunks:Buffer[]=[];res.on('data',chunk=>chunks.push(chunk));res.on('end',()=>{try{resolve({status:res.statusCode??0,data:JSON.parse(Buffer.concat(chunks).toString('utf8'))});}catch(error){reject(error);}});
     });req.on('error',reject);req.setTimeout(55000,()=>req.destroy(new Error('测试超时')));if(body)req.write(JSON.stringify(body));req.end();
   });
