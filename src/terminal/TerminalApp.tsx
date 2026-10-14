@@ -24,6 +24,7 @@ import {BottomNavigation,type TerminalPage} from './BottomNavigation';
 const TerminalAlarms=registerPlugin<{check:()=>Promise<{granted:boolean}>;request:()=>Promise<{granted:boolean}>}>('TerminalAlarms');
 type Page=TerminalPage;
 export default function TerminalApp(){
+  const [navigationMotion,setNavigationMotion]=useState(false);
   const [page,setPage]=useState<Page>('today');const [ready,setReady]=useState(false);const [fatal,setFatal]=useState('');const [notice,setNotice]=useState('');const [note,setNote]=useState('');const [date,setDate]=useState(localDateKey());const [notif,setNotif]=useState<ReminderNotificationStatus>();const [exact,setExact]=useState<boolean>();const [keyboardOpen,setKeyboardOpen]=useState(false);
   const entries=useLiveQuery(()=>terminalDb.entries.toArray(),[],[]);const reminders=useLiveQuery(()=>terminalDb.reminders.toArray(),[],[]);const notes=useLiveQuery(()=>terminalDb.notes.orderBy('createdAt').reverse().toArray(),[],[]);const messages=useLiveQuery(()=>terminalDb.messages.orderBy('createdAt').toArray(),[],[]);const settings=useLiveQuery(()=>terminalDb.settings.get('main'),[])??defaultSettings;
   const summary=summarizeLedger(entries??[],date.slice(0,7));
@@ -59,11 +60,11 @@ export default function TerminalApp(){
   if(!ready)return <main className="terminal-shell"><p role="status">正在打开你的日常终端…</p></main>;
   const upcoming=(reminders??[]).map(r=>({r,at:nextReminderOccurrence(r)})).filter((x):x is {r:Reminder;at:Date}=>!!x.at).sort((a,b)=>a.at.getTime()-b.at.getTime()).slice(0,4);
   const reminderCount=(reminders??[]).filter(r=>r.enabled&&!!nextReminderOccurrence(r)).length;
-  const navigate=(next:Page)=>{setPage(next);window.scrollTo({top:0,behavior:'instant'});};
+  const navigate=(next:Page)=>{if(next!==page){setNavigationMotion(true);setPage(next);}window.scrollTo({top:0,behavior:'instant'});};
   const weatherPanel=<WeatherPanel config={settings.weather??{provider:'openmeteo'}} onConfigChange={weather=>updateSettings({...settings,weather})} onBundleChange={weatherUpdated}/>;
   return <div className={`terminal-shell ${page==='assistant'?'is-assistant':''} ${keyboardOpen?'keyboard-open':''}`}><header className="terminal-header"><div className="terminal-brand"><svg className="brand-sigil" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 3h24v7H11v5h13v7H11v7H4z" fill="currentColor"/><path d="M25 25h3v4h-3z" fill="currentColor"/></svg><h1>日常终端</h1></div><span className="terminal-header-state">{assistantConfigured(settings.ai)?'AI 已配置':'离线助手'}</span><button className="theme-button" aria-label="切换深浅模式" onClick={()=>void updateSettings({...settings,theme:settings.theme==='dark'?'light':'dark'}).catch(e=>setNotice(String(e)))}>{settings.theme==='dark'?'浅色':'深色'}</button></header>
     {notice&&<div className="notice toast" role="status"><p>{notice}</p><button aria-label="关闭提示" onClick={()=>setNotice('')}>关闭</button></div>}
-    <main className={`terminal-content page-${page}`}>
+    <main key={page} className={`terminal-content page-${page}${navigationMotion?' route-enter':''}`}>
     {page==='today'&&<><OverviewPanel date={date} reminderCount={reminderCount} expense={summary.expense} balance={summary.balance} budget={settings.budget} almanacSummary={getAlmanacSummary(date)} onNavigate={navigate} agenda={<section className="overview-agenda"><div className="panel-heading"><h2>接下来</h2><button onClick={()=>navigate('reminders')}>管理提醒</button></div>{upcoming.length?upcoming.slice(0,1).map(({r,at})=><button className="agenda-item" key={r.id} onClick={()=>navigate('reminders')}><span>{r.title}</span><time>{at.toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}</time></button>):<p className="muted">目前没有即将到来的提醒。</p>}</section>}/>
 <WeatherPanel compact onOpen={()=>navigate('weather')} config={settings.weather??{provider:'openmeteo'}} onConfigChange={weather=>updateSettings({...settings,weather})} onBundleChange={weatherUpdated}/></>}
     {page==='ledger'&&<LedgerPanel entries={entries??[]} onSave={saveEntry} onDelete={async id=>{await terminalDb.entries.delete(id);}}/>}

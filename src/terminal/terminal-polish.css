@@ -2,6 +2,12 @@
 :root { --radius-input: 4px; --navigation-height: 76px; }
 .terminal-shell { padding-top: calc(16px + env(safe-area-inset-top)); }
 .terminal-shell button { min-height: 48px; font-weight: 500; }
+/* New content arrives immediately; only the signal mark fades, never reading text. */
+.terminal-content.route-enter { position:relative; animation:terminal-route-enter 190ms cubic-bezier(.16,1,.3,1); }
+.terminal-content.route-enter::before { content:''; position:absolute; top:0; left:-8px; width:1px; height:48px; background:var(--accent); transform-origin:top; pointer-events:none; opacity:0; animation:terminal-route-signal 190ms ease-out; }
+@keyframes terminal-route-enter { from { transform:translateX(6px); } to { transform:translateX(0); } }
+@keyframes terminal-route-signal { 0% { opacity:1; transform:scaleY(.25); } 50% { opacity:1; transform:scaleY(1); } 100% { opacity:0; transform:scaleY(1); } }
+@media(prefers-reduced-motion:reduce) { .terminal-content.route-enter,.terminal-content.route-enter::before { animation:none!important; } }
 /* Feedback keeps hit regions still: only the control's contents respond. */
 .terminal-shell .button-row button,
 .terminal-shell .panel-heading > button { border-radius:8px 3px 8px 3px; }
