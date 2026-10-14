@@ -7,3 +7,5 @@ Calendar: lunar-javascript, Copyright (c) 2019 6tail, MIT license. https://githu
 Weather: attribution to selected service is shown on the weather page.
 
 Font: Noto Sans SC subset, Copyright Adobe/Google; SIL Open Font License 1.1. See fonts/OFL.txt.
+
+0.3 local personal build includes sourced character portrait and user-linked fan stickers. They are not under the application GPL license. See characters/SOURCES.txt for authors and source links.

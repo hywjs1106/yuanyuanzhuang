@@ -1,3 +1,65 @@
-/* Hallmark · industrial command terminal · original geometry */
-:root{--color-base:oklch(91% .006 110);--color-paper:oklch(97% .004 110);--color-panel-end:oklch(93% .005 110);--color-paper-2:oklch(89% .008 110);--color-paper-3:oklch(84% .01 110);--color-ink:oklch(23% .009 110);--color-ink-2:oklch(43% .01 110);--color-rule:oklch(72% .009 110);--color-rule-strong:oklch(47% .008 110);--color-accent:oklch(91% .18 104);--color-accent-ink:oklch(19% .015 110);--color-focus:oklch(43% .13 215);--color-communication:oklch(40% .075 220);--color-error:oklch(44% .17 26);--color-success:oklch(40% .095 152);--color-overlay:oklch(15% .01 110 / .72);--color-shadow:oklch(15% .01 110 / .12);--color-clear:transparent;--color-glass:oklch(96% .005 110 / .96);--color-topography:oklch(59% .02 110 / .12);--font-body:"Terminal Sans","Segoe UI","Microsoft YaHei",system-ui,sans-serif;--font-display:"Bahnschrift","DIN Alternate","Arial Narrow","Terminal Sans","Microsoft YaHei",sans-serif;--font-mono:"Consolas","SFMono-Regular",ui-monospace,monospace;--space-xs:8px;--space-sm:12px;--space-md:16px;--space-lg:24px;--space-xl:32px;--radius-input:2px;--navigation-height:76px;--ease-out:cubic-bezier(.16,1,.3,1);--ease-in:cubic-bezier(.7,0,.84,0);--ease-in-out:cubic-bezier(.65,0,.35,1);--dur-short:140ms;--paper:var(--color-paper);--ink:var(--color-ink);--muted:var(--color-ink-2);--line:var(--color-rule);--accent:var(--color-accent);--error:var(--color-error)}
-:root[data-terminal-theme=dark]{--color-base:oklch(18% .006 110);--color-paper:oklch(26% .007 110);--color-panel-end:oklch(22% .006 110);--color-paper-2:oklch(30% .009 110);--color-paper-3:oklch(36% .01 110);--color-ink:oklch(94% .005 110);--color-ink-2:oklch(74% .008 110);--color-rule:oklch(43% .008 110);--color-rule-strong:oklch(66% .012 110);--color-focus:oklch(83% .12 215);--color-communication:oklch(83% .08 220);--color-error:oklch(78% .12 26);--color-success:oklch(80% .1 152);--color-shadow:oklch(5% .005 110 / .3);--color-glass:oklch(22% .007 110 / .96);--color-topography:oklch(68% .025 110 / .09)}
+/* Endfield-inspired functional palette: warm paper, carbon, signal yellow. */
+:root {
+  --color-base: #efefe9;
+  --color-paper: #fafaf6;
+  --color-panel-end: #fafaf6;
+  --color-paper-2: #e4e4dc;
+  --color-paper-3: #d6d6cc;
+  --color-ink: #20221f;
+  --color-ink-2: #60635a;
+  --color-rule: #c3c5ba;
+  --color-rule-strong: #73786a;
+  --color-accent: #e8ef20;
+  --color-accent-ink: #20221f;
+  --color-focus: #697200;
+  --color-communication: #166a78;
+  --color-error: #ab3028;
+  --color-success: #28633e;
+  --color-overlay: #151813b8;
+  --color-shadow: #20221f16;
+  --color-clear: transparent;
+  --color-glass: #fafaf6;
+  --color-topography: #20221f0a;
+  --color-carbon: #242824;
+  --color-on-carbon: #f5f5eb;
+  --color-on-carbon-muted: #c3c8ba;
+  --font-body: "Terminal Sans", "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+  --font-display: "Terminal Sans", "Bahnschrift", "DIN Alternate", sans-serif;
+  --font-mono: "Consolas", "SFMono-Regular", ui-monospace, monospace;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --radius-input: 0px;
+  --navigation-height: 82px;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-in: cubic-bezier(.7, 0, .84, 0);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --dur-short: 140ms;
+  --paper: var(--color-paper);
+  --ink: var(--color-ink);
+  --muted: var(--color-ink-2);
+  --line: var(--color-rule);
+  --accent: var(--color-accent);
+  --error: var(--color-error);
+}
+:root[data-terminal-theme=dark] {
+  --color-base: #181c19;
+  --color-paper: #242924;
+  --color-panel-end: #242924;
+  --color-paper-2: #30362e;
+  --color-paper-3: #41483b;
+  --color-ink: #f0f1e8;
+  --color-ink-2: #b2b9a8;
+  --color-rule: #485140;
+  --color-rule-strong: #818c74;
+  --color-focus: #e8ef20;
+  --color-communication: #91d6df;
+  --color-error: #ffa090;
+  --color-success: #a5d8a9;
+  --color-shadow: #00000024;
+  --color-glass: #242924;
+  --color-topography: #f0f1e80a;
+  --color-carbon: #101511;
+}

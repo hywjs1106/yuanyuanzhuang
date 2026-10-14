@@ -1,0 +1,11 @@
+Character material provenance — personal DailyTerminal build
+
+fangyi-avatar.png: game character Zhuang Fangyi portrait, located through Wanye-7300/baker-dx asset path assets/extracted/avatar/operator/icon_round_chr_0030_zhuangfy.png.
+Source: https://github.com/Wanye-7300/baker-dx
+Game artwork rights remain with their respective owners. The repository code license is not treated as an artwork license.
+
+fangyi-working.gif and fangyi-peek.gif: public animated fan stickers by 夏雪NazuYuki, from the user supplied collection. Original files retained without modification.
+Source: https://www.bilibili.com/opus/1193389820389359623
+No general open-source artwork license was identified; these files are excluded from the GPL code license. Do not infer permission for public redistribution from this provenance record.
+
+This local build was created for the user's personal use. No private desktop theme download, private messaging, account login, or publication was performed.

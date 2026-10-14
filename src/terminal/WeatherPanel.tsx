@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { searchCity, weatherReady, weatherEmoji, attributionLabel, type WeatherCity } from '../utils/weather';
 import { fetchWeatherBundle, rainGuidance, readWeatherCache, weatherFreshness, writeWeatherCache, type WeatherBundle, type WeatherConfig } from './weather';
-export interface WeatherPanelProps { config: WeatherConfig; onConfigChange: (cfg:WeatherConfig)=>Promise<void>; onBundleChange?:(bundle:WeatherBundle)=>void; }
+export interface WeatherPanelProps { config: WeatherConfig; onConfigChange: (cfg:WeatherConfig)=>Promise<void>; onBundleChange?:(bundle:WeatherBundle)=>void; compact?:boolean; onOpen?:()=>void; }
 const message = (e:unknown) => e instanceof Error ? e.message : '天气服务暂时不可用';
 
-export function WeatherPanel({config,onConfigChange,onBundleChange}:WeatherPanelProps) {
+export function WeatherPanel({config,onConfigChange,onBundleChange,compact=false,onOpen}:WeatherPanelProps) {
   const [draft,setDraft] = useState<WeatherConfig>({...config,provider:config.provider ?? 'openmeteo'});
   const [query,setQuery] = useState('');
   const [cities,setCities] = useState<WeatherCity[]>([]);
@@ -53,6 +53,7 @@ export function WeatherPanel({config,onConfigChange,onBundleChange}:WeatherPanel
   }
   const stale = bundle ? weatherFreshness(bundle.fetchedAt,clock)==='stale' || weatherFreshness(bundle.now.observedAt.toISOString(),clock)==='stale' : true;
   const viewDays = bundle?.days.filter(day=>day.date >= new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit'}).format(clock)) ?? [];
+  if(compact)return <section className="overview-weather" aria-label="天气摘要"><div className="overview-weather-main"><div><h2>天气{config.city?` · ${config.city.name}`:''}</h2><p>{bundle?`${bundle.now.text} · 体感 ${bundle.now.feelsLike}°`:loading?'正在获取天气…':config.city?'暂无有效数据':'选择城市，看看今日天气'}</p></div>{bundle&&<strong>{bundle.now.temp}°</strong>}</div>{bundle&&<p className="muted">{stale?'上次数据已过时 · ':cached?'上次有效结果 · ':''}{rainGuidance(viewDays,stale)}</p>}{error&&<p role="alert">{error}{bundle?'，保留上次结果':''}</p>}<button type="button" onClick={onOpen}>查看天气</button></section>;
   return <section className="terminal-panel weather-panel" aria-labelledby="weather-heading">
     <header className="panel-heading"><div><p className="eyebrow">所选城市 · 无需定位权限</p><h2 id="weather-heading">天气{config.city ? ` · ${config.city.name}` : ''}</h2></div><button type="button" disabled={loading || !weatherReady({...config,provider})} onClick={()=>setRefresh(v=>v+1)}>{loading?'更新中…':'刷新天气'}</button></header>
     {error && <p className="error-message" role="alert">{error}{bundle ? '。保留上次有效结果。' : ''}</p>}

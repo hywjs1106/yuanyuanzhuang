@@ -1,38 +1,38 @@
-# 日常终端 · mechanical command console
+# 日常终端 · Endfield functional panels
 
-This locked visual system applies to all eight existing pages. User data and confirmed-action behavior belong to the existing application. The reference is the supplied Endfield hub screenshots, adapted as original CSS and SVG geometry. No game screenshots, logos, character art, coordinates, connection latency, or invented operational metrics ship in the app.
+The user pinned Arknights: Endfield as the visual world and rejected the previous generic grey industrial treatment. This redesign preserves the existing local data, forms, page destinations, assistant confirmation behavior and notification behavior. The application is an everyday tool in Operate mode; real information stays ahead of decoration.
 
-## Visual DNA
+## Reference evidence
 
-Portrait command console: compact identity and truthful status strip, narrow route rail, a working area of metal-toned panels, five fixed bottom destinations. The overview combines real amounts with a compact circular instrument. Other pages lead with their actual forms, records, calendar details or conversation; they do not repeat a decorative hero.
+- Supplied `references/game-main-menu.jpg` and `references/game-hub-menu.png`: large pale functional planes against carbon, yellow action plates, bold legible amounts, displaced panel corners and clear selected modules.
+- [Wanye-7300/baker-dx](https://github.com/Wanye-7300/baker-dx), including the locally reviewed `references/baker-preview.png`: an actual character portrait anchors the conversation; the contact/header rail and message plane are distinct regions. The chat surface follows that composition rather than a generic assistant card.
+- [VBeatDead/ReEnd-Components](https://github.com/VBeatDead/ReEnd-Components): tactical panel corner and geometric frame vocabulary, adapted as original CSS rather than copying project assets.
+- [Yue-plus/astro-endfield](https://github.com/Yue-plus/astro-endfield): Endfield website reference for a crisp black, offwhite and yellow hierarchy.
 
-Signal yellow denotes selected navigation and primary actions. Cool cyan identifies assistant communication and input. Neutral charcoal and warm grey hold the interface; light mode reverses the same hierarchy into pale metal. Thin contour lines, segmented circle scales, alignment rails, top-edge breaks and square module controls establish the mechanical voice. No neon bloom or continuous scanning animation.
+Game character imagery, when present, is a verified source asset rather than a recreated SVG person. The header uses an original geometric sigil rather than the official logo. No fictional coordinates, latency, service connection status or operational metrics are introduced.
+
+## Direction contract
+
+The first viewport is a calendar masthead, a dark portrait conversation rail and a ledger plane. Today's real date is oversize and the overview heading stays upright and direct. The 64px portrait and greeting lead straight into the assistant. Monthly expense is the dominant real figure; budget remaining or balance is secondary. The cut-corner yellow record plate names its action. Upcoming reminders are simple ruled rows and weather is a light horizontal function rail, with any stale-data notice or error below its main line. There is no repeated boxed card hero or decorative circular instrument in the overview.
+
+Across the application, pale flat working surfaces use restrained broken corner geometry and top rules. Nested forms remain open divided regions. Dark mode uses deep green charcoal rather than washed-out grey. Selected bottom navigation is a solid yellow module with a cut corner, large enough to carry the entire active destination. Cyan is reserved for conversation affordances where the dedicated chat surface uses it. Yellow marks working selection and primary action.
 
 ## Tokens and typography
 
-`src/terminal/terminal-tokens.css` is the semantic palette and timing source; `terminal.css` imports it. Color roles are base, paper, panel-end, paper-2, paper-3, ink, ink-2, rule, rule-strong, accent, accent-ink, focus, communication, error, success, overlay, shadow, clear, glass and topography. Dark mode overrides roles using `data-terminal-theme="dark"`.
+`src/terminal/terminal-tokens.css` owns shared semantic colors, fonts and timing. Palette roles cover base, paper, panel-end, paper-2, paper-3, ink, ink-2, rule, rule-strong, accent, accent-ink, focus, communication, error, success, overlay, shadow, clear, glass, topography, carbon, on-carbon and on-carbon-muted. Dark mode overrides these through `data-terminal-theme="dark"`. The portrait rail retains high-contrast carbon and pale text in both themes.
 
-Display uses installed Bahnschrift/DIN with bundled Terminal Sans for Chinese; body uses the bundled OFL Noto Sans SC subset. Mono uses installed Consolas/system monospace. Every font/color declaration consumes a named token except the local @font-face registration. No external font request. Headings remain upright. Amounts use tabular numbers; body copy stays comfortably readable.
+The bundled OFL Terminal Sans Chinese font carries body and display typography, with installed platform fallbacks. No external font request is made. Chinese headings use substantial weight, amounts and dates use tabular numbers, status copy stays at 11px, ordinary content uses 13–15px. Monospace is available only for meaningful measurement or code and does not costume the shell.
 
-## Navigation and responsive contract
+## Navigation, responsive and interaction contract
 
-Five bottom destinations: 今日, 记账, 助手, 提醒, 更多. Assistant has a distinctive cyan communication socket; yellow marks its active state. More opens a native modal dialog with 天气, 黄历, 备忘, 设置, and marks itself current for secondary pages. Native dialog supplies focus containment; Escape, close, backdrop and the cancelable window `terminal-back` event dismiss it and restore focus to More. Root native Back handling dispatches that event and stops navigation when defaultPrevented is true.
+The five fixed destinations remain 今日, 记账, 助手, 提醒, 更多. More supplies the existing native modal with 天气, 黄历, 备忘 and 设置, including focus restoration and native Back dismissal. The shell reserves an 82px navigation height plus clearance and safe-area insets. The keyboard state hides the navigation and removes its clearance.
 
-Controls are at least 44px high; bottom destinations are 60px high. Safe-area padding is included above and below. Shell reserves navigation height plus 32px; keyboardOpen hides navigation and root `.keyboard-open` removes its clearance. Max shell width is 820px. Grid tracks use minmax(0,1fr); 320, 375, 414 and 768px must have no horizontal overflow. Textareas remain normal document controls and can scroll into view above the keyboard.
+The shell is at most 820px wide. Grid tracks use `minmax(0,1fr)`, long values can wrap, and 320px layouts use compact space without reducing primary controls below 44px. At 600px the finance plane becomes one horizontal region instead of stacked equal-size cards. The dedicated assistant surface owns its chat CSS; legacy chat styles in `terminal.css` are explicitly scoped to `.page-assistant > .panel`.
 
-## State and motion
+Focus rings, selection, caret and scrollbar colors consume the same palette. Hover, pressed, disabled, loading, error and success states remain functional. Motion is limited to brief color changes and a 1px pressed response, removed for reduced motion. No decorative scrolling, scanning or glow is present.
 
-Default, hover, focus-visible, active, disabled, loading, error and success styles are present. Focus rings appear instantly; motion is limited to a 1px pressed response and explicit short color transitions. Reduced motion removes pressed movement and transitions. Existing errors, saved states and disabled controls retain their meaning; no celebration or simulated service status is added.
+## Integration and verification scope
 
-## Integration
+Root owns `TerminalApp.tsx`, the actual overview content and route state. The styling contract is `.overview-topline`, `.overview-date`, `.overview-message`, `.overview-finance`, `.overview-expense`, `.overview-remaining`, `.overview-record`, `.overview-agenda` and `.overview-weather`. Existing `.panel`, form, ledger, reminder, weather, almanac, notes and settings classes are retained. `TerminalInstrument` stays exported for existing independent consumers but is not mounted in the overview.
 
-- `BottomNavigation({currentPage,onNavigate,keyboardOpen?})`; exported TerminalPage includes all eight existing pages.
-- `TerminalStatusStrip({date,reminderCount,aiConfigured})`; caller provides actual local date, pending reminder count and configuration state. Configuration is never presented as a verified live connection.
-- `TerminalInstrument({expense,budget,reminderCount})`; bounded budget ratio when budget exists, otherwise pending reminder count. Original SVG contour art is decorative; equivalent real values are visible and available in the accessible label.
-- Overview `.hero-body`/`.hero-copy` layout is shared with `.today-command`. Existing panel, form, list, assistant and weather classes are preserved.
-
-## Verification record
-
-Focused navigation SSR tests check five destinations, More selection for secondary pages and honest budget overspend values. Browser inspection at 375px verified light/dark overview and More sheet; Escape restored More focus. All eight pages at 320, 375, 414 and 768px matched document width to viewport. The 320px assistant surface was visually reviewed. The cancelable terminal-back event was consumed when the sheet was open. Root owns the complete page/browser regression suite, keyboard/native testing and APK packaging.
-
-Hallmark self-critique: Philosophy 5, Hierarchy 4, Execution 4, Specificity 5, Restraint 4, Variety 4. User-requested game menu shape intentionally permits compact framed modules and yellow edge markers; application function remains primary.
+This CSS change was checked against the actual overview and compact weather markup. Root performs the build, page regressions, bounded light/dark browser review and 320px overflow checks after merging the independently owned changes. Earlier verification records for the discarded grey design do not certify this replacement.

@@ -99,3 +99,34 @@ test('Android resized WebView hides the dock while editing and restores it after
  await page.evaluate(()=>{Object.defineProperty(window,'innerHeight',{configurable:true,value:844});Object.defineProperty(window.visualViewport!,'height',{configurable:true,value:844});window.dispatchEvent(new Event('resize'));});
  await expect(page.getByRole('navigation',{name:'功能导航'})).toBeVisible();
 });
+
+test('character portrait and expressions load locally without changing saved conversations',async({page})=>{
+ await page.goto('/');await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'助手',exact:true}).click();
+ const avatar=page.getByRole('img',{name:'庄方宜头像',exact:true}).first();await expect(avatar).toBeVisible();await expect.poll(()=>avatar.evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBeTruthy();
+ await page.getByRole('button',{name:'方宜表情',exact:true}).click();await page.getByRole('button',{name:'播放探头表情',exact:true}).click();
+ const expression=page.getByRole('img',{name:'方宜探头表情',exact:true});await expect(expression).toBeVisible();await expect.poll(()=>expression.evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBeTruthy();
+ await page.getByRole('button',{name:'停止表情',exact:true}).click();await expect(expression).toHaveCount(0);
+ await page.getByLabel('和方宜说说').fill('你好');await page.getByRole('button',{name:'发送',exact:true}).click();await expect(page.getByText(/管理员，我在/)).toBeVisible();
+ await expect(page.locator('.chat-message.user')).toHaveCount(1);await expect(page.locator('.chat-message.assistant')).toHaveCount(1);await page.reload();await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'助手',exact:true}).click();await expect(page.getByText(/管理员，我在/)).toBeVisible();await expect(page.getByRole('button',{name:'确认保存',exact:true})).toHaveCount(0);
+});
+test('long conversations remain readable at 320px with visible composer and reduced motion',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});await page.setViewportSize({width:320,height:740});await page.goto('/');await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'助手',exact:true}).click();
+ await page.getByLabel('和方宜说说').fill('今天有点累，'+ '这是一段很长的日常感想。'.repeat(25));await page.getByRole('button',{name:'发送',exact:true}).click();await expect(page.getByText(/先歇一歇也无妨/)).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+ await page.getByRole('button',{name:'方宜表情',exact:true}).click();await expect(page.getByRole('img',{name:'方宜忙碌表情',exact:true})).toHaveCount(0);await expect(page.getByRole('img',{name:'方宜探头表情',exact:true})).toHaveCount(0);
+});
+
+test('all eight surfaces fit narrow phones and new replies respect the reader',async({page})=>{
+ await page.goto('/');
+ for(const width of [320,414]){await page.setViewportSize({width,height:740});for(const name of ['今日','记账','提醒','助手','天气','黄历','备忘','设置']){if(['天气','黄历','备忘','设置'].includes(name))await more(page,name);else await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name,exact:true}).click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${name} ${width}px`).toBeTruthy();}}
+ await page.setViewportSize({width:390,height:844});await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'助手',exact:true}).click();
+ await page.getByLabel('和方宜说说').fill('这是一段历史消息。'.repeat(90));await page.getByRole('button',{name:'发送',exact:true}).click();await expect(page.locator('.chat-message.assistant')).toHaveCount(1);
+ const log=page.getByRole('log',{name:'聊天记录'});await log.evaluate(el=>{el.scrollTop=0;el.dispatchEvent(new Event('scroll'));});
+ await page.getByLabel('和方宜说说').fill('你好');await page.getByRole('button',{name:'发送',exact:true}).click();await expect(page.getByRole('button',{name:'最新消息',exact:true})).toBeVisible();expect(await log.evaluate(el=>el.scrollTop)).toBeLessThan(10);
+ await page.getByRole('button',{name:'最新消息',exact:true}).click();await expect(page.getByRole('button',{name:'最新消息',exact:true})).toHaveCount(0);expect(await log.evaluate(el=>el.scrollHeight-el.clientHeight-el.scrollTop)).toBeLessThan(10);
+ await page.getByRole('button',{name:'方宜表情',exact:true}).click();await page.getByRole('button',{name:'播放忙碌表情',exact:true}).click();await expect(page.getByRole('img',{name:'方宜忙碌表情',exact:true})).toBeVisible();await page.screenshot({path:'test-results/assistant-expression.png'});await expect(page.getByRole('img',{name:'方宜忙碌表情',exact:true})).toHaveCount(0,{timeout:6500});
+});
+
+test('expression controls cannot clip the composer in a short keyboard viewport',async({page})=>{
+ await page.goto('/');await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'助手',exact:true}).click();await page.getByRole('button',{name:'方宜表情',exact:true}).click();await page.getByLabel('和方宜说说').focus();await page.setViewportSize({width:390,height:400});
+ await expect(page.getByRole('navigation',{name:'功能导航',includeHidden:true})).toBeHidden();const panel=await page.getByRole('region',{name:'与庄方宜的对话'}).boundingBox();const composer=await page.getByLabel('和方宜说说').boundingBox();expect(composer!.y+composer!.height).toBeLessThanOrEqual(panel!.y+panel!.height);expect(composer!.y+composer!.height).toBeLessThanOrEqual(400);
+});
