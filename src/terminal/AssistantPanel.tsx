@@ -6,6 +6,7 @@ import type {Message} from './ledger';
 import {executeAssistantActions} from './assistantExecution';
 import {StickerMessage} from './StickerMessage';
 import {StickerPicker} from './StickerPicker';
+import {TerminalIcon} from './TerminalVisuals';
 export function AssistantPanel({config,context,messages,onMessage,onConfirm}:{config:AIConfig|undefined;context:string;messages:Message[];onMessage:(message:Message)=>Promise<void>;onConfirm:(proposal:Proposal,operationId?:string,signal?:AbortSignal)=>Promise<string|void>}){
   const [text,setText]=useState('');const [pending,setPending]=useState<AssistantReply>();const [states,setStates]=useState<Record<number,string>>({});const [busy,setBusy]=useState(false);const [error,setError]=useState('');const ctrl=useRef<AbortController>();const mounted=useRef(true);const inFlight=useRef(new Set<string>());const batch=useRef('');const [newReply,setNewReply]=useState('');const [preview,setPreview]=useState<string>();
   useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;ctrl.current?.abort();};},[]);
@@ -43,7 +44,7 @@ export function AssistantPanel({config,context,messages,onMessage,onConfirm}:{co
     <header className="fangyi-contact">
       <div className="fangyi-portrait-frame"><img src="/characters/fangyi-avatar.png" alt="庄方宜头像" width="64" height="64"/></div>
       <div className="fangyi-contact-copy"><h2>{characterPersona.name}</h2><p>{characterPersona.badge} · 武陵</p><span className="fangyi-config">{assistantConfigured(config)?'AI 已配置':'离线预设'}</span></div>
-      <div className="fangyi-signal-stamp" aria-hidden="true"><svg viewBox="0 0 92 62"><defs><pattern id="baker-dots" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".7"/></pattern></defs><path d="M0 0h92v62H0z" fill="url(#baker-dots)" opacity=".3"/><path d="M0 0h10v10H0zM10 10h10v10H10zM0 20h10v10H0zM0 52h10v10H0z"/><circle cx="52" cy="23" r="10"/><path d="M36 52v-8a16 16 0 0 1 32 0v8z"/><path d="M75 6v50M80 6v50M85 6v50" fill="none" stroke="currentColor" strokeWidth="1"/></svg></div>
+      <div className="fangyi-signal-stamp" aria-hidden="true"><TerminalIcon name="assistant"/></div>
     </header>
     <p className="fangyi-chat-notice">说清事项就能记账、安排提醒；有歧义时，方宜会再问你。</p>
     <div className="chat-log" ref={log} role="log" aria-label="聊天记录" aria-live="polite" onScroll={()=>{const el=log.current;if(el){nearBottom.current=el.scrollHeight-el.scrollTop-el.clientHeight<64;if(nearBottom.current)setUnread(false);}}}>

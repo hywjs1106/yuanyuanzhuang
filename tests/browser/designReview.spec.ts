@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {mkdirSync,copyFileSync} from 'node:fs';
-const out='../references/ui-06-1';
+const out='../references/ui-07';
 test('eight surfaces retain task entry points in the new visual system',async({page,browser})=>{
  mkdirSync(out,{recursive:true});await page.goto('/');
  await page.screenshot({path:`${out}/home.png`});const agenda=await page.locator('.overview-agenda').boundingBox();const dock=await page.locator('.bottom-navigation').boundingBox();expect(agenda!.y+agenda!.height).toBeLessThan(dock!.y);

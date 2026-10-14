@@ -208,3 +208,11 @@ components:
 - **Don't** 把装饰地形解释为真实定位、地图或遥测。
 - **Don't** 用首页重复摘要堆叠遮住联系人与最近安排。
 - **Don't** 将浏览器预览当作原生安装或通知送达验证。
+
+## 0.6.3 refinement
+
+The four external corner plates use a single edge and a small corner mark, with a 24px glyph, 15px title and 12px meaningful helper. Circle/time separation and reduced-motion rules stay unchanged. Fine SVG ledger/chat/bell/weather glyphs keep 3–21 optical bounds.
+
+Fangyi remains the chat identity. The oversized anonymous cyan stamp is replaced by one small communication glyph; character status is honest. Body text is15px with1.85 line-height, quiet12px status labels, softer incoming/outgoing bubble corners. Keyboard state compresses the header and hides only explanatory copy, preserving composer and scrollable sticker/gallery content.
+
+The five navigation destinations use24pxglyphs and12pxlabels with one selected surface/yellow indicator; hover does not create a second selected-looking tile. Primary business-page actions use signalyellow. Other functional rows, databases, native reminders and AI execution guards are unchanged.
