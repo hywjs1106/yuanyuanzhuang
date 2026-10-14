@@ -1,4 +1,4 @@
-/* A real local clock in the center; four independent controls on the outer corners. */
+/* Time and date share the header; the animated terrain stays unobstructed. */
 .overview-hub{--hub-ground:#1f292b;--hub-contour:#adbbb0;--hub-land:#647664;--hub-land-side:#34473c;--hub-lowland:#3f5553;position:relative;margin-bottom:18px}
 .hub-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:18px 0 12px}
 .overview-hub h2{font-size:23px;font-weight:600;margin:0;letter-spacing:-.02em}
@@ -18,9 +18,6 @@
 .hub-clock{pointer-events:none;color:#f5f6ee;z-index:1}
 .hub-clock-dial{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#b8c3bc;stroke-width:.7}.hub-clock-dial>circle{stroke:#cbd4c0;stroke-width:1}.clock-major-tick{stroke:#f4f6df;stroke-width:1.3}
 .hub-clock-hand{position:absolute;inset:0;border-radius:50%}.hub-clock-hand i{position:absolute;width:3px;height:13px;left:calc(50% - 1.5px);top:4px;background:#e8ef20;border-radius:1px}
-.hub-clock-face{position:absolute;inset:24%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#172123ee;box-shadow:0 0 0 1px #93a9a562;gap:6px}
-.hub-clock-face>span{font-size:9px;letter-spacing:.04em;color:#c5d6d0;white-space:nowrap}.hub-clock time{display:flex;align-items:baseline;gap:3px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.hub-clock time b{font-size:27px;line-height:1.1;font-weight:500;letter-spacing:-.035em}.hub-clock time .clock-second-value{font-size:13px;font-weight:500;color:#e8ef20;min-width:15px;animation:clock-tick-in 240ms ease-out}.hub-clock-face>.clock-caption{font-size:8px;letter-spacing:0;color:#afc1b7}
 @keyframes clock-tick-in{from{transform:translateY(3px);opacity:.6}to{transform:translateY(0);opacity:1}}
 .hub-modules{position:absolute;inset:0;pointer-events:none;z-index:2}
 .overview-hub .hub-plate{position:absolute;pointer-events:auto;width:108px;min-height:60px;max-width:37%;padding:11px 10px;border:1px solid var(--color-rule-strong);background:var(--paper);color:var(--ink);border-radius:4px;box-shadow:none;white-space:normal;text-align:left}
@@ -35,7 +32,7 @@
 .hub-reminder-count{font-size:11px;margin:0 0 6px;color:var(--muted)}
 .hub-finance{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:10px 0 14px;border-bottom:1px solid var(--line)}.hub-finance>div{min-width:0}.hub-finance>div>span{font-size:11px;color:var(--muted)}.hub-finance strong{display:block;font-size:21px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.7;overflow-wrap:anywhere}.hub-finance strong small{font-size:12px;font-weight:400;margin-right:3px}.hub-finance .hub-over-budget{color:var(--error)}
 .overview-hub .hub-almanac{display:flex;align-items:center;gap:10px;min-height:48px;width:100%;padding:10px 0;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;text-align:left;white-space:normal;color:var(--muted);font-size:11px;font-weight:400}.hub-almanac>span{flex:1;min-width:0;line-height:1.7}.hub-almanac>svg{width:17px;height:17px;flex-shrink:0}.hub-almanac>svg:last-child{fill:none;stroke:currentColor;stroke-width:1.5}
-@media(max-width:350px){.hub-orbit{height:320px}.overview-hub .hub-plate{width:99px;padding:11px 9px}.hub-clock time b{font-size:24px}.hub-clock time .clock-second-value{font-size:11px;min-width:13px}.hub-clock-face>.clock-caption{display:none}.hub-contact-copy>span{font-size:10px}}
+@media(max-width:350px){.hub-orbit{height:320px}.overview-hub .hub-plate{width:99px;padding:11px 9px}.hub-contact-copy>span{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.hub-topographic-lines,.hub-land-contours,.clock-second-value{animation:none!important}.hub-clock-hand{transform:none!important}}
 
 .overview-hub .overview-agenda{margin:0 0 16px;padding:0 0 8px;border-bottom:1px solid var(--line)}
@@ -44,3 +41,9 @@
 .overview-hub .overview-agenda .panel-heading button{padding:8px 0 8px 8px;font-size:11px;min-height:48px}
 .overview-hub .overview-agenda .muted{font-size:12px;margin:0 0 6px;line-height:1.6}
 .overview-hub .overview-agenda .agenda-item{padding:8px 0;min-height:48px;border:0}
+
+.hub-heading-meta{display:grid;justify-items:end;gap:4px;flex-shrink:0}
+.hub-heading-meta .overview-date{flex-direction:row;align-items:baseline;gap:7px}
+.hub-heading-meta .overview-date strong{margin:0}
+.hub-clock-readout{display:flex;align-items:baseline;font-size:16px;line-height:1.35;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
+.hub-clock-readout .clock-second-value{font-size:12px;color:var(--muted);font-weight:400;animation:clock-tick-in 240ms ease-out}

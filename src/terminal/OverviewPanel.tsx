@@ -43,10 +43,10 @@ const money=(amount:number)=>amount.toLocaleString('zh-CN',{minimumFractionDigit
 export function OverviewPanel({date,reminderCount,expense,balance,budget,almanacSummary,onNavigate,agenda}:OverviewPanelProps) {
   const remaining=budget-expense;
   return <section className="overview-hub" aria-labelledby="overview-hub-title">
-    <header className="hub-heading"><h2 id="overview-hub-title">今日总览</h2><time className="overview-date" dateTime={date}><span>{date.slice(0,4)}</span><strong>{date.slice(5,7)}月{date.slice(8)}日</strong></time></header>
+    <header className="hub-heading"><h2 id="overview-hub-title">今日总览</h2><div className="hub-heading-meta"><time className="overview-date" dateTime={date}><span>{date.slice(0,4)}</span><strong>{date.slice(5,7)}月{date.slice(8)}日</strong></time><LiveClock/></div></header>
     <div className="hub-orbit">
       <div className="hub-map-stage" aria-hidden="true"><div className="hub-map-base"/><div className="hub-map-rim"><HubTerrain/></div><svg className="hub-rim-detail" viewBox="0 0 300 300" aria-hidden="true"><path d="M43 57A132 132 0 0 1 225 39M273 119A132 132 0 0 1 196 273M90 267A132 132 0 0 1 21 127"/><path d="M76 30A139 139 0 0 1 120 13M278 197A139 139 0 0 1 266 219"/></svg></div>
-      <LiveClock/>
+      <LiveClock variant="dial"/>
     <div className="hub-modules">
       {modules.map(({page,label,detail})=><button key={page} type="button" className={`hub-plate hub-plate-${page}`} aria-label={`打开${label}`} onClick={()=>onNavigate(page)}>
         <span className="hub-plate-content"><TerminalIcon name={page}/><strong>{label}</strong><small>{detail}</small></span>

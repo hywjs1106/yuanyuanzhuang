@@ -48,11 +48,11 @@ test('no-budget overview uses actual balance and preserves large amounts and zer
 
 test('date belongs to the heading and navigation is separate from the decorative terrain',()=>{
  const html=renderToStaticMarkup(<OverviewPanel {...props}/>);
- assert.match(html, /<header class="hub-heading">[\s\S]*?<time class="overview-date" dateTime="2026-10-14">[\s\S]*?<\/time><\/header>/);
+ assert.match(html, /<header class="hub-heading">[\s\S]*?<time class="overview-date" dateTime="2026-10-14">[\s\S]*?<\/time>[\s\S]*?<\/header>/);
  const orbit=html.split('<div class="hub-orbit">')[1]?.split('<div class="hub-modules">')[0];
  assert.ok(orbit);
  assert.match(orbit,/class="hub-map-stage" aria-hidden="true"/);
- assert.doesNotMatch(orbit,/<button/);
+ assert.doesNotMatch(orbit,/<button|<time/);
  assert.match(orbit,/class="hub-clock"/);
  assert.doesNotMatch(orbit,/dateTime="2026-10-14"/);
  assert.match(html,/<div class="hub-modules"><button/);
