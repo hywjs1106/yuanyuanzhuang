@@ -3,17 +3,26 @@ import type {AIConfig} from '@/utils/aiClient';
 import {characterPersona} from './persona';
 import {askAssistant,assistantConfigured,type AssistantReply,type Proposal} from './assistant';
 import type {Message} from './ledger';
-export function AssistantPanel({config,context,messages,onMessage,onConfirm}:{config:AIConfig|undefined;context:string;messages:Message[];onMessage:(message:Message)=>Promise<void>;onConfirm:(proposal:Proposal)=>Promise<void>}){
-  const [text,setText]=useState('');const [pending,setPending]=useState<AssistantReply>();const [states,setStates]=useState<Record<number,string>>({});const [busy,setBusy]=useState(false);const [error,setError]=useState('');const ctrl=useRef<AbortController>();const mounted=useRef(true);const inFlight=useRef(new Set<number>());
+import {executeAssistantActions} from './assistantExecution';
+import {StickerMessage} from './StickerMessage';
+import {StickerPicker} from './StickerPicker';
+export function AssistantPanel({config,context,messages,onMessage,onConfirm}:{config:AIConfig|undefined;context:string;messages:Message[];onMessage:(message:Message)=>Promise<void>;onConfirm:(proposal:Proposal,operationId?:string,signal?:AbortSignal)=>Promise<string|void>}){
+  const [text,setText]=useState('');const [pending,setPending]=useState<AssistantReply>();const [states,setStates]=useState<Record<number,string>>({});const [busy,setBusy]=useState(false);const [error,setError]=useState('');const ctrl=useRef<AbortController>();const mounted=useRef(true);const inFlight=useRef(new Set<string>());const batch=useRef('');const [newReply,setNewReply]=useState('');const [preview,setPreview]=useState<string>();
   useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;ctrl.current?.abort();};},[]);
   async function submit(e:FormEvent){e.preventDefault();if(!text.trim()||busy)return;const input=text.trim();setBusy(true);setError('');setPending(undefined);setStates({});setText('');const controller=new AbortController();ctrl.current=controller;try{
-    await onMessage({id:crypto.randomUUID(),role:'user',text:input,createdAt:new Date().toISOString()});
+    const requestId=crypto.randomUUID();batch.current=requestId;await onMessage({id:requestId,role:'user',text:input,createdAt:new Date().toISOString()});
     if(controller.signal.aborted||!mounted.current)return;
     const reply=await askAssistant(input,config,context,messages.map(m=>({role:m.role,content:m.text})),controller.signal);
     if(controller.signal.aborted||!mounted.current)return;
-    await onMessage({id:crypto.randomUUID(),role:'assistant',text:reply.reply,createdAt:new Date().toISOString()});if(!controller.signal.aborted&&mounted.current)setPending(reply);
+    const result=await executeAssistantActions(input,reply.actions,requestId,onConfirm,controller.signal);
+    if(controller.signal.aborted&&!result.receipts.length)return;
+    const remaining=result.actions.some((_,i)=>!result.states[i]);
+    const answer=result.actions.length?`管理员，收到。\n${result.receipts.join('\n')}${remaining?'\n还有待核对的事项，请确认下面的内容。':''}`:reply.reply;
+    const id=crypto.randomUUID();const lastSticker=[...messages].reverse().find(m=>m.role==='assistant')?.stickerId;
+    const stickerId=reply.stickerId!==lastSticker?reply.stickerId:undefined;
+    await onMessage({id,role:'assistant',text:answer,createdAt:new Date().toISOString(),...(stickerId?{stickerId}:{})});if(mounted.current){setNewReply(id);setPending({...reply,actions:result.actions});setStates(result.states);}
   }catch(e){if(mounted.current&&!controller.signal.aborted)setError(e instanceof Error && e.name==='AbortError'?'已停止':e instanceof Error?e.message:'助手暂时不可用');}finally{if(mounted.current&&ctrl.current===controller)setBusy(false);}}
-  async function confirm(a:Proposal,index:number){if(inFlight.current.has(index)||states[index]==='已保存')return;inFlight.current.add(index);setStates(s=>({...s,[index]:'保存中…'}));try{await onConfirm(a);setStates(s=>({...s,[index]:'已保存'}));}catch(e){setStates(s=>({...s,[index]:''}));setError(e instanceof Error?e.message:'保存失败');}finally{inFlight.current.delete(index);}}
+  async function confirm(a:Proposal,index:number){const requestId=batch.current;const id=`ai-${requestId}-${index}`;if(inFlight.current.has(id)||states[index]==='已保存')return;inFlight.current.add(id);setStates(s=>({...s,[index]:'保存中…'}));try{const receipt=await onConfirm(a,id);if(mounted.current&&batch.current===requestId)setStates(s=>({...s,[index]:'已保存'}));await onMessage({id:`receipt-${id}`,role:'assistant',text:receipt||'已保存。',createdAt:new Date().toISOString()});}catch(e){if(mounted.current&&batch.current===requestId){setStates(s=>({...s,[index]:''}));setError(e instanceof Error?e.message:'保存失败');}}finally{inFlight.current.delete(id);}}
   const [drawer,setDrawer]=useState(false);
   const [unread,setUnread]=useState(false);
   const previousCount=useRef(messages.length);
@@ -36,15 +45,16 @@ export function AssistantPanel({config,context,messages,onMessage,onConfirm}:{co
       <div className="fangyi-contact-copy"><h2>{characterPersona.name}</h2><p>{characterPersona.badge} · 武陵</p><span className="fangyi-config">{assistantConfigured(config)?'AI 已配置':'离线预设'}</span></div>
       <div className="fangyi-signal-stamp" aria-hidden="true"><svg viewBox="0 0 92 62"><defs><pattern id="baker-dots" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".7"/></pattern></defs><path d="M0 0h92v62H0z" fill="url(#baker-dots)" opacity=".3"/><path d="M0 0h10v10H0zM10 10h10v10H10zM0 20h10v10H0zM0 52h10v10H0z"/><circle cx="52" cy="23" r="10"/><path d="M36 52v-8a16 16 0 0 1 32 0v8z"/><path d="M75 6v50M80 6v50M85 6v50" fill="none" stroke="currentColor" strokeWidth="1"/></svg></div>
     </header>
-    <p className="fangyi-chat-notice">记录、提醒和备忘，确认后才会保存。</p>
+    <p className="fangyi-chat-notice">说清事项就能记账、安排提醒；有歧义时，方宜会再问你。</p>
     <div className="chat-log" ref={log} role="log" aria-label="聊天记录" aria-live="polite" onScroll={()=>{const el=log.current;if(el){nearBottom.current=el.scrollHeight-el.scrollTop-el.clientHeight<64;if(nearBottom.current)setUnread(false);}}}>
       {messages.length===0&&<><div className="chat-day-separator">开始对话</div><article className="chat-message assistant">{avatar}<div className="chat-message-content"><small>{characterPersona.name}</small><div className="chat-bubble"><p>{characterPersona.greeting}</p></div></div></article></>}
-      {shown.map((m,index)=><Fragment key={m.id}>{(index===0||day(shown[index-1].createdAt)!==day(m.createdAt))&&<div className="chat-day-separator">{day(m.createdAt)}</div>}<article className={`chat-message ${m.role}`}>{m.role==='assistant'?avatar:userAvatar}<div className="chat-message-content"><small>{m.role==='user'?'你':characterPersona.name}</small><div className="chat-bubble"><p>{m.text}</p></div><time dateTime={m.createdAt}>{clock(m.createdAt)}</time></div></article></Fragment>)}
+      {shown.map((m,index)=><Fragment key={m.id}>{(index===0||day(shown[index-1].createdAt)!==day(m.createdAt))&&<div className="chat-day-separator">{day(m.createdAt)}</div>}<article className={`chat-message ${m.role}`}>{m.role==='assistant'?avatar:userAvatar}<div className="chat-message-content"><small>{m.role==='user'?'你':characterPersona.name}</small><div className="chat-bubble"><p>{m.text}</p></div>{m.stickerId&&<StickerMessage stickerId={m.stickerId} autoPlay={m.id===newReply}/>}<time dateTime={m.createdAt}>{clock(m.createdAt)}</time></div></article></Fragment>)}
       {busy&&<article className="chat-message assistant">{avatar}<div className="chat-message-content"><small>{characterPersona.name}</small><div className="chat-bubble chat-thinking" role="status">正在想一想…</div></div></article>}
+      {preview&&<StickerMessage key={preview} stickerId={preview} autoPlay/>}
       {expression&&<article className="chat-expression"><img src={reducedMotion?'/characters/fangyi-avatar.png':`/characters/fangyi-${expression==='working'?'working':'peek'}.gif`} alt={expression==='working'?'方宜忙碌表情':'方宜探头表情'} width="136" height="136"/><div><p>{reducedMotion?'已开启减少动态效果，显示静态头像。':'表情将在 5 秒后停止。'}</p><button type="button" onClick={()=>setExpression(undefined)}>停止表情</button></div></article>}
       {error&&<p role="alert" className="error">{error}</p>}
       {pending?.actions.map((a,i)=><article className="proposal" key={i}><h3>{a.kind==='ledger'?'待确认流水':a.kind==='reminder'?'待确认提醒':'待确认备忘'}</h3><p>{a.kind==='ledger'?`${a.date} · ${a.direction==='expense'?'支出':'收入'} ¥${a.amount.toFixed(2)} · ${a.note??''}`:a.kind==='reminder'?`${a.title} · ${a.at.replace('T',' ')} · ${a.repeat==='none'?'单次':a.repeat==='daily'?'每天':a.repeat==='weekly'?'每周':a.repeat==='monthly'?'每月':'每年'}`:a.text}</p>{states[i]==='已保存'?<span className="tag">已保存</span>:states[i]==='已忽略'?<span className="muted">已忽略</span>:<div className="button-row"><button disabled={!!states[i]} onClick={()=>void confirm(a,i)}>确认保存</button><button disabled={!!states[i]} onClick={()=>setStates(s=>({...s,[i]:'已忽略'}))}>忽略</button></div>}</article>)}
-    {drawer&&<div className="fangyi-expression-drawer" aria-label="方宜表情选择"><div className="expression-choices"><button type="button" aria-label="播放忙碌表情" onClick={()=>setExpression('working')}><span>忙碌中</span><small>播放 5 秒</small></button><button type="button" aria-label="播放探头表情" onClick={()=>setExpression('peek')}><span>探个头</span><small>播放 5 秒</small></button></div><p>表情来源：<a href="https://www.bilibili.com/opus/1193389820389359623" target="_blank" rel="noreferrer">夏雪NazuYuki · Bilibili</a></p></div>}
+    {drawer&&<div className="fangyi-expression-drawer" aria-label="方宜表情选择"><div className="expression-choices"><button type="button" aria-label="播放忙碌表情" onClick={()=>setExpression('working')}><span>忙碌中</span><small>播放 5 秒</small></button><button type="button" aria-label="播放探头表情" onClick={()=>setExpression('peek')}><span>探个头</span><small>播放 5 秒</small></button></div><StickerPicker onSelect={id=>{setPreview(id);setDrawer(false);}}/><p>表情来源：<a href="https://www.bilibili.com/opus/1193389820389359623" target="_blank" rel="noreferrer">夏雪NazuYuki · Bilibili</a></p></div>}
     </div>
     {unread&&<button type="button" className="chat-latest" onClick={()=>{const el=log.current;if(el)el.scrollTop=el.scrollHeight;nearBottom.current=true;setUnread(false);}}>最新消息</button>}
 

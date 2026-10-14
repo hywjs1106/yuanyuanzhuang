@@ -22,11 +22,12 @@ test('talking about yesterday or tea does not trigger the reminder workflow offl
   assert.notEqual(assistant.localAssistantReply('昨天好累，想歇一会').reply, assistant.localAssistantReply('今天想喝点茶').reply);
 });
 
-test('offline amount parsing preserves confirmation and does not infer casual numbers as spending', () => {
+test('offline amount parsing needs an explicit record request and cannot claim completion', () => {
   assert.deepEqual(assistant.localAssistantReply('今天看了28页书').actions, []);
-  const reply = assistant.localAssistantReply('午饭花了28元', new Date(2026, 9, 14));
-  assert.deepEqual(reply.actions, [{kind:'ledger',direction:'expense',amount:28,date:'2026-10-14',note:'午饭花了28元',type:'food'}]);
-  assert.match(reply.reply, /确认/);
+  assert.deepEqual(assistant.localAssistantReply('午饭花了28元').actions, []);
+  const text='帮我记一下午饭花了28元';
+  const reply = assistant.localAssistantReply(text, new Date(2026, 9, 14));
+  assert.deepEqual(reply.actions, [{kind:'ledger',direction:'expense',amount:28,date:'2026-10-14',note:text,type:'food'}]);
   assert.doesNotMatch(reply.reply, /已经保存|已保存/);
   assert.deepEqual(assistant.localAssistantReply('明天提醒我交电费').actions, []);
 });

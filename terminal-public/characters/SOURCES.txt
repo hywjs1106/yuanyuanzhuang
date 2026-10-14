@@ -9,3 +9,16 @@ Source: https://www.bilibili.com/opus/1193389820389359623
 No general open-source artwork license was identified; these files are excluded from the GPL code license. Do not infer permission for public redistribution from this provenance record.
 
 This local build was created for the user's personal use. No private desktop theme download, private messaging, account login, or publication was performed.
+
+0.5: 178 Fangyi animated stickers, eleven unique source posts, author 夏雪NazuYuki. Converted to 256px animated WebP (content and frame durations preserved) with 160px middle-frame previews. All are bundled for offline personal use; per-image metadata appears in src/terminal/stickerCatalog.ts. Artwork is excluded from GPL software licensing.
+https://www.bilibili.com/opus/1193387247657811973
+https://www.bilibili.com/opus/1193387449545392134
+https://www.bilibili.com/opus/1193387621362958343
+https://www.bilibili.com/opus/1193387818936696835
+https://www.bilibili.com/opus/1193387986436227106
+https://www.bilibili.com/opus/1193388184016257028
+https://www.bilibili.com/opus/1193388480318668808
+https://www.bilibili.com/opus/1193388604877963269
+https://www.bilibili.com/opus/1202921838874722310
+https://www.bilibili.com/opus/1214403025151459333
+https://www.bilibili.com/opus/1228165161257271315

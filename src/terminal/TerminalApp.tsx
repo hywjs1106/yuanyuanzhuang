@@ -13,6 +13,7 @@ import type {Proposal} from './assistant';
 import {assistantConfigured} from './assistant';
 import './terminal.css';
 import './assistant-chat.css';
+import './sticker-gallery.css';
 import './overview-hub.css';
 import './reminder-missions.css';
 import {OverviewPanel} from './OverviewPanel';
@@ -41,10 +42,18 @@ export default function TerminalApp(){
     const orient=()=>{fullHeight=window.innerHeight;update();};viewport?.addEventListener('resize',update);viewport?.addEventListener('scroll',update);window.addEventListener('resize',update);window.addEventListener('orientationchange',orient);document.addEventListener('focusout',update);update();return()=>{viewport?.removeEventListener('resize',update);viewport?.removeEventListener('scroll',update);window.removeEventListener('resize',update);window.removeEventListener('orientationchange',orient);document.removeEventListener('focusout',update);};},[]);
   useEffect(()=>{if(!Capacitor.isNativePlatform())return;let disposed=false;let remove:undefined|(()=>void);void NativeApp.addListener('backButton',()=>{const event=new Event('terminal-back',{cancelable:true});window.dispatchEvent(event);if(event.defaultPrevented)return;if(keyboardOpen){(document.activeElement as HTMLElement|null)?.blur();return;}if(page!=='today'){setPage('today');window.scrollTo(0,0);}else void NativeApp.exitApp();}).then(handler=>{if(disposed)void handler.remove();else remove=()=>void handler.remove();});return()=>{disposed=true;remove?.();};},[page,keyboardOpen]);
   async function updateSettings(next:TerminalSettings){await saveSettings(next);}
-  async function confirm(proposal:Proposal){
-    if(proposal.kind==='ledger')await saveEntry({id:crypto.randomUUID(),direction:proposal.direction,amount:proposal.amount,date:proposal.date,note:proposal.note,type:proposal.type as LedgerExpenseType,currency:'CNY',source:'ai',createdAt:new Date()});
-    if(proposal.kind==='note')await terminalDb.notes.put({id:crypto.randomUUID(),text:proposal.text,createdAt:new Date().toISOString()});
-    if(proposal.kind==='reminder'){const r=createReminder({title:proposal.title,startAt:proposal.at,recurrence:proposal.repeat==='none'?'once':proposal.repeat},await terminalDb.reminders.toArray());if(!nextReminderOccurrence(r))throw new Error('这个单次提醒时间已经过去，请重新指定未来时间');await saveReminder(r);await refreshNotifications();}
+  async function confirm(proposal:Proposal,operationId:string=crypto.randomUUID(),signal?:AbortSignal):Promise<string>{
+    const cancelled=()=>{if(signal?.aborted)throw new DOMException('已停止','AbortError');};cancelled();
+    if(proposal.kind==='ledger'){
+      await terminalDb.transaction('rw',terminalDb.entries,async()=>{if(await terminalDb.entries.get(operationId))return;cancelled();await saveEntry({id:operationId,direction:proposal.direction,amount:proposal.amount,date:proposal.date,note:proposal.note,type:proposal.type as LedgerExpenseType,currency:'CNY',source:'ai',createdAt:new Date()});});
+      return `已记账：${proposal.date} · ${proposal.direction==='expense'?'支出':'收入'} ¥${proposal.amount.toFixed(2)}。`;
+    }
+    if(proposal.kind==='note'){
+      await terminalDb.transaction('rw',terminalDb.notes,async()=>{if(await terminalDb.notes.get(operationId))return;cancelled();await terminalDb.notes.put({id:operationId,text:proposal.text,createdAt:new Date().toISOString()});});return '已保存备忘。';
+    }
+    await terminalDb.transaction('rw',terminalDb.reminders,async()=>{if(await terminalDb.reminders.get(operationId))return;const r={...createReminder({title:proposal.title,body:`管理员，到了约定的时间：${proposal.title}。`,startAt:proposal.at,recurrence:proposal.repeat==='none'?'once':proposal.repeat},await terminalDb.reminders.toArray()),id:operationId};if(!nextReminderOccurrence(r))throw new Error('这个单次提醒时间已经过去，请重新指定未来时间');cancelled();await saveReminder(r);});
+    const receipt=`已添加提醒：${proposal.title} · ${proposal.at.replace('T',' ')}。`;
+    try{const status=await reminderNotifications.reconcile(await terminalDb.reminders.toArray());setNotif(status);return receipt+(status.native?(status.permission==='granted'?'系统通知已安排。':'请到提醒页允许通知，才能到点提醒你。'):'定时通知需要安装安卓应用。');}catch{return receipt+'通知尚未安排成功，请到提醒页重试。';}
   }
   async function addNote(){try{if(!note.trim())return;await terminalDb.notes.put({id:crypto.randomUUID(),text:note.trim(),createdAt:new Date().toISOString()});setNote('');}catch(e){setNotice(String(e));}}
   if(fatal)return <main className="terminal-shell"><h1>本地数据暂时无法打开</h1><p role="alert">{fatal}</p><button onClick={()=>window.location.reload()}>重试</button></main>;

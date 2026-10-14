@@ -42,16 +42,21 @@ test('phone user can record, edit and persist ledger and reminders without game 
   await page.getByLabel('查看日期').fill('2026-02-17');
   await expect(page.getByText(/正月初一/)).toBeVisible();
 });
-test('offline assistant offers a confirmation then creates an entry once',async({page})=>{
+test('offline assistant saves an explicit ledger command once and persists its receipt',async({page})=>{
   await page.goto('/');
   await page.getByRole('button',{name:'助手',exact:true}).click();
-  await page.getByLabel('和方宜说说').fill('午饭花了28元');
+  await page.getByLabel('和方宜说说').fill('帮我记一下午饭花了28元');
   await page.getByRole('button',{name:'发送',exact:true}).click();
-  await expect(page.getByRole('button',{name:'确认保存',exact:true})).toBeVisible();
-  await page.getByRole('button',{name:'确认保存',exact:true}).click();
+  await expect(page.locator('.chat-message.assistant').last()).toContainText('已记账：');
+  await expect(page.getByRole('button',{name:'确认保存',exact:true})).toHaveCount(0);
   await expect(page.getByText('已保存',{exact:true})).toBeVisible();
   await page.getByRole('button',{name:'记账',exact:true}).click();
-  await expect(page.getByText('午饭花了28元',{exact:true})).toHaveCount(1);
+  await expect(page.getByText('帮我记一下午饭花了28元',{exact:true})).toHaveCount(1);
+  await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(1);
+  await page.reload();await page.getByRole('button',{name:'记账',exact:true}).click();
+  await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(1);
+  await page.getByRole('button',{name:'助手',exact:true}).click();
+  await expect(page.locator('.chat-message.assistant').last()).toContainText('已记账：');
 });
 test('configured AI supports multiple confirmed actions and rejects malformed proposals',async({page})=>{
   let malformed=false;
@@ -142,4 +147,65 @@ test('mission selection follows current data through edits, completion and delet
 test('radial overview shortcuts navigate to their real destinations',async({page})=>{
  await page.goto('/');for(const [label,target] of [['打开记账','记账'],['打开提醒','提醒与生日'],['打开天气','天气'],['打开黄历','黄历']]){await page.getByRole('button',{name:label,exact:true}).click();await expect(page.getByRole('heading',{name:target,exact:true})).toBeVisible();await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'今日',exact:true}).click();}
  await page.getByRole('button',{name:'与庄方宜对话',exact:true}).click();await expect(page.getByRole('heading',{name:'庄方宜',exact:true})).toBeVisible();
+});
+
+test('natural explicit reminders save while casual and ambiguous chat creates no records',async({page})=>{
+ await page.goto('/');await page.getByRole('button',{name:'助手',exact:true}).click();
+ for(const text of ['午饭花了28元','明天九点提醒我寄快递','今天有点累']){
+  await page.getByLabel('和方宜说说').fill(text);await page.getByRole('button',{name:'发送',exact:true}).click();
+  await expect(page.locator('.chat-message.assistant')).toHaveCount(['午饭花了28元','明天九点提醒我寄快递','今天有点累'].indexOf(text)+1);
+  await expect(page.getByRole('button',{name:'确认保存',exact:true})).toHaveCount(0);
+ }
+ await page.getByRole('button',{name:'记账',exact:true}).click();await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(0);
+ await page.getByRole('button',{name:'提醒',exact:true}).click();await expect(page.getByRole('button',{name:/查看提醒：/})).toHaveCount(0);
+ await page.getByRole('button',{name:'助手',exact:true}).click();await page.getByLabel('和方宜说说').fill('明天上午九点提醒我交电费');await page.getByRole('button',{name:'发送',exact:true}).click();
+ await expect(page.locator('.chat-message.assistant').last()).toContainText('已添加提醒：交电费');await expect(page.getByRole('button',{name:'确认保存',exact:true})).toHaveCount(0);
+ await page.getByRole('button',{name:'提醒',exact:true}).click();await expect(page.getByRole('button',{name:'查看提醒：交电费',exact:true})).toHaveCount(1);
+ await page.reload();await page.getByRole('button',{name:'提醒',exact:true}).click();await expect(page.getByRole('heading',{name:'交电费',exact:true})).toBeVisible();
+ await expect(page.getByRole('button',{name:/查看提醒：/})).toHaveCount(1);
+});
+
+test('assistant sends contextual stickers and restores history as static posters',async({page})=>{
+ await page.goto('/');await page.getByRole('button',{name:'助手',exact:true}).click();await page.getByLabel('和方宜说说').fill('谢谢你');await page.getByRole('button',{name:'发送',exact:true}).click();
+ const sticker=page.locator('.chat-message.assistant .sticker-message__image');await expect(sticker).toHaveCount(1);await expect(sticker).toHaveAttribute('src','/characters/stickers/fy-01-17.webp');
+ await expect.poll(()=>sticker.evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBeTruthy();await page.screenshot({path:'test-results/assistant-sticker.png'});
+ await page.reload();await page.getByRole('button',{name:'助手',exact:true}).click();await expect(sticker).toHaveAttribute('src','/characters/stickers/fy-01-17.jpg');await expect(page.getByRole('button',{name:'播放表情：点赞',exact:true})).toBeVisible();
+ await page.emulateMedia({reducedMotion:'reduce'});await page.getByLabel('和方宜说说').fill('晚安');await page.getByRole('button',{name:'发送',exact:true}).click();await expect(page.locator('.chat-message.assistant .sticker-message__image').last()).toHaveAttribute('src','/characters/stickers/fy-01-04.jpg');
+});
+
+test('178 sticker gallery paginates and filters without mounting every image',async({page})=>{
+ await page.goto('/');await page.getByRole('button',{name:'助手',exact:true}).click();await page.getByRole('button',{name:'方宜表情',exact:true}).click();
+ const gallery=page.getByRole('region',{name:'方宜表情库',exact:true});await expect(gallery.getByText('共 178 张',{exact:true})).toBeVisible();await expect(gallery.locator('.sticker-picker__item')).toHaveCount(24);
+ const firstTitle=await gallery.locator('.sticker-picker__item').first().getAttribute('title');await gallery.getByRole('button',{name:'下一页表情',exact:true}).click();expect(await gallery.locator('.sticker-picker__item').first().getAttribute('title')).not.toBe(firstTitle);await expect(gallery.getByText('178 张 · 2 / 8',{exact:true})).toBeVisible();
+ await gallery.getByLabel('表情搜索').fill('fy-11-18');await expect(gallery.locator('.sticker-picker__item')).toHaveCount(1);await expect(gallery.getByRole('button',{name:'选择表情：火焰背景抬手',exact:true})).toBeVisible();await expect(gallery.getByRole('button',{name:'下一页表情',exact:true})).toBeDisabled();
+ await gallery.getByLabel('表情搜索').fill('不存在的表情');await expect(gallery.getByText('没有找到这类表情，换个词试试。',{exact:true})).toBeVisible();
+ await gallery.getByLabel('表情搜索').fill('');await gallery.getByLabel('表情分组').selectOption('11');await expect(gallery.locator('.sticker-picker__item')).toHaveCount(18);await page.screenshot({path:'test-results/sticker-gallery.png'});
+});
+
+test('configured model stickers persist and unknown IDs preserve text without loading images',async({page})=>{
+ let unknown=false;await page.route('https://example.invalid/**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({choices:[{message:{content:JSON.stringify({reply:unknown?'未知表情仍然正常回复':'收到你的感谢。',actions:[],stickerId:unknown?'untrusted-unknown-id':'fy-01-17'})}}]})}));
+ await page.goto('/');await more(page,'设置');await page.getByLabel('服务地址').fill('https://example.invalid/v1');await page.getByLabel('模型名称').fill('test-model');await page.getByLabel('API Key',{exact:true}).fill('test-only-key');await page.getByRole('button',{name:'保存设置'}).click();
+ await page.getByRole('button',{name:'助手',exact:true}).click();await page.getByLabel('和方宜说说').fill('谢谢');await page.getByRole('button',{name:'发送',exact:true}).click();await expect(page.locator('.chat-message.assistant').last()).toContainText('收到你的感谢。');await expect(page.locator('.chat-message.assistant .sticker-message__image')).toHaveAttribute('src','/characters/stickers/fy-01-17.webp');await page.screenshot({path:'test-results/assistant-model-sticker.png'});
+ await page.reload();await page.getByRole('button',{name:'助手',exact:true}).click();await expect(page.locator('.chat-message.assistant .sticker-message__image')).toHaveAttribute('src','/characters/stickers/fy-01-17.jpg');unknown=true;
+ await page.getByLabel('和方宜说说').fill('继续聊聊');await page.getByRole('button',{name:'发送',exact:true}).click();await expect(page.locator('.chat-message.assistant').last()).toContainText('未知表情仍然正常回复');await expect(page.locator('.chat-message.assistant').last().locator('.sticker-message')).toHaveCount(0);await expect(page.getByRole('alert')).toHaveCount(0);
+});
+
+test('model metadata variations cannot turn one explicit command into duplicate ledger writes',async({page})=>{
+ await page.route('https://example.invalid/**',async route=>{const date=new Date();const day=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({choices:[{message:{content:JSON.stringify({reply:'收到',actions:[{kind:'ledger',amount:28,direction:'expense',date:day,note:'午饭',type:'food'},{kind:'ledger',amount:28,direction:'expense',date:day,note:'午餐重复',type:'other'}]})}}]})});});
+ await page.goto('/');await more(page,'设置');await page.getByLabel('服务地址').fill('https://example.invalid/v1');await page.getByLabel('模型名称').fill('test-model');await page.getByLabel('API Key',{exact:true}).fill('test-only-key');await page.getByRole('button',{name:'保存设置'}).click();
+ await page.getByRole('button',{name:'助手',exact:true}).click();await page.getByLabel('和方宜说说').fill('帮我记一下午饭花了28元');await page.getByRole('button',{name:'发送',exact:true}).click();await expect(page.locator('.chat-message.assistant').last()).toContainText('额外重复操作已忽略，未执行。');await expect(page.getByRole('button',{name:'确认保存',exact:true})).toHaveCount(0);
+ await page.getByRole('button',{name:'记账',exact:true}).click();await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(1);await expect(page.getByText('午饭',{exact:true})).toHaveCount(1);await expect(page.getByText('午餐重复',{exact:true})).toHaveCount(0);
+ await page.reload();await page.getByRole('button',{name:'记账',exact:true}).click();await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(1);
+});
+
+test('overview separates clickable modules and date from terrain and honors reduced motion',async({page})=>{
+ await page.emulateMedia({reducedMotion:'no-preference'});await page.goto('/');
+ for(const width of [320,390,768]){
+  await page.setViewportSize({width,height:844});const map=await page.locator('.hub-map-stage').boundingBox();const date=await page.locator('.overview-date').boundingBox();expect(map).not.toBeNull();expect(date).not.toBeNull();expect(date!.y+date!.height).toBeLessThanOrEqual(map!.y);
+  const boxes=await page.locator('.hub-modules button').evaluateAll(elements=>elements.map(el=>{const r=el.getBoundingClientRect();return{x:r.x,y:r.y,right:r.right,bottom:r.bottom};}));expect(boxes).toHaveLength(4);
+  for(const box of boxes)expect(box.y).toBeGreaterThanOrEqual(map!.y+map!.height);
+  for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++){const a=boxes[i],b=boxes[j];expect(a.right<=b.x||b.right<=a.x||a.bottom<=b.y||b.bottom<=a.y).toBeTruthy();}
+ }
+ const contours=page.locator('.hub-topographic-lines');expect(await contours.evaluate(el=>getComputedStyle(el).animationName)).not.toBe('none');
+ await page.setViewportSize({width:390,height:844});await page.screenshot({path:'test-results/home-separated-modules.png'});await page.emulateMedia({reducedMotion:'reduce'});await expect.poll(()=>contours.evaluate(el=>getComputedStyle(el).animationName)).toBe('none');await expect.poll(()=>page.locator('.hub-land-contours').evaluate(el=>getComputedStyle(el).animationName)).toBe('none');
 });

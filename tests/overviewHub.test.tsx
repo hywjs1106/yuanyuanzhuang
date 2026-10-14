@@ -45,3 +45,13 @@ test('no-budget overview uses actual balance and preserves large amounts and zer
  assert.match(html,/src="\/characters\/fangyi-avatar.png"/);
  assert.match(html,/农历九月初五/);
 });
+
+test('date belongs to the heading and navigation is separate from the decorative terrain',()=>{
+ const html=renderToStaticMarkup(<OverviewPanel {...props}/>);
+ assert.match(html, /<header class="hub-heading">[\s\S]*?<time class="overview-date" dateTime="2026-10-14">[\s\S]*?<\/time><\/header>/);
+ const orbit=html.split('<div class="hub-orbit">')[1]?.split('<div class="hub-modules">')[0];
+ assert.ok(orbit);
+ assert.match(orbit,/class="hub-map-stage" aria-hidden="true"/);
+ assert.doesNotMatch(orbit,/<time|<button/);
+ assert.match(html,/<div class="hub-modules"><button/);
+});

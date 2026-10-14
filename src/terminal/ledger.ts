@@ -2,9 +2,10 @@ import type { LedgerEntry } from '@/types';
 import type { WeatherConfig } from '@/utils/weather';
 import type { AIConfig } from '@/utils/aiClient';
 import { validateReminder, type Reminder } from './reminders';
+import { isKnownStickerId } from './stickerCatalog';
 export interface TerminalSettings { id: 'main'; budget: number; ai?: AIConfig; weather?: WeatherConfig; theme?: 'light' | 'dark'; weatherBriefing?:boolean; weatherBriefingTime?:string; }
 export interface Note { id: string; text: string; createdAt: string; }
-export interface Message { id: string; role: 'user' | 'assistant'; text: string; createdAt: string; }
+export interface Message { id: string; role: 'user' | 'assistant'; text: string; createdAt: string; stickerId?:string; }
 export interface Snapshot { entries: LedgerEntry[]; reminders: Reminder[]; notes: Note[]; messages: Message[]; settings: TerminalSettings; }
 export function localDateKey(d = new Date()): string { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 export function validDateKey(s: string): boolean {
@@ -65,7 +66,8 @@ export function validateBackup(value: unknown): Snapshot {
   }));
   const messages = uniqueRows(b.messages.map(m=>{
     if(!['user','assistant'].includes(m.role)||typeof m.text!=='string'||m.text.length>30000||!Number.isFinite(Date.parse(m.createdAt))) throw new Error('聊天格式不正确');
-    return {id:m.id,role:m.role,text:m.text,createdAt:m.createdAt};
+    if(m.stickerId!==undefined && !isKnownStickerId(m.stickerId))throw new Error('聊天表情编号不正确');
+    return {id:m.id,role:m.role,text:m.text,createdAt:m.createdAt,...(m.stickerId?{stickerId:m.stickerId}:{})};
   }));
   const s = b.settings;
   if(!s || s.id!=='main' || !Number.isFinite(s.budget) || s.budget<0 || s.budget>100000000) throw new Error('预算设置不正确');

@@ -27,3 +27,12 @@ test('malformed backup rejects the entire import rather than silently dropping b
   assert.throws(() => validateBackup({ ...b, entries: [entry, entry] }));
   assert.throws(() => validateBackup({ ...b, format: 'unknown' }));
 });
+
+test('sticker chat backups retain known IDs, accept old messages and reject unknown assets',()=>{
+ const message={id:'chat',role:'assistant' as const,text:'晚安',createdAt:'2026-10-14T00:00:00Z',stickerId:'fy-01-04'};
+ const backup=makeBackup({entries:[],reminders:[],notes:[],messages:[message],settings:{id:'main',budget:0}});
+ assert.equal(validateBackup(JSON.parse(JSON.stringify(backup))).messages[0].stickerId,message.stickerId);
+ const {stickerId,...old}=message;
+ assert.equal(validateBackup({...backup,messages:[old]}).messages[0].stickerId,undefined);
+ assert.throws(()=>validateBackup({...backup,messages:[{...message,stickerId:'https://arbitrary.invalid/image'}]}));
+});

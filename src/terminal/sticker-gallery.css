@@ -1,0 +1,27 @@
+.sticker-message { margin: 6px 0 0; max-width: 180px; }
+.sticker-message__image { display: block; width: 144px; height: 144px; object-fit: contain; }
+.sticker-message figcaption { display: flex; align-items: start; gap: 6px; flex-wrap: wrap; }
+.sticker-message__play { min-height: 44px; padding: 4px 10px; border: 1px solid #b5bea9; border-radius: 8px; color: #354638; background: #f4f6ed; cursor: pointer; font-size: 12px; }
+.sticker-message__play:disabled { opacity: .65; cursor: default; }
+.sticker-message__hint, .sticker-message__fallback { color: var(--chat-muted, #5b675c); font-size: 11px; line-height: 1.5; }
+.sticker-message__fallback { display: block; padding: 12px 0; }
+.sticker-picker { box-sizing: border-box; width: 100%; padding: 12px; border: 1px solid #c3cbbb; border-radius: 12px; background: #f8f9f1; color: #334437; }
+.sticker-picker__heading { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+.sticker-picker__heading > span { color: #64725e; font-size: 11px; }
+.sticker-picker__filters { display: flex; gap: 8px; margin-bottom: 8px; }
+.sticker-picker__filters select, .sticker-picker__filters input { box-sizing: border-box; min-height: 44px; min-width: 0; border: 1px solid #c4ccb9; border-radius: 7px; background: white; color: inherit; font: inherit; font-size: 12px; padding: 6px 8px; }
+.sticker-picker__filters select { width: 42%; }
+.sticker-picker__filters input { flex: 1; width: 50%; }
+.sticker-picker__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; max-height: 230px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.sticker-picker__item { display: flex; align-items: center; flex-direction: column; justify-content: start; min-width: 0; min-height: 94px; padding: 4px 2px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: inherit; cursor: pointer; }
+.sticker-picker__item img { width: min(100%, 72px); height: 72px; object-fit: contain; }
+.sticker-picker__item span { width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; line-height: 1.5; }
+.sticker-picker__item:hover { border-color: #b0bea0; background: #e9eee1; }
+.sticker-picker__item:focus-visible, .sticker-picker__pages button:focus-visible, .sticker-message__play:focus-visible { outline: 2px solid #526b40; outline-offset: 2px; }
+.sticker-picker__pages { display: flex; align-items: center; justify-content: space-between; gap: 5px; margin-top: 8px; font-size: 11px; }
+.sticker-picker__pages button { min-height: 44px; padding: 4px 8px; border: 1px solid #c4ccb9; border-radius: 7px; background: white; color: inherit; font-size: 11px; cursor: pointer; }
+.sticker-picker__pages button:disabled { opacity: .45; cursor: default; }
+.sticker-picker__credit { display: block; margin-top: 6px; color: #64725e; font-size: 10px; }
+.sticker-picker__empty { grid-column: 1 / -1; padding: 12px 0; font-size: 12px; }
+@media (max-height: 600px) { .sticker-picker__grid { max-height: 160px; } }
+@media (prefers-reduced-motion: reduce) { .sticker-picker *, .sticker-message * { scroll-behavior: auto; } }

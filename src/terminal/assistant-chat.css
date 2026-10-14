@@ -28,7 +28,7 @@
 .assistant-chat .chat-bubble::before{content:'';position:absolute;width:8px;height:11px;top:0;left:-6px;background:var(--chat-bubble);clip-path:polygon(0 0,100% 0,100% 100%)}
 .assistant-chat .user .chat-bubble{background:var(--chat-white);color:var(--chat-dark);border-radius:13px 2px 13px 13px}
 .assistant-chat .user .chat-bubble::before{left:auto;right:-6px;background:var(--chat-white);clip-path:polygon(0 0,100% 0,0 100%)}
-.assistant-chat .chat-bubble p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.8}
+.assistant-chat .chat-bubble p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;font-weight:400;line-height:1.8}
 .assistant-chat .chat-message time{display:block;margin-top:6px;font-size:10px;font-variant-numeric:tabular-nums;color:var(--chat-muted);line-height:1.4}
 .assistant-chat .user time{text-align:right}
 .assistant-chat .chat-thinking{font-size:13px;color:var(--chat-cyan)}
