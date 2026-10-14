@@ -54,7 +54,7 @@ const uniqueRows = <T extends {id:string}>(rows: T[]):T[] => {
 export function validateBackup(value: unknown): Snapshot {
   if(!value || typeof value!=='object') throw new Error('备份格式不正确');
   const b = value as Snapshot & {format:string;version:number};
-  if(b.format!=='daily-terminal' || b.version!==1 || ![b.entries,b.reminders,b.notes,b.messages].every(Array.isArray)) throw new Error('这不是日常终端的完整备份');
+  if(b.format!=='daily-terminal' || b.version!==1 || ![b.entries,b.reminders,b.notes,b.messages].every(Array.isArray)) throw new Error('这不是帝江号的完整备份');
   if(b.entries.length+b.reminders.length+b.notes.length+b.messages.length>100000) throw new Error('备份记录过多');
   const entries = uniqueRows(b.entries.map(validateEntry));
   const reminders = uniqueRows(b.reminders.map(validateReminder));

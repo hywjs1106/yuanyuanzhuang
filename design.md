@@ -1,5 +1,5 @@
 ---
-name: 日常终端
+name: 帝江号
 description: 终末地游戏内界面启发的个人安卓生活工具
 colors:
   base: "#efefe9"
@@ -91,11 +91,11 @@ components:
     padding: "20px"
 ---
 
-# Design System: 日常终端
+# Design System: 帝江号
 
 ## Overview
 
-**Creative North Star: "游戏内日常终端"**
+**Creative North Star: "游戏内帝江号"**
 
 中文安卓生活工具沿用《终末地》游戏内主菜单、BAKER通讯和任务页面的界面语法：暖纸工作面、碳色阅读面、克制的信号黄，以及清晰的细线和几何图标。参考的产品事实与来源见 [PRODUCT.md](PRODUCT.md) 和 [游戏内界面来源](docs/endfield-ingame-ui-sources.md)。图形为原创抽象地形，不表示真实定位或遥测。
 

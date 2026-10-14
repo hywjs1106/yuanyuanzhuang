@@ -1,7 +1,7 @@
-Daily Terminal (日常终端) is a modified version of The Velvet.
+Dijiang (帝江号) is a modified version of The Velvet.
 Upstream source: https://github.com/yuukimarine/the-velvet
 Upstream authors: The Velvet contributors (see repository history).
-Modified 2026-10-14: lightweight local personal assistant; removed game runtime and proprietary artwork from this build; added personal reminders, weather forecast, Chinese almanac and simplified ledger.
+Modified 2026-10-14: lightweight local personal assistant; removed the upstream game runtime and upstream proprietary artwork from this build; added personal reminders, weather forecast, Chinese almanac and simplified ledger.
 Code licensed GPL-3.0-or-later; see LICENSE.txt. Corresponding source is the local velvet folder supplied with the APK. Original author names/icons/artwork are not reused as product branding.
 Calendar: lunar-javascript, Copyright (c) 2019 6tail, MIT license. https://github.com/6tail/lunar-javascript
 Weather: attribution to selected service is shown on the weather page.
@@ -9,3 +9,5 @@ Weather: attribution to selected service is shown on the weather page.
 Font: Noto Sans SC subset, Copyright Adobe/Google; SIL Open Font License 1.1. See fonts/OFL.txt.
 
 0.3 local personal build includes sourced character portrait and user-linked fan stickers. They are not under the application GPL license. See characters/SOURCES.txt for authors and source links.
+
+2026-10-15: renamed visible app to 帝江号, preserving application and local data identities. Sourced Endfield Industries marks and screenshot-derived Dijiang artwork are excluded from GPL code licensing; see branding/SOURCES.txt.

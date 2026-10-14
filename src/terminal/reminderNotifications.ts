@@ -20,7 +20,7 @@ export function buildReminderNotifications(reminders:Reminder[], now=new Date())
     if (!r.enabled) continue;
     const signature=JSON.stringify([r.id,r.notificationId,r.title,r.body,r.startAt,r.recurrence,r.enabled,r.completedAt??null,r.skipUntil??null,r.snoozedUntil??null]);
     const at=nextReminderOccurrence(r,now);
-    const shared={title:r.title,body:r.body || '日常终端提醒',actionTypeId:'terminal-reminder',channelId:'terminal-reminders',autoCancel:true};
+    const shared={title:r.title,body:r.body || '帝江号提醒',actionTypeId:'terminal-reminder',channelId:'terminal-reminders',autoCancel:true};
     if (at && !(r.recurrence==='once' && r.snoozedUntil)) notifications.push({...shared,id:r.notificationId,schedule:{at,repeats:false,allowWhileIdle:true},extra:{terminal:true,reminderId:r.id,signature,recurrence:r.recurrence,startAt:r.startAt,skipUntil:r.skipUntil}});
     if (r.snoozedUntil && Date.parse(r.snoozedUntil)>now.getTime()) notifications.push({...shared,id:r.notificationId+1,schedule:{at:new Date(r.snoozedUntil),repeats:false,allowWhileIdle:true},extra:{terminal:true,reminderId:r.id,signature,recurrence:'once',snooze:true}});
   }
@@ -83,7 +83,7 @@ export function createReminderNotificationService(api:NotificationAPI=LocalNotif
     const status=await getStatus();
     if (!status.native || status.permission!=='granted') throw new Error(status.message);
     await init(actions);
-    await api.schedule({notifications:[{id:-2147483647,title:'日常终端',body:'通知测试成功',channelId:'terminal-reminders',schedule:{at:new Date(now().getTime()+5000),allowWhileIdle:true},extra:{terminal:true,test:true}}]});
+    await api.schedule({notifications:[{id:-2147483647,title:'帝江号',body:'通知测试成功',channelId:'terminal-reminders',schedule:{at:new Date(now().getTime()+5000),allowWhileIdle:true},extra:{terminal:true,test:true}}]});
   }
   return {init,reconcile,getStatus,requestPermission,test:testNotification};
 }

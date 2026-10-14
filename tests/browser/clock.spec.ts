@@ -6,8 +6,8 @@ test('local clock ticks from real time, moves its marker and keeps updating with
  const before=await clock.getAttribute('datetime');const hand=await page.locator('.hub-clock-hand').getAttribute('style');
  await expect.poll(()=>clock.getAttribute('datetime'),{timeout:4000}).not.toBe(before);
  await expect.poll(()=>page.locator('.hub-clock-hand').getAttribute('style')).not.toBe(hand);
- await expect.poll(()=>page.locator('.hub-topographic-lines').evaluate(el=>getComputedStyle(el).transform)).not.toBe('none');
- await page.emulateMedia({reducedMotion:'reduce'});await expect.poll(()=>page.locator('.hub-topographic-lines').evaluate(el=>getComputedStyle(el).animationName)).toBe('none');
+ await expect.poll(()=>page.locator('.hub-ship').evaluate(el=>getComputedStyle(el).transform)).not.toBe('none');
+ await page.emulateMedia({reducedMotion:'reduce'});await expect.poll(()=>page.locator('.hub-ship').evaluate(el=>getComputedStyle(el).animationName)).toBe('none');
  const later=await clock.getAttribute('datetime');await expect.poll(()=>clock.getAttribute('datetime'),{timeout:4000}).not.toBe(later);
  expect(await page.locator('.hub-clock').getAttribute('aria-live')).toBeNull();
 });

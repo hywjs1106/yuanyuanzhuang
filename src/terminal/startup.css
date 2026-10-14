@@ -22,3 +22,14 @@
 @keyframes startup-line-reveal-vertical{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 @media(max-height:420px){.startup-brand{gap:12px}.startup-name{font-size:36px}.startup-triangles{width:26px;height:23px}.startup-decor{display:none}.startup-foot p{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.startup-screen,.startup-screen *{animation:none!important}}
+
+/* Preserve the sourced complete lockup rather than rebuilding its lettering. */
+.startup-visual{background:radial-gradient(ellipse at 50% 36%,#3e443f 0,#1c201d 60%,#111512 100%)}
+.startup-visual::before{content:'';position:absolute;inset:0;opacity:.14;background:repeating-linear-gradient(135deg,transparent 0 3px,#f2f4e533 3px 4px);pointer-events:none}
+.startup-brand{width:min(84%,360px);left:50%;top:42%;transform:translate(-50%,-50%);align-items:center;gap:14px}
+.startup-emblem{display:block;width:100%;height:auto;object-fit:contain;mix-blend-mode:screen;animation:startup-mark-reveal 650ms cubic-bezier(.16,1,.3,1) both}
+.startup-emblem-frame{position:absolute;top:0;left:0;width:100%;height:auto;aspect-ratio:594/512;fill:none;stroke:#f2f5e5;stroke-width:2;opacity:.65;pointer-events:none;animation:startup-mark-reveal 650ms cubic-bezier(.16,1,.3,1) both}
+.startup-name{display:block;font-size:32px;font-weight:500;letter-spacing:.26em;line-height:1.4;padding-left:.26em}
+.startup-subtitle{font-size:10px;letter-spacing:.3em;color:#bdc6b8}
+@media(min-aspect-ratio:1/1){.startup-brand{left:50%;top:44%;width:min(45vh,360px);transform:translate(-50%,-50%);gap:8px}.startup-name{font-size:22px}.startup-foot{left:8%;right:8%;bottom:5%}.startup-rule{position:relative;top:auto;left:auto;width:auto;height:4px;margin-bottom:16px}.startup-rule i{animation-name:startup-line-reveal;transform-origin:left}.startup-decor{display:none}}
+@media(max-height:420px){.startup-brand{width:180px;gap:3px}.startup-name{font-size:18px}.startup-subtitle{font-size:9px}.startup-foot{bottom:12px}.startup-rule{margin-bottom:8px}}

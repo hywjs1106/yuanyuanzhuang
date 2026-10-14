@@ -13,7 +13,7 @@ test('eight surfaces retain task entry points in the new visual system',async({p
  // Enlarge text to exercise geometry, without changing the user's device settings.
  await page.setViewportSize({width:320,height:844});await page.evaluate(()=>{document.documentElement.style.fontSize='19.5px';});await page.screenshot({path:`${out}/home-large-text.png`});
  const videoContext=await browser.newContext({viewport:{width:390,height:844},recordVideo:{dir:`${out}/motion`,size:{width:390,height:844}},reducedMotion:'no-preference'});
- const motion=await videoContext.newPage();await motion.goto('http://127.0.0.1:5180/');await expect(motion.locator('.hub-clock')).toBeVisible();await motion.screenshot({path:`${out}/motion-start.png`});const start=await motion.locator('.hub-topographic-lines').evaluate(el=>getComputedStyle(el).transform);
- await motion.waitForTimeout(2200);const finish=await motion.locator('.hub-topographic-lines').evaluate(el=>getComputedStyle(el).transform);expect(finish).not.toBe(start);await motion.screenshot({path:`${out}/motion-end.png`});await motion.waitForTimeout(2000);
+ const motion=await videoContext.newPage();await motion.goto('http://127.0.0.1:5180/');await expect(motion.locator('.hub-clock')).toBeVisible();await motion.screenshot({path:`${out}/motion-start.png`});const start=await motion.locator('.hub-ship').evaluate(el=>getComputedStyle(el).transform);
+ await motion.waitForTimeout(2200);const finish=await motion.locator('.hub-ship').evaluate(el=>getComputedStyle(el).transform);expect(finish).not.toBe(start);await motion.screenshot({path:`${out}/motion-end.png`});await motion.waitForTimeout(2000);
  const video=motion.video();await videoContext.close();if(video)copyFileSync(await video.path(),`${out}/home-motion.webm`);
 });

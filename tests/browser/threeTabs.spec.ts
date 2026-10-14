@@ -10,5 +10,5 @@ test('three tabs leave all daily tools reachable and Settings opens directly',as
 });
 
 test('opening has no skip button and automatically releases keyboard focus',async({page})=>{
- await page.clock.install();await page.clock.pauseAt(new Date());await page.goto('/');const opening=page.getByRole('dialog',{name:'日常终端开场'});await expect(opening).toBeVisible();expect(await opening.getByRole('button').count()).toBe(0);await page.keyboard.press('Tab');await expect(opening).toBeFocused();await page.clock.runFor(1800);await expect(opening).toHaveCount(0);await expect(page.getByRole('navigation',{name:'功能导航'})).toBeVisible();
+ await page.clock.install();await page.clock.pauseAt(new Date());await page.goto('/');const opening=page.getByRole('dialog',{name:'帝江号开场'});await expect(opening).toBeVisible();expect(await opening.getByRole('button').count()).toBe(0);await page.keyboard.press('Tab');await expect(opening).toBeFocused();await page.clock.runFor(1800);await expect(opening).toHaveCount(0);await expect(page.getByRole('navigation',{name:'功能导航'})).toBeVisible();
 });

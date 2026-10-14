@@ -2,7 +2,7 @@ import {go} from './navigation';
 import { test, expect, type Page } from '@playwright/test';
 async function more(page:Page,name:string){await go(page,name);}
 test('three fixed bottom destinations retain access to daily tools through Today',async({page})=>{
-  await page.goto('/');await expect(page.getByRole('heading',{name:'日常终端',exact:true})).toBeVisible();
+  await page.goto('/');await expect(page.getByRole('heading',{name:'帝江号',exact:true})).toBeVisible();
   const nav=page.getByRole('navigation',{name:'功能导航'});
   const position=await nav.boundingBox();expect(position).not.toBeNull();expect(position!.y).toBeGreaterThan(650);
   await expect(nav.getByRole('button')).toHaveText(['今日','助手','设置']);
@@ -12,7 +12,7 @@ test('three fixed bottom destinations retain access to daily tools through Today
 });
 test('phone user can record, edit and persist ledger and reminders without game onboarding',async({page})=>{
   await page.goto('/');
-  await expect(page.getByRole('heading',{name:'日常终端',exact:true})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'帝江号',exact:true})).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
   await page.screenshot({path:'test-results/mobile-home.png',fullPage:true});
   await go(page,'记账');
@@ -198,7 +198,7 @@ test('model metadata variations cannot turn one explicit command into duplicate 
  await page.reload();await go(page,'记账');await expect(page.getByText('-¥28.00',{exact:true})).toHaveCount(1);
 });
 
-test('overview separates clickable modules and date from terrain and honors reduced motion',async({page})=>{
+test('overview separates clickable modules and date from the ship and honors reduced motion',async({page})=>{
  await page.emulateMedia({reducedMotion:'no-preference'});await page.goto('/');
  for(const width of [320,390,768]){
   await page.setViewportSize({width,height:844});const map=await page.locator('.hub-map-stage').boundingBox();const date=await page.locator('.overview-date').boundingBox();expect(map).not.toBeNull();expect(date).not.toBeNull();expect(date!.y+date!.height).toBeLessThanOrEqual(map!.y);
@@ -210,6 +210,6 @@ test('overview separates clickable modules and date from terrain and honors redu
   for(const button of await page.locator('.hub-modules button').all()){const svg=await button.locator('.hub-plate-content>svg').boundingBox();const box=await button.boundingBox();expect(svg!.x).toBeGreaterThanOrEqual(box!.x+8);expect(svg!.x+svg!.width).toBeLessThanOrEqual(box!.x+box!.width-8);}
   for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++){const a=boxes[i],b=boxes[j];expect(a.right<=b.x||b.right<=a.x||a.bottom<=b.y||b.bottom<=a.y).toBeTruthy();}
  }
- const contours=page.locator('.hub-topographic-lines');expect(await contours.evaluate(el=>getComputedStyle(el).animationName)).not.toBe('none');
- await page.setViewportSize({width:390,height:844});await page.screenshot({path:'test-results/home-separated-modules.png'});await page.emulateMedia({reducedMotion:'reduce'});await expect.poll(()=>contours.evaluate(el=>getComputedStyle(el).animationName)).toBe('none');await expect.poll(()=>page.locator('.hub-land-contours').evaluate(el=>getComputedStyle(el).animationName)).toBe('none');
+ const ship=page.locator('.hub-ship');expect(await ship.evaluate(el=>getComputedStyle(el).animationName)).not.toBe('none');
+ await page.setViewportSize({width:390,height:844});await page.screenshot({path:'test-results/home-separated-modules.png'});await page.emulateMedia({reducedMotion:'reduce'});await expect.poll(()=>ship.evaluate(el=>getComputedStyle(el).animationName)).toBe('none');
 });

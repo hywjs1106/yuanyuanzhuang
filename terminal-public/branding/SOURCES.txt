@@ -1,0 +1,16 @@
+帝江号 · 私人同人应用素材记录
+
+Endfield Industries 完整徽标（白色 / 黑色版本）：
+https://github.com/Longxiangjunlin/dsh-endfield-theme/tree/main/client/assets
+作者素材声明：https://github.com/Longxiangjunlin/dsh-endfield-theme/blob/main/NOTICE.md
+声明原始来源：https://www.bilibili.com/opus/1237489243187576841
+游戏图像、名称与商标属于 Hypergryph / GRYPHLINE。用于私人非商业同人展示；游戏素材不适用本项目 GPL，也不适用主题代码 MIT。
+
+帝江号飞船：用户提供游戏菜单截图，经内置 imagegen 提取并重建遮挡处；非官方独立原始资源，细节不保证逐像素相同。
+最终文件：branding/dijiang-ship.png
+处理要求：保留原角度、长舰体、左侧塔架及灰色线刻外观，移除菜单、圆环、文字、黄光和指针；保留完整舰体。
+
+应用图标：以上完整徽标加代码绘制外围倒三角框，以浏览器直接栅格化为 Android 多密度资源。
+
+内置 imagegen 使用的提取提示词（透明背景请求，保留工具返回原文件）：
+Use case: background-extraction. Edit target: attached actual Arknights Endfield game menu screenshot. Extract ONLY the central OMV Dijiang spaceship into a clean transparent PNG asset for a private fan app. Preserve exact recognizable ship design, long slender pointed bow to the right, bulky industrial stern to left, elevated mast on upper left, oblique top view and grey monochrome engraved wireframe rendered detail, same angle/silhouette/proportions as screenshot. Remove every surrounding UI panel, circles, grids, labels, yellow scanner beam, center pointer/triangle, glow, numbers, all text, background. Reconstruct small parts of ship obstructed by UI naturally using surrounding ship geometry; do not design a different vessel. Entire vessel visible, long horizontal composition with generous transparent margin, centered occupying 90% of image width, no cropping. Actual transparent alpha background, no frame no checkerboard no extra ships. Landscape 1536x1024.
