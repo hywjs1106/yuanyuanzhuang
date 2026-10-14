@@ -2,7 +2,7 @@
   "name": "daily-terminal",
   "private": true,
   "license": "GPL-3.0-or-later",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,7 @@
     "cap:open:android": "cap open android",
     "cap:run:android": "cap run android",
     "cap:build:android": "cap build android",
-    "test": "tsx --test tests/*.test.ts",
+    "test": "tsx --test tests/*.test.ts tests/*.test.tsx",
     "test:browser": "playwright test",
     "postinstall": "node scripts/patch-terminal-notifications.mjs"
   },

@@ -5,3 +5,5 @@ Modified 2026-10-14: lightweight local personal assistant; removed game runtime 
 Code licensed GPL-3.0-or-later; see LICENSE.txt. Corresponding source is the local velvet folder supplied with the APK. Original author names/icons/artwork are not reused as product branding.
 Calendar: lunar-javascript, Copyright (c) 2019 6tail, MIT license. https://github.com/6tail/lunar-javascript
 Weather: attribution to selected service is shown on the weather page.
+
+Font: Noto Sans SC subset, Copyright Adobe/Google; SIL Open Font License 1.1. See fonts/OFL.txt.
