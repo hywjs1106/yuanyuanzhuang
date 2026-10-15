@@ -27,3 +27,8 @@ fangyi-bouquet-avatar.png: transparent avatar adapted with built-in image_gen fr
 Product: https://store.gryphline.com/products/arknights-endfield-chibi-acrylic-stand-set-springwake-pavilion-zhuang-fangyi
 Reference: https://store.gryphline.com/cdn/shop/files/Q_c3287670-f05d-4d18-baf0-ae94be08967f.png?v=1776772568&width=600
 Generated edit: 2026-10-15; local reference references/avatar-search/official-source.png; preserved generated output in workspace as PNG with alpha.
+
+ink-spirit-brand.png: unchanged game portrait, Doodled Lung / 龙的简约线条, item_user_avatar_bp_1_6. Retrieved 2026-10-15. Used only for the in-app masthead; launcher icon and opening animation retain their existing assets.
+Catalog: https://endfield.wiki.gg/wiki/Doodled_Lung_(Portrait)
+Game asset mirror: https://endfield-assets.fffdan.com/vfs/Bundle/file/assets/beyond/dynamicassets/gameplay/ui/sprites/playeravatar/icon_user_avatar_bp_1_6.png
+Original game artwork belongs to Hypergryph / GRYPHLINE and respective rights holders; excluded from GPL code licensing.

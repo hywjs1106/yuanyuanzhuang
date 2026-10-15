@@ -48,6 +48,7 @@
 .terminal-brand { gap: 9px; }
 .terminal-brand h1 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
 .terminal-brand .brand-sigil { width: 22px; height: 22px; }
+.terminal-brand .brand-ink-spirit { width: 30px; height: 30px; object-fit: cover; border-radius: 4px; }
 .terminal-header-state { margin-left: auto; color: var(--muted); font-size: 12px; line-height: 1.5; white-space: nowrap; }
 .terminal-header .theme-button { min-width: 48px; padding: 10px 0 10px 12px; border: 0; font-size: 12px; background: var(--color-clear); }
 .terminal-status-strip { padding: 10px 0 15px; gap: 5px 12px; font-size: 10px; }
