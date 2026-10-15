@@ -9,7 +9,7 @@ import {exportSnapshot,restoreSnapshot} from './data';
 import {makeBackup,validateBackup,localDateKey,type Snapshot,type TerminalSettings} from './ledger';
 import {reminderNotifications} from './reminderNotifications';
 import {parseLocalAIConnection,assertLocalCredentialTarget} from './localAI';
-export function SettingsPanel({settings,onSave,onNotice}:{settings:TerminalSettings;onSave:(s:TerminalSettings)=>Promise<void>;onNotice:(s:string)=>void}){
+export function SettingsPanel({settings,onSave,onNotice,onOpenNotes}:{settings:TerminalSettings;onSave:(s:TerminalSettings)=>Promise<void>;onNotice:(s:string)=>void;onOpenNotes?:()=>void}){
   const [budget,setBudget]=useState(String(settings.budget));const [baseUrl,setBaseUrl]=useState(settings.ai?.baseUrl??'');const [model,setModel]=useState(settings.ai?.model??'');const [apiKey,setApiKey]=useState(settings.ai?.apiKey??'');const [protocol,setProtocol]=useState<'openai'|'anthropic'>(settings.ai?.protocol??'openai');const [busy,setBusy]=useState(false);const [error,setError]=useState('');const [incoming,setIncoming]=useState<Snapshot>();
   useEffect(()=>{setBudget(String(settings.budget));setBaseUrl(settings.ai?.baseUrl??'');setModel(settings.ai?.model??'');setApiKey(settings.ai?.apiKey??'');setProtocol(settings.ai?.protocol??'openai');},[settings]);
   async function run(fn:()=>Promise<void>){setBusy(true);setError('');try{await fn();}catch(e){setError(e instanceof Error?e.message:'操作失败');}finally{setBusy(false);}}
@@ -24,6 +24,7 @@ export function SettingsPanel({settings,onSave,onNotice}:{settings:TerminalSetti
     <div className="settings-section"><h3>数据备份</h3><p className="muted">包含流水、提醒、备忘、聊天和设置。恢复会替换当前记录，请先导出一份备份。本机已有 AI 与天气 Key 时，服务地址和 Key 沿用本机；天气城市从备份恢复。</p><div className="button-row"><button disabled={busy} onClick={()=>void run(backup)}>导出备份</button><label className="file-button">选择备份文件<input aria-label="选择备份文件" type="file" accept=".json,application/json" disabled={busy} onChange={e=>void importFile(e.target.files?.[0])}/></label></div>
     {incoming&&<div className="notice"><p>准备恢复：{incoming.entries.length} 笔流水、{incoming.reminders.length} 个提醒、{incoming.notes.length} 条备忘、{incoming.messages.length} 条聊天。</p><div className="button-row"><button disabled={busy} onClick={()=>void restore()}>确认替换并恢复</button><button onClick={()=>setIncoming(undefined)}>取消恢复</button></div></div>}
     {localStorage.getItem('daily-terminal-pre-restore')&&<button disabled={busy} onClick={()=>void run(async()=>{await restoreSnapshot(JSON.parse(localStorage.getItem('daily-terminal-pre-restore')!));onNotice('已恢复到上次导入之前');})}>撤销上次恢复</button>}</div>
+    {onOpenNotes&&<div className="settings-section"><h3>工具</h3><button type="button" aria-label="打开备忘" onClick={onOpenNotes}>备忘与购物清单</button></div>}
     <div className="settings-section"><h3>帝江号 · 个人生活终端</h3><p className="muted">基于 The Velvet 源码改造，保留 GPL 许可证与作者署名。记账采用原流水格式，AI 沿用原请求层；游戏系统不在本版运行。当前使用人民币，生日按公历重复。</p><a href="https://github.com/yuukimarine/the-velvet" target="_blank" rel="noreferrer">查看上游项目与许可证</a><p className="muted">天气需要联网；黄历离线可查。</p></div>
   </section>;
 }

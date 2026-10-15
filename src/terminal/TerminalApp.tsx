@@ -5,12 +5,11 @@ import {Capacitor,registerPlugin} from '@capacitor/core';
 import type {LedgerExpenseType} from '@/types';
 import {terminalDb,defaultSettings,initializeTerminal,saveEntry,saveReminder,saveSettings} from './data';
 import {summarizeLedger,localDateKey,type TerminalSettings} from './ledger';
-import {LedgerPanel} from './LedgerPanel';import {AssistantPanel} from './AssistantPanel';import {SettingsPanel} from './SettingsPanel';import {ReminderPanel} from './ReminderPanel';import {WeatherPanel} from './WeatherPanel';import {AlmanacPanel} from './AlmanacPanel';
+import {LedgerPanel} from './LedgerPanel';import {AssistantPanel} from './AssistantPanel';import {SettingsPanel} from './SettingsPanel';import {ReminderPanel} from './ReminderPanel';import {WeatherPanel,WeatherRefresh} from './WeatherPanel';import {AlmanacPanel} from './AlmanacPanel';
 import {getAlmanacSummary} from './almanac';
 import {createReminder,completeDeliveredReminder,snoozeDeliveredReminder,nextReminderOccurrence,type Reminder} from './reminders';
 import {reminderNotifications,type ReminderNotificationStatus} from './reminderNotifications';
 import type {Proposal} from './assistant';
-import {assistantConfigured} from './assistant';
 import './terminal.css';
 import './assistant-chat.css';
 import './sticker-gallery.css';
@@ -59,19 +58,17 @@ export default function TerminalApp(){
   if(fatal)return <main className="terminal-shell"><h1>本地数据暂时无法打开</h1><p role="alert">{fatal}</p><button onClick={()=>window.location.reload()}>重试</button></main>;
   if(!ready)return <main className="terminal-shell"><p role="status">正在打开你的帝江号…</p></main>;
   const upcoming=(reminders??[]).map(r=>({r,at:nextReminderOccurrence(r)})).filter((x):x is {r:Reminder;at:Date}=>!!x.at).sort((a,b)=>a.at.getTime()-b.at.getTime()).slice(0,4);
-  const reminderCount=(reminders??[]).filter(r=>r.enabled&&!!nextReminderOccurrence(r)).length;
   const navigate=(next:Page)=>{if(next!==page){setNavigationMotion(true);setPage(next);}window.scrollTo({top:0,behavior:'instant'});};
   const weatherPanel=<WeatherPanel config={settings.weather??{provider:'openmeteo'}} onConfigChange={weather=>updateSettings({...settings,weather})} onBundleChange={weatherUpdated}/>;
-  return <div className={`terminal-shell ${page==='assistant'?'is-assistant':''} ${keyboardOpen?'keyboard-open':''}`}><header className="terminal-header"><div className="terminal-brand"><img className="brand-sigil" src="/terminal-icon.svg" width="32" height="32" alt=""/><h1>帝江号</h1></div><span className="terminal-header-state">{assistantConfigured(settings.ai)?'AI 已配置':'离线助手'}</span><button className="theme-button" aria-label="切换深浅模式" onClick={()=>void updateSettings({...settings,theme:settings.theme==='dark'?'light':'dark'}).catch(e=>setNotice(String(e)))}>{settings.theme==='dark'?'浅色':'深色'}</button></header>
+  return <div className={`terminal-shell ${page==='assistant'?'is-assistant':''} ${keyboardOpen?'keyboard-open':''}`}><header className="terminal-header"><div className="terminal-brand"><img className="brand-sigil" src="/terminal-icon.svg" width="32" height="32" alt=""/><h1>帝江号</h1></div><button className="theme-button" aria-label="切换深浅模式" onClick={()=>void updateSettings({...settings,theme:settings.theme==='dark'?'light':'dark'}).catch(e=>setNotice(String(e)))}>{settings.theme==='dark'?'浅色':'深色'}</button></header>
     {notice&&<div className="notice toast" role="status"><p>{notice}</p><button aria-label="关闭提示" onClick={()=>setNotice('')}>关闭</button></div>}
     <main key={page} className={`terminal-content page-${page}${navigationMotion?' route-enter':''}`}>
-    {page==='today'&&<><OverviewPanel date={date} reminderCount={reminderCount} expense={summary.expense} balance={summary.balance} budget={settings.budget} almanacSummary={getAlmanacSummary(date)} onNavigate={navigate} agenda={<section className="overview-agenda"><div className="panel-heading"><h2>接下来</h2><button onClick={()=>navigate('reminders')}>管理提醒</button></div>{upcoming.length?upcoming.slice(0,1).map(({r,at})=><button className="agenda-item" key={r.id} onClick={()=>navigate('reminders')}><span>{r.title}</span><time>{at.toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}</time></button>):<p className="muted">目前没有即将到来的提醒。</p>}</section>}/>
-<WeatherPanel compact onOpen={()=>navigate('weather')} config={settings.weather??{provider:'openmeteo'}} onConfigChange={weather=>updateSettings({...settings,weather})} onBundleChange={weatherUpdated}/></>}
+    {page==='today'&&<><OverviewPanel date={date} onNavigate={navigate}/><WeatherRefresh config={settings.weather??{provider:'openmeteo'}} onBundleChange={weatherUpdated}/></>}
     {page==='ledger'&&<LedgerPanel entries={entries??[]} onSave={saveEntry} onDelete={async id=>{await terminalDb.entries.delete(id);}}/>}
     {page==='reminders'&&<><ReminderPanel reminders={reminders??[]} onSave={async r=>{await saveReminder(r);await refreshNotifications();}} onDelete={async id=>{await terminalDb.reminders.delete(id);await refreshNotifications();}} notificationStatus={notif} onRequestPermission={async()=>{setNotif(await reminderNotifications.requestPermission());await refreshNotifications();}} onTestNotification={()=>reminderNotifications.test()}/>{Capacitor.isNativePlatform()&&<div className="notice"><p>准点提醒权限：{exact===undefined?'检查中':exact?'已允许':'尚未允许，提醒可能延迟'}</p>{exact===false&&<button onClick={()=>void TerminalAlarms.request().then(s=>setExact(s.granted)).catch(e=>setNotice(String(e)))}>允许准点提醒</button>}<p className="muted">手机强行停止应用、限制后台或省电设置可能影响通知。可用“测试通知”检查。</p></div>}</>}
     {page==='weather'&&weatherPanel}{page==='almanac'&&<AlmanacPanel/>}
     {page==='assistant'&&<AssistantPanel config={settings.ai} context={`今日${getAlmanacSummary(date)}；本月支出${summary.expense}元；待提醒事项：${upcoming.map(x=>`${x.r.title} ${x.r.startAt}`).join('；')}。`} messages={messages??[]} onMessage={async m=>{await terminalDb.messages.put(m);}} onConfirm={confirm}/>}
     {page==='notes'&&<section className="panel"><h2>备忘与购物清单</h2><label>写点什么<textarea value={note} maxLength={10000} rows={4} onChange={e=>setNote(e.target.value)} placeholder="要买的东西、临时想法…"/></label><button disabled={!note.trim()} onClick={()=>void addNote()}>保存备忘</button>{(notes??[]).map(n=><article className="note-item" key={n.id}><p>{n.text}</p><small>{new Date(n.createdAt).toLocaleString('zh-CN')}</small><button className="danger" onClick={()=>void terminalDb.notes.delete(n.id).catch(e=>setNotice(String(e)))}>删除</button></article>)}</section>}
-    {page==='settings'&&<SettingsPanel settings={settings} onSave={updateSettings} onNotice={setNotice}/>}
-    </main>{page!=='assistant'&&<footer className="terminal-footer"><span>LOCAL ARCHIVE / 本地保存</span><span>你的生活，你来安排</span></footer>}<BottomNavigation currentPage={page} onNavigate={navigate} keyboardOpen={keyboardOpen}/></div>;
+    {page==='settings'&&<SettingsPanel settings={settings} onSave={updateSettings} onNotice={setNotice} onOpenNotes={()=>navigate('notes')}/>}
+    </main><BottomNavigation currentPage={page} onNavigate={navigate} keyboardOpen={keyboardOpen}/></div>;
 }

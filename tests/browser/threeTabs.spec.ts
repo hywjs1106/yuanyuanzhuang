@@ -4,7 +4,7 @@ test('three tabs leave all daily tools reachable and Settings opens directly',as
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');const nav=page.getByRole('navigation',{name:'功能导航'});
  await expect(nav.getByRole('button')).toHaveText(['今日','助手','设置']);await expect(page.locator('.more-sheet')).toHaveCount(0);
  for(const [name,destination] of [['记账','ledger'],['提醒','reminders'],['天气','weather'],['黄历','almanac'],['备忘','notes']]){
-  await nav.getByRole('button',{name:'今日',exact:true}).click();await page.getByRole('button',{name:'打开'+name,exact:true}).click();await expect(page.locator('main.page-'+destination)).toBeVisible();await expect(nav.getByRole('button',{name:'今日',exact:true})).toHaveAttribute('aria-current','location');
+  await nav.getByRole('button',{name:name==='备忘'?'设置':'今日',exact:true}).click();await page.getByRole('button',{name:'打开'+name,exact:true}).click();await expect(page.locator('main.page-'+destination)).toBeVisible();await expect(nav.getByRole('button',{name:'今日',exact:true})).toHaveAttribute('aria-current','location');
  }
  await nav.getByRole('button',{name:'助手',exact:true}).click();await expect(page.getByLabel('和方宜说说',{exact:true})).toBeVisible();await nav.getByRole('button',{name:'设置',exact:true}).click();await expect(page.getByLabel('每月预算')).toBeVisible();
 });

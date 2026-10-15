@@ -26,7 +26,12 @@ test('floating surfaces move without moving touch targets and stop offscreen or 
   const parent=await child.locator('..').boundingBox();const rect=await child.boundingBox();expect(rect!.y).toBeGreaterThanOrEqual(parent!.y-.1);expect(rect!.y+rect!.height).toBeLessThanOrEqual(parent!.y+parent!.height+.1);
   const map=await page.locator('.hub-map-stage').boundingBox();expect(rect!.y+rect!.height<map!.y||rect!.y>map!.y+map!.height).toBeTruthy();
  }
- await page.setViewportSize({width:320,height:200});await page.evaluate(()=>window.scrollTo(0,document.body.scrollHeight));
+ await page.setViewportSize({width:320,height:200});await page.evaluate(()=>{
+  // A minimal home has nothing below the scene; supply scroll space so the
+  // entire observed scene can actually leave the viewport.
+  const space=document.createElement('div');space.style.height='400px';document.body.appendChild(space);
+  window.scrollTo(0,document.body.scrollHeight);
+ });
  await expect.poll(()=>surface.evaluate(el=>getComputedStyle(el).animationPlayState)).toBe('paused');
  await page.evaluate(()=>window.scrollTo(0,0));await expect.poll(()=>surface.evaluate(el=>getComputedStyle(el).animationPlayState)).toBe('running');
  await page.emulateMedia({reducedMotion:'reduce'});expect(await surface.evaluate(el=>el.getAnimations().length)).toBe(0);

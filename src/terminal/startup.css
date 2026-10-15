@@ -1,35 +1,18 @@
-/* MIT SplashScreen layout/motion adaptation; see licenses/endfield-ui-MIT.txt. */
+/* Whole-mark presentation: one restrained ghost pulse, no reveal or progress UI. */
 .startup-screen{position:fixed;inset:0;z-index:100;color:#f5f5eb;overflow:hidden;outline:none}
-.startup-visual{position:absolute;inset:0;background:#1c201d;overflow:hidden}
-.startup-brand{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:min(70%,300px);display:flex;flex-direction:column;align-items:flex-start;gap:26px}
-.startup-triangles{display:block;width:42px;height:37px;color:#e8ef20;animation:startup-mark-reveal 600ms cubic-bezier(.16,1,.3,1)}
-.startup-name{display:flex;flex-direction:column;font-size:clamp(54px,18vw,76px);font-weight:550;letter-spacing:.05em;line-height:1.14}
-.startup-foot{position:absolute;left:8%;right:8%;bottom:calc(38px + env(safe-area-inset-bottom))}
-.startup-rule{position:relative;height:8px;margin-bottom:32px;background:#41473f;overflow:hidden}
-.startup-rule i{position:absolute;inset:0;display:block;background:#e8ef20;transform-origin:left;animation:startup-line-reveal 900ms cubic-bezier(.16,1,.3,1) both}
-.startup-decor{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.startup-decor svg{width:20px;height:20px;stroke:#c3c8ba;stroke-width:1;fill:none}
-.startup-decor>span{display:grid;grid-template-columns:repeat(6,4px);gap:3px}.startup-decor i{width:4px;height:4px;background:#c3c8ba}.startup-decor i:nth-child(n+10){opacity:.35}
-.startup-foot p{margin:0;font-size:13px;color:#c3c8ba}
-.startup-wipe-layer{position:absolute;inset:0;background:#e8ef20;transform-origin:left;pointer-events:none;animation:startup-yellow-fill 540ms cubic-bezier(1,0,.7,1) both}
-.startup-leaving .startup-visual{animation:startup-exit 200ms ease-out both}
-.startup-focus-target:focus{outline:none}
-@keyframes startup-mark-reveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
-@keyframes startup-line-reveal{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes startup-yellow-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes startup-exit{to{opacity:0}}
-@media(min-aspect-ratio:1/1){.startup-brand{left:64.45%;top:45%;transform:translateY(-50%);width:28%;gap:18px}.startup-name{font-size:clamp(36px,8vw,66px)}.startup-triangles{width:32px;height:28px}.startup-foot{left:64.45%;right:5%;bottom:6%}.startup-rule{position:fixed;top:0;bottom:0;left:0;width:8px;height:auto;margin:0}.startup-rule i{transform-origin:top;animation-name:startup-line-reveal-vertical}.startup-decor{margin-bottom:8px}}
-@keyframes startup-line-reveal-vertical{from{transform:scaleY(0)}to{transform:scaleY(1)}}
-@media(max-height:420px){.startup-brand{gap:12px}.startup-name{font-size:36px}.startup-triangles{width:26px;height:23px}.startup-decor{display:none}.startup-foot p{font-size:12px}}
-@media(prefers-reduced-motion:reduce){.startup-screen,.startup-screen *{animation:none!important}}
-
-/* Preserve the sourced complete lockup rather than rebuilding its lettering. */
-.startup-visual{background:radial-gradient(ellipse at 50% 36%,#3e443f 0,#1c201d 60%,#111512 100%)}
-.startup-visual::before{content:'';position:absolute;inset:0;opacity:.14;background:repeating-linear-gradient(135deg,transparent 0 3px,#f2f4e533 3px 4px);pointer-events:none}
-.startup-brand{width:min(84%,360px);left:50%;top:42%;transform:translate(-50%,-50%);align-items:center;gap:14px}
-.startup-emblem{display:block;width:100%;height:auto;object-fit:contain;mix-blend-mode:screen;animation:startup-mark-reveal 650ms cubic-bezier(.16,1,.3,1) both}
-.startup-emblem-frame{position:absolute;top:0;left:0;width:100%;height:auto;aspect-ratio:594/512;fill:none;stroke:#f2f5e5;stroke-width:2;opacity:.65;pointer-events:none;animation:startup-mark-reveal 650ms cubic-bezier(.16,1,.3,1) both}
+.startup-visual{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 36%,#3e443f 0,#1c201d 60%,#111512 100%)}
+.startup-visual::before{content:'';position:absolute;inset:0;opacity:.1;background:repeating-linear-gradient(0deg,transparent 0 3px,#f2f4e529 3px 4px);pointer-events:none}
+.startup-brand{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(84%,360px);display:flex;flex-direction:column;align-items:center;gap:14px;animation:startup-signal 1300ms ease-in-out both}
+.startup-brand::before{content:'';position:absolute;left:0;top:0;width:100%;aspect-ratio:594/512;background:url('/branding/endfield-lockup-dark.png') center/contain no-repeat;mix-blend-mode:screen;pointer-events:none;opacity:0;animation:startup-ghost 1100ms ease-in-out both}
+.startup-emblem{display:block;width:100%;height:auto;object-fit:contain;mix-blend-mode:screen}
+.startup-emblem-frame{position:absolute;top:0;left:0;width:100%;height:auto;aspect-ratio:594/512;fill:none;stroke:#f2f5e5;stroke-width:2;opacity:.65;pointer-events:none}
 .startup-name{display:block;font-size:32px;font-weight:500;letter-spacing:.26em;line-height:1.4;padding-left:.26em}
 .startup-subtitle{font-size:10px;letter-spacing:.3em;color:#bdc6b8}
-@media(min-aspect-ratio:1/1){.startup-brand{left:50%;top:44%;width:min(45vh,360px);transform:translate(-50%,-50%);gap:8px}.startup-name{font-size:22px}.startup-foot{left:8%;right:8%;bottom:5%}.startup-rule{position:relative;top:auto;left:auto;width:auto;height:4px;margin-bottom:16px}.startup-rule i{animation-name:startup-line-reveal;transform-origin:left}.startup-decor{display:none}}
-@media(max-height:420px){.startup-brand{width:180px;gap:3px}.startup-name{font-size:18px}.startup-subtitle{font-size:9px}.startup-foot{bottom:12px}.startup-rule{margin-bottom:8px}}
+.startup-leaving .startup-visual{animation:startup-exit 190ms ease-out both}
+.startup-focus-target:focus{outline:none}
+@keyframes startup-signal{0%,100%{opacity:1}32%{opacity:.92}48%{opacity:.84}62%{opacity:.98}}
+@keyframes startup-ghost{0%,100%{opacity:0;transform:none}30%{opacity:.12;transform:translate(2px,-1px)}54%{opacity:.06;transform:translate(-1px,1px)}75%{opacity:0;transform:none}}
+@keyframes startup-exit{to{opacity:0}}
+@media(min-aspect-ratio:1/1){.startup-brand{width:min(58vh,360px);top:46%;gap:8px}.startup-name{font-size:22px}}
+@media(max-height:420px){.startup-brand{width:180px;gap:3px}.startup-name{font-size:18px}.startup-subtitle{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.startup-screen,.startup-screen *{animation:none!important}}

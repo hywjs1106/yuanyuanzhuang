@@ -8,7 +8,7 @@ test('corner controls and navigation remain readable and separated on small phon
   const map=await page.locator('.hub-map-stage').boundingBox();
   for(const plate of await page.locator('.hub-plate').all()){
    const rect=await plate.boundingBox();expect(rect!.height).toBeGreaterThanOrEqual(48);
-   expect(await plate.locator('small').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(11);
+   expect(await plate.locator('strong').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(15);
    expect(rect!.y+rect!.height<=map!.y-3||rect!.y>=map!.y+map!.height+3).toBeTruthy();
    const icon=await plate.locator('svg').boundingBox();expect(icon!.x).toBeGreaterThanOrEqual(rect!.x+8);expect(icon!.x+icon!.width).toBeLessThanOrEqual(rect!.x+rect!.width-8);
   }

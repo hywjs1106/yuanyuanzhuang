@@ -229,3 +229,5 @@
 .almanac-panel .lunar-date { font-size:32px; padding:20px 0 12px; border-top:1px solid var(--line); }
 .almanac-activities>div:first-child h4 { color:var(--color-success); }
 .almanac-activities>div:last-child h4 { color:var(--color-error); }
+
+.terminal-header .theme-button{margin-left:auto}

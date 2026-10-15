@@ -1,12 +1,12 @@
 import {useEffect,useRef,useState,type ReactNode} from 'react';
 import './startup.css';
 
-/* Original MIT SplashScreen layout, triangle and fill/wipe/fade adaptation.
+/* MIT SplashScreen lifecycle adaptation; whole-mark television ghosting.
  * Copyright (c) 2026 球球; terminal-public/licenses/endfield-ui-MIT.txt.
  * Source: github.com/icaruszezen/endfield-ui. Game artwork attribution: terminal-public/branding/SOURCES.txt. */
 
 export function StartupGate({children}:{children:ReactNode}) {
-  const [phase,setPhase]=useState<'intro'|'wipe'|'leaving'|'done'>(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches?'done':'intro');
+  const [phase,setPhase]=useState<'intro'|'leaving'|'done'>(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches?'done':'intro');
   const content=useRef<HTMLDivElement|null>(null);
   const opening=useRef<HTMLDivElement>(null);
   useEffect(()=>{
@@ -15,7 +15,7 @@ export function StartupGate({children}:{children:ReactNode}) {
     const finish=()=>setPhase('done');
     const reduce=()=>{if(preference.matches)finish();};
     const back=(event:Event)=>{event.preventDefault();finish();};
-    const timer=window.setTimeout(()=>setPhase(phase==='intro'?'wipe':phase==='wipe'?'leaving':'done'),phase==='intro'?900:phase==='wipe'?540:200);
+    const timer=window.setTimeout(()=>setPhase(phase==='intro'?'leaving':'done'),phase==='intro'?1450:190);
     preference.addEventListener('change',reduce);window.addEventListener('terminal-back',back);
     if(phase==='intro')opening.current?.focus({preventScroll:true});
     return()=>{clearTimeout(timer);preference.removeEventListener('change',reduce);window.removeEventListener('terminal-back',back);};
@@ -31,8 +31,7 @@ export function StartupGate({children}:{children:ReactNode}) {
     {phase!=='done'&&<div ref={opening} tabIndex={-1} className={`startup-screen startup-${phase}`} role="dialog" aria-modal="true" aria-label="帝江号开场" onKeyDown={event=>{if(event.key==='Escape')setPhase('done');if(event.key==='Tab'){event.preventDefault();opening.current?.focus({preventScroll:true});}}}>
       <div className="startup-visual">
         <div className="startup-brand"><img className="startup-emblem" src="/branding/endfield-lockup-dark.png" width="594" height="512" alt="终末地工业完整徽标"/><svg className="startup-emblem-frame" viewBox="0 0 594 512" aria-hidden="true"><path d="M32 20H562L297 492Z"/><path d="M28 16h14M552 16h14M294 487l3 5 3-5"/></svg><strong className="startup-name">帝江号</strong><span className="startup-subtitle">O.M.V. DIJIANG</span></div>
-        <div className="startup-foot"><div className="startup-rule" aria-hidden="true"><i/></div><div className="startup-decor" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22"/><path d="M6 12h12M12 6v12"/></svg><span>{Array.from({length:12},(_,i)=><i key={i}/>)}</span></div><p>你的生活，你来安排</p></div>
-        {phase!=='intro'&&<div className="startup-wipe-layer" aria-hidden="true"/>}
+
       </div>
     </div>}
   </>;

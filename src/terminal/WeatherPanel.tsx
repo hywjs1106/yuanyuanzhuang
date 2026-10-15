@@ -4,6 +4,20 @@ import { fetchWeatherBundle, rainGuidance, readWeatherCache, weatherFreshness, w
 export interface WeatherPanelProps { config: WeatherConfig; onConfigChange: (cfg:WeatherConfig)=>Promise<void>; onBundleChange?:(bundle:WeatherBundle)=>void; compact?:boolean; onOpen?:()=>void; }
 const message = (e:unknown) => e instanceof Error ? e.message : '天气服务暂时不可用';
 
+/** Preserve the home refresh and briefing callback without mounting any UI. */
+export function WeatherRefresh({config,onBundleChange}:{config:WeatherConfig;onBundleChange:(bundle:WeatherBundle)=>void}) {
+  const provider=config.provider??'openmeteo';
+  useEffect(()=>{
+    const controller=new AbortController();const cfg={...config,provider};
+    if(weatherReady(cfg))void fetchWeatherBundle(cfg,controller.signal).then(bundle=>{
+      if(controller.signal.aborted)return;
+      writeWeatherCache(cfg,bundle);onBundleChange(bundle);
+    }).catch(()=>{/* A failed silent refresh preserves the existing cache. */});
+    return()=>controller.abort();
+  },[provider,config.apiKey,config.host,config.city?.lat,config.city?.lon,config.city?.id,onBundleChange]);
+  return null;
+}
+
 export function WeatherPanel({config,onConfigChange,onBundleChange,compact=false,onOpen}:WeatherPanelProps) {
   const [draft,setDraft] = useState<WeatherConfig>({...config,provider:config.provider ?? 'openmeteo'});
   const [query,setQuery] = useState('');
