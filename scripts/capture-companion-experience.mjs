@@ -1,0 +1,10 @@
+import {chromium} from '@playwright/test';import fs from 'node:fs';
+const out='../references/ui-20';fs.mkdirSync(out,{recursive:true});const b=await chromium.launch({channel:'chromium'});const c=await b.newContext({viewport:{width:390,height:844},recordVideo:{dir:out+'/video',size:{width:390,height:844}}});const p=await c.newPage();
+await p.goto('http://127.0.0.1:5180');await p.getByRole('button',{name:'助手',exact:true}).click();await p.screenshot({path:out+'/empty-light.png'});
+await p.getByRole('button',{name:'和方宜打个招呼',exact:true}).click();await p.waitForTimeout(650);await p.screenshot({path:out+'/greeting.png'});await p.waitForTimeout(4500);
+await p.getByRole('button',{name:'随便聊聊',exact:true}).click();await p.screenshot({path:out+'/draft.png'});await p.getByRole('textbox',{name:'和方宜说说'}).fill('你好');await p.getByRole('button',{name:'发送',exact:true}).click();await p.waitForTimeout(600);await p.screenshot({path:out+'/chat-light.png'});
+await p.getByRole('button',{name:'切换深浅模式'}).click();await p.waitForFunction(()=>document.documentElement.dataset.terminalTheme==='dark');await p.screenshot({path:out+'/chat-dark.png'});
+await p.setViewportSize({width:320,height:740});await p.screenshot({path:out+'/chat-320.png'});
+await p.getByRole('button',{name:'方宜表情',exact:true}).click();await p.getByLabel('和方宜说说').focus();await p.setViewportSize({width:320,height:400});await p.waitForTimeout(150);await p.screenshot({path:out+'/keyboard-320.png'});
+const v=p.video();await c.close();await v.saveAs(out+'/companion-preview.webm');
+const q=await b.newPage({viewport:{width:320,height:740}});await q.goto('http://127.0.0.1:5180');await q.getByRole('button',{name:'助手',exact:true}).click();await q.screenshot({path:out+'/empty-320.png'});await q.emulateMedia({reducedMotion:'reduce'});await q.getByRole('button',{name:'和方宜打个招呼',exact:true}).click();await q.screenshot({path:out+'/reduced-320.png'});await b.close();

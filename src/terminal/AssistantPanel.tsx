@@ -6,6 +6,7 @@ import type {Message} from './ledger';
 import {executeAssistantActions} from './assistantExecution';
 import {StickerMessage} from './StickerMessage';
 import {StickerPicker} from './StickerPicker';
+import {FangyiPresence} from './FangyiPresence';
 export function AssistantPanel({config,context,messages,onMessage,onConfirm}:{config:AIConfig|undefined;context:string;messages:Message[];onMessage:(message:Message)=>Promise<void>;onConfirm:(proposal:Proposal,operationId?:string,signal?:AbortSignal)=>Promise<string|void>}){
   const [text,setText]=useState('');const [pending,setPending]=useState<AssistantReply>();const [states,setStates]=useState<Record<number,string>>({});const [busy,setBusy]=useState(false);const [error,setError]=useState('');const ctrl=useRef<AbortController>();const mounted=useRef(true);const inFlight=useRef(new Set<string>());const batch=useRef('');const [newReply,setNewReply]=useState('');const [preview,setPreview]=useState<string>();
   useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;ctrl.current?.abort();};},[]);
@@ -29,10 +30,11 @@ export function AssistantPanel({config,context,messages,onMessage,onConfirm}:{co
   const [expression,setExpression]=useState<'working'|'peek'>();
   const [reducedMotion,setReducedMotion]=useState(false);
   const log=useRef<HTMLDivElement>(null);
+  const composer=useRef<HTMLTextAreaElement>(null);
   const nearBottom=useRef(true);
   useEffect(()=>{const media=window.matchMedia('(prefers-reduced-motion: reduce)');const update=()=>setReducedMotion(media.matches);update();media.addEventListener('change',update);return()=>media.removeEventListener('change',update);},[]);
   useEffect(()=>{if(!expression)return;const timer=window.setTimeout(()=>setExpression(undefined),5000);return()=>window.clearTimeout(timer);},[expression]);
-  useEffect(()=>{const el=log.current;if(el&&nearBottom.current)el.scrollTop=el.scrollHeight;},[messages,busy,pending,expression,drawer]);
+  useEffect(()=>{const el=log.current;if(!el)return;if(messages.length===0&&!drawer&&!expression&&!preview)el.scrollTop=0;else if(nearBottom.current)el.scrollTop=el.scrollHeight;},[messages,busy,pending,expression,drawer,preview]);
   useEffect(()=>{if(messages.length>previousCount.current&&!nearBottom.current)setUnread(true);previousCount.current=messages.length;},[messages]);
   const shown=messages.slice(-30);
   const day=(value:string)=>{const date=new Date(value);return Number.isNaN(date.getTime())?'历史消息':date.toLocaleDateString('zh-CN',{month:'long',day:'numeric'});};
@@ -40,15 +42,17 @@ export function AssistantPanel({config,context,messages,onMessage,onConfirm}:{co
   const avatar=<img className="fangyi-message-avatar" src="/characters/fangyi-avatar.png" alt="" width="36" height="36"/>;
   const userAvatar=<span className="admin-message-avatar" role="img" aria-label="你的头像"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2z"/></svg></span>;
   return <section className="panel assistant-chat" aria-label="与庄方宜的对话">
-    <header className="fangyi-contact">
-      <div className="fangyi-portrait-frame"><img src="/characters/fangyi-avatar.png" alt="庄方宜头像" width="64" height="64"/></div>
-      <div className="fangyi-contact-copy"><h2>{characterPersona.name}</h2><p>{characterPersona.badge} · 武陵</p></div>
-      <span className="fangyi-config">{assistantConfigured(config)?'AI 已配置':'离线预设'}</span>
+    <header className="fangyi-contact" data-busy={busy}>
+      <div className="fangyi-contact-copy"><h2>{characterPersona.name}</h2><p>{characterPersona.badge} · 武陵</p><span className="fangyi-config">{assistantConfigured(config)?'AI 已配置':'离线预设'}</span><span className="fangyi-request-state" aria-hidden="true">{busy?'正在整理回复…':''}</span></div>
+      <FangyiPresence busy={busy}/>
     </header>
     <p className="fangyi-chat-notice">说清事项就能记账、安排提醒；有歧义时，方宜会再问你。</p>
-    <div className="chat-log" ref={log} role="log" aria-label="聊天记录" aria-live="polite" onScroll={()=>{const el=log.current;if(el){nearBottom.current=el.scrollHeight-el.scrollTop-el.clientHeight<64;if(nearBottom.current)setUnread(false);}}}>
-      {messages.length===0&&<><div className="chat-day-separator">开始对话</div><article className="chat-message assistant">{avatar}<div className="chat-message-content"><small>{characterPersona.name}</small><div className="chat-bubble"><p>{characterPersona.greeting}</p></div></div></article></>}
-      {shown.map((m,index)=><Fragment key={m.id}>{(index===0||day(shown[index-1].createdAt)!==day(m.createdAt))&&<div className="chat-day-separator">{day(m.createdAt)}</div>}<article className={`chat-message ${m.role}`}>{m.role==='assistant'?avatar:userAvatar}<div className="chat-message-content"><small>{m.role==='user'?'你':characterPersona.name}</small><div className="chat-bubble"><p>{m.text}</p></div>{m.stickerId&&<StickerMessage stickerId={m.stickerId} autoPlay={m.id===newReply}/>}<time dateTime={m.createdAt}>{clock(m.createdAt)}</time></div></article></Fragment>)}
+    <div className="chat-log" ref={log} role="log" aria-label="聊天记录" aria-live="polite" onScroll={()=>{const el=log.current;if(el){nearBottom.current=messages.length===0||el.scrollHeight-el.scrollTop-el.clientHeight<64;if(nearBottom.current)setUnread(false);}}}>
+      {messages.length===0&&<><article className="chat-message assistant">{avatar}<div className="chat-message-content"><small>{characterPersona.name}</small><div className="chat-bubble"><p>{characterPersona.greeting}</p></div></div></article></>}
+      {messages.length===0&&<div className="chat-starters" role="group" aria-label="找个话题"><p>找个话题</p><div>{[
+        ['随便聊聊','今天想和你随便聊聊。'],['分享好消息','今天有件挺开心的事，想跟你说说。'],['理一理思路','我有个想法，想听听你的看法。'],
+      ].map(([label,draft])=><button key={label} type="button" disabled={!!text.trim()||busy} onClick={()=>{if(text.trim()||busy)return;setText(draft);composer.current?.focus();}}>{label}<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10 5l5 5-5 5"/></svg></button>)}</div></div>}
+      {shown.map((m,index)=><Fragment key={m.id}>{(index===0||day(shown[index-1].createdAt)!==day(m.createdAt))&&<div className="chat-day-separator">{day(m.createdAt)}</div>}<article className={`chat-message ${m.role}`} data-arrival={m.id===newReply}>{m.role==='assistant'?avatar:userAvatar}<div className="chat-message-content"><small>{m.role==='user'?'你':characterPersona.name}</small><div className="chat-bubble"><p>{m.text}</p></div>{m.stickerId&&<StickerMessage stickerId={m.stickerId} autoPlay={m.id===newReply}/>}<time dateTime={m.createdAt}>{clock(m.createdAt)}</time></div></article></Fragment>)}
       {busy&&<article className="chat-message assistant">{avatar}<div className="chat-message-content"><small>{characterPersona.name}</small><div className="chat-bubble chat-thinking" role="status">正在想一想…</div></div></article>}
       {preview&&<StickerMessage key={preview} stickerId={preview} autoPlay/>}
       {expression&&<article className="chat-expression"><img src={reducedMotion?'/characters/fangyi-avatar.png':`/characters/fangyi-${expression==='working'?'working':'peek'}.gif`} alt={expression==='working'?'方宜忙碌表情':'方宜探头表情'} width="136" height="136"/><div><p>{reducedMotion?'已开启减少动态效果，显示静态头像。':'表情将在 5 秒后停止。'}</p><button type="button" onClick={()=>setExpression(undefined)}>停止表情</button></div></article>}
@@ -60,7 +64,7 @@ export function AssistantPanel({config,context,messages,onMessage,onConfirm}:{co
 
     <form className="assistant-composer" onSubmit={submit}>
       <button className="expression-toggle" type="button" aria-label="方宜表情" aria-expanded={drawer} onClick={()=>setDrawer(!drawer)}><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M8 14c1 4 7 4 8 0M8 9h.01M16 9h.01" strokeLinecap="round"/></svg></button>
-      <textarea aria-label="和方宜说说" maxLength={6000} value={text} onChange={e=>setText(e.target.value)} placeholder="和方宜说说…" rows={2}/>
+      <textarea ref={composer} aria-label="和方宜说说" maxLength={6000} value={text} onChange={e=>setText(e.target.value)} placeholder="和方宜说说…" rows={2}/>
       {busy?<button type="button" className="send-message" onClick={()=>ctrl.current?.abort()}>停止</button>:<button type="submit" className="send-message" disabled={!text.trim()}>发送</button>}
     </form>
   </section>;
