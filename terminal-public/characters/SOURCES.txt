@@ -22,3 +22,8 @@ https://www.bilibili.com/opus/1193388604877963269
 https://www.bilibili.com/opus/1202921838874722310
 https://www.bilibili.com/opus/1214403025151459333
 https://www.bilibili.com/opus/1228165161257271315
+
+fangyi-bouquet-avatar.png: transparent avatar adapted with built-in image_gen from the user's selected B, GRYPHLINE official Springwake Pavilion Zhuang Fangyi chibi acrylic stand product illustration. Product background/platform/text and adjacent mascot removed; some character details reconstructed by image editing. This is an adapted asset, not an untouched official standalone avatar. Original artwork rights remain with respective owners; excluded from GPL code licensing.
+Product: https://store.gryphline.com/products/arknights-endfield-chibi-acrylic-stand-set-springwake-pavilion-zhuang-fangyi
+Reference: https://store.gryphline.com/cdn/shop/files/Q_c3287670-f05d-4d18-baf0-ae94be08967f.png?v=1776772568&width=600
+Generated edit: 2026-10-15; local reference references/avatar-search/official-source.png; preserved generated output in workspace as PNG with alpha.

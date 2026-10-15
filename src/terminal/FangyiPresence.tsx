@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {getSticker} from './stickerCatalog';
 
-const portrait='/characters/stickers/fy-01-08.jpg';
+const portrait='/characters/fangyi-bouquet-avatar.png';
 const greetings=['fy-01-06','fy-01-08','fy-01-17'] as const;
 
 /** A local, user-triggered character gesture; never an AI message or inferred emotion. */
