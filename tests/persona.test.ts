@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as assistant from '../src/terminal/assistant';
+import { characterPersona } from '../src/terminal/persona';
 import type { AIConfig, AIMessage } from '../src/utils/aiClient';
 
 const config: AIConfig = { apiKey: 'test-key', model: 'test-model', baseUrl: 'https://example.invalid/v1' };
@@ -43,6 +44,7 @@ test('configured outgoing request includes persona, safe context and conversatio
   const reply = await assistant.askAssistant('想喝茶', config, 'available notes: tea', history, new AbortController().signal, transport);
   assert.deepEqual(reply.actions, []);
   const system = String(outbound[0].content);
+  assert.ok(system.startsWith(characterPersona.prompt), 'the configured request must carry the entire current persona, not just its name');
   assert.match(system, /庄方宜/);
   assert.match(system, /普通.*聊天.*actions/);
   assert.match(system, /确认/);
