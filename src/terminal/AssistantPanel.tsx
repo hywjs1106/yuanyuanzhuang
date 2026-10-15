@@ -6,7 +6,6 @@ import type {Message} from './ledger';
 import {executeAssistantActions} from './assistantExecution';
 import {StickerMessage} from './StickerMessage';
 import {StickerPicker} from './StickerPicker';
-import {TerminalIcon} from './TerminalVisuals';
 export function AssistantPanel({config,context,messages,onMessage,onConfirm}:{config:AIConfig|undefined;context:string;messages:Message[];onMessage:(message:Message)=>Promise<void>;onConfirm:(proposal:Proposal,operationId?:string,signal?:AbortSignal)=>Promise<string|void>}){
   const [text,setText]=useState('');const [pending,setPending]=useState<AssistantReply>();const [states,setStates]=useState<Record<number,string>>({});const [busy,setBusy]=useState(false);const [error,setError]=useState('');const ctrl=useRef<AbortController>();const mounted=useRef(true);const inFlight=useRef(new Set<string>());const batch=useRef('');const [newReply,setNewReply]=useState('');const [preview,setPreview]=useState<string>();
   useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;ctrl.current?.abort();};},[]);
@@ -43,8 +42,8 @@ export function AssistantPanel({config,context,messages,onMessage,onConfirm}:{co
   return <section className="panel assistant-chat" aria-label="与庄方宜的对话">
     <header className="fangyi-contact">
       <div className="fangyi-portrait-frame"><img src="/characters/fangyi-avatar.png" alt="庄方宜头像" width="64" height="64"/></div>
-      <div className="fangyi-contact-copy"><h2>{characterPersona.name}</h2><p>{characterPersona.badge} · 武陵</p><span className="fangyi-config">{assistantConfigured(config)?'AI 已配置':'离线预设'}</span></div>
-      <div className="fangyi-signal-stamp" aria-hidden="true"><TerminalIcon name="assistant"/></div>
+      <div className="fangyi-contact-copy"><h2>{characterPersona.name}</h2><p>{characterPersona.badge} · 武陵</p></div>
+      <span className="fangyi-config">{assistantConfigured(config)?'AI 已配置':'离线预设'}</span>
     </header>
     <p className="fangyi-chat-notice">说清事项就能记账、安排提醒；有歧义时，方宜会再问你。</p>
     <div className="chat-log" ref={log} role="log" aria-label="聊天记录" aria-live="polite" onScroll={()=>{const el=log.current;if(el){nearBottom.current=el.scrollHeight-el.scrollTop-el.clientHeight<64;if(nearBottom.current)setUnread(false);}}}>
