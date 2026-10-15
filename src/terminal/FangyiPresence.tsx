@@ -34,6 +34,6 @@ export function FangyiPresence({busy}:{busy:boolean}){
       <svg className="fangyi-presence-orbit" viewBox="0 0 120 120" aria-hidden="true"><path d="M10 36V10h26M84 10h26v26M110 84v26H84M36 110H10V84"/><path d="M4 64a56 56 0 0 0 52 52M64 4a56 56 0 0 1 52 52"/></svg>
       <img className="fangyi-presence-art" src={src} alt="庄方宜头像" width="104" height="104" onError={()=>setFailed(true)}/>
     </span>
-    <span className="fangyi-presence-hint" aria-hidden="true">{busy?'正在回复':reaction?'停止表情':'打个招呼'}</span>
+    <span className="fangyi-presence-hint" aria-hidden="true">{busy?'正在回复':reaction?<svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="1"/></svg>:'打个招呼'}</span>
   </button>;
 }

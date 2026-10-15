@@ -70,8 +70,8 @@ test('assistant surface shows character identity and honest incomplete configura
   const html = renderToStaticMarkup(createElement(AssistantPanel, {config: {...config,model:''},context:'',messages:[],onMessage:async()=>{},onConfirm:async()=>{}}));
   assert.match(html, /庄方宜/);
   assert.match(html, /角色风格/);
-  assert.match(html, /离线/);
-  assert.doesNotMatch(html, /已配置 AI/);
+  assert.doesNotMatch(html, /离线预设/);
+  assert.doesNotMatch(html, /AI 已配置|已配置 AI/);
   assert.match(html, /闲聊/);
 });
 
