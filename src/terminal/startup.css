@@ -2,7 +2,7 @@
 .startup-screen{position:fixed;inset:0;z-index:100;color:#f5f5eb;overflow:hidden;outline:none}
 .startup-visual{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 36%,#3e443f 0,#1c201d 60%,#111512 100%)}
 .startup-visual::before{content:'';position:absolute;inset:0;opacity:.1;background:repeating-linear-gradient(0deg,transparent 0 3px,#f2f4e529 3px 4px);pointer-events:none}
-.startup-brand{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(84%,360px);display:flex;flex-direction:column;align-items:center;gap:14px;animation:startup-signal 1300ms ease-in-out both}
+.startup-brand{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(84%,360px);display:flex;flex-direction:column;align-items:center;gap:14px;animation:startup-signal 1300ms ease-in-out both,startup-hover 1450ms ease-in-out both}
 .startup-brand::before{content:'';position:absolute;left:0;top:0;width:100%;aspect-ratio:594/512;background:url('/branding/endfield-lockup-dark.png') center/contain no-repeat;mix-blend-mode:screen;pointer-events:none;opacity:0;animation:startup-ghost 1100ms ease-in-out both}
 .startup-emblem{display:block;width:100%;height:auto;object-fit:contain;mix-blend-mode:screen}
 .startup-emblem-frame{position:absolute;top:0;left:0;width:100%;height:auto;aspect-ratio:594/512;fill:none;stroke:#f2f5e5;stroke-width:2;opacity:.65;pointer-events:none}
@@ -11,6 +11,7 @@
 .startup-leaving .startup-visual{animation:startup-exit 190ms ease-out both}
 .startup-focus-target:focus{outline:none}
 @keyframes startup-signal{0%,100%{opacity:1}32%{opacity:.92}48%{opacity:.84}62%{opacity:.98}}
+@keyframes startup-hover{0%,100%{transform:translate(-50%,-50%) translateY(0) scale(1)}50%{transform:translate(-50%,-50%) translateY(-6px) scale(1.018)}}
 @keyframes startup-ghost{0%,100%{opacity:0;transform:none}30%{opacity:.12;transform:translate(2px,-1px)}54%{opacity:.06;transform:translate(-1px,1px)}75%{opacity:0;transform:none}}
 @keyframes startup-exit{to{opacity:0}}
 @media(min-aspect-ratio:1/1){.startup-brand{width:min(58vh,360px);top:46%;gap:8px}.startup-name{font-size:22px}}
