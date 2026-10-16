@@ -6,7 +6,9 @@ test('painting edition persists, restores Fangyi and does not discard settings d
   const toggle=page.getByRole('button',{name:'切换角色风格',exact:true});
   await toggle.click();await expect(page.locator('html')).toHaveAttribute('data-terminal-visual','si');
   await expect(page.getByAltText('祀主题山水画')).toBeVisible();
-  await page.reload();await expect(page.locator('html')).toHaveAttribute('data-terminal-visual','si');
+  await expect(page.getByRole('heading',{name:'缘缘庄',exact:true})).toBeVisible();await expect(page).toHaveTitle('缘缘庄');
+  await page.reload();await expect(page.locator('.startup-name')).toHaveText('缘缘庄');await expect(page.locator('html')).toHaveAttribute('data-terminal-visual','si');
+  await expect(page.getByRole('heading',{name:'缘缘庄',exact:true})).toBeVisible();
   await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'设置',exact:true}).click();
   await page.getByLabel('模型名称',{exact:true}).fill('draft-model');
   await page.getByRole('button',{name:'切换角色风格',exact:true}).click();
@@ -14,6 +16,7 @@ test('painting edition persists, restores Fangyi and does not discard settings d
   await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'今日',exact:true}).click();
   await expect(page.getByAltText('帝江号飞船')).toBeVisible();
   await expect(page.getByAltText('祀主题山水画')).toHaveCount(0);
+  await expect(page.getByRole('heading',{name:'帝江号',exact:true})).toBeVisible();await expect(page).toHaveTitle('帝江号');
 });
 
 test('switching companion aborts a pending request and never moves its response to the new chat',async({page})=>{

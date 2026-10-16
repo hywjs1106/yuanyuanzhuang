@@ -11,6 +11,8 @@ test('Si uses her own identity and excludes the Fangyi sticker catalog in the ac
   assert.match(prompt, /祀/);
   assert.match(prompt, /缘缘庄/);
   assert.match(prompt, /si-smile/);
+  assert.match(prompt, /喜欢使用颜文字/);
+  assert.match(prompt, /你在“缘缘庄”/);
   assert.doesNotMatch(prompt, /fy-01-01|庄方宜的角色风格/);
   assert.match(prompt, /终端返回真实执行结果前不能说已经保存或安排完成/);
 });
