@@ -1,6 +1,10 @@
+import {SI_STICKER_CATALOG,chooseSiOfflineSticker} from './siStickers';
+export type StickerCharacter='fangyi'|'si';
 /** Source attribution belongs to the sticker artwork; no software license is inferred for it. */
 export interface StickerDefinition {
   readonly id: string;
+  readonly character?: StickerCharacter;
+  readonly animated?: boolean;
   readonly part: number;
   readonly index: number;
   readonly label: string;
@@ -194,16 +198,18 @@ export const STICKER_CATALOG: readonly StickerDefinition[] = Object.freeze([
   Object.freeze({"id":"fy-11-18","part":11,"index":18,"label":"火焰背景抬手","tags":["火焰","抬手"],"localAsset":"/characters/stickers/fy-11-18.webp","poster":"/characters/stickers/fy-11-18.jpg","remoteUrl":"https://i0.hdslb.com/bfs/new_dyn/c40ad753d6042c59d082a97010966b5f183856206.gif","source":"https://www.bilibili.com/opus/1228165161257271315","author":"夏雪NazuYuki"}),
 ]);
 
-const byId = new Map(STICKER_CATALOG.map(sticker => [sticker.id, sticker]));
-export function getSticker(id: string): StickerDefinition | undefined {
-  return byId.get(id);
+const byId = new Map([...STICKER_CATALOG,...SI_STICKER_CATALOG].map(sticker => [sticker.id, sticker]));
+export function getSticker(id: string,character?:StickerCharacter): StickerDefinition | undefined {
+  const sticker=byId.get(id);
+  return sticker&&(!character||(sticker.character??'fangyi')===character)?sticker:undefined;
 }
-export function isKnownStickerId(id: unknown): id is string {
-  return typeof id === 'string' && byId.has(id);
+export function isKnownStickerId(id: unknown,character?:StickerCharacter): id is string {
+  return typeof id === 'string' && !!getSticker(id,character);
 }
 
 /** Only a few semantic candidates enter the AI prompt, never the full asset catalog. */
-export function stickerPromptCandidates(text: string): string {
+export function stickerPromptCandidates(text: string,character:StickerCharacter='fangyi'): string {
+  if(character==='si')return SI_STICKER_CATALOG.map(s=>`${s.id} ${s.label}（${s.tags.join('、')}）`).join('\n');
   const query = text.toLocaleLowerCase();
   const scored = STICKER_CATALOG.map((sticker, order) => ({
     sticker, order,
@@ -218,7 +224,8 @@ export function stickerPromptCandidates(text: string): string {
 }
 
 /** Curated expressive moments only; ordinary requests do not get a decorative sticker. */
-export function chooseOfflineSticker(text: string): string | undefined {
+export function chooseOfflineSticker(text: string,character:StickerCharacter='fangyi'): string | undefined {
+  if(character==='si')return chooseSiOfflineSticker(text);
   if (/晚安|睡觉|睡了|good\s*night/i.test(text)) return 'fy-01-04';
   if (/谢谢|感谢|多谢|thank(?:s| you)/i.test(text)) return 'fy-01-17';
   if (/好累|累死|疲惫|好困|困死|tired|sleepy/i.test(text)) return 'fy-06-18';

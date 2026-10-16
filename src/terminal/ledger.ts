@@ -67,7 +67,7 @@ export function validateBackup(value: unknown): Snapshot {
   }));
   const messages = uniqueRows(b.messages.map(m=>{
     if(!['user','assistant'].includes(m.role)||typeof m.text!=='string'||m.text.length>30000||!Number.isFinite(Date.parse(m.createdAt))) throw new Error('聊天格式不正确');
-    if(m.stickerId!==undefined && !isKnownStickerId(m.stickerId))throw new Error('聊天表情编号不正确');
+    if(m.stickerId!==undefined && !isKnownStickerId(m.stickerId,m.character??'fangyi'))throw new Error('聊天表情编号不正确');
     if(m.character!==undefined && m.character!=='fangyi' && m.character!=='si')throw new Error('聊天角色不正确');
     return {id:m.id,role:m.role,text:m.text,createdAt:m.createdAt,...(m.stickerId?{stickerId:m.stickerId}:{}),...(m.character?{character:m.character}:{})};
   }));

@@ -1,13 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
-import { getSticker } from './stickerCatalog';
+import { getSticker, type StickerCharacter } from './stickerCatalog';
 
 export interface StickerMessageProps {
   stickerId: string;
   autoPlay?: boolean;
+  character?:StickerCharacter;
 }
 
 /** Historical messages stay still. Animation is bounded and only mounted while playing. */
-export function StickerMessage({ stickerId, autoPlay = false }: StickerMessageProps) {
+export function StickerMessage({stickerId,autoPlay=false,character='fangyi'}:StickerMessageProps){
+  const sticker=getSticker(stickerId,character);
+  if(!sticker)return null;
+  if(sticker.animated===false)return <StaticSticker key={stickerId} stickerId={stickerId}/>;
+  return <AnimatedStickerMessage stickerId={stickerId} autoPlay={autoPlay}/>;
+}
+function StaticSticker({stickerId}:{stickerId:string}){
+  const sticker=getSticker(stickerId,'si')!;
+  const [unavailable,setUnavailable]=useState(false);
+  return <figure className="sticker-message sticker-message--static" aria-label={`祀表情：${sticker.label}`}>
+    {unavailable?<span className="sticker-message__fallback" role="status">{sticker.label} · 表情暂时无法显示</span>:<img src={sticker.poster} className="sticker-message__image" alt={`祀表情：${sticker.label}`} width="144" height="144" loading="lazy" decoding="async" onError={()=>setUnavailable(true)}/>}
+  </figure>;
+}
+function AnimatedStickerMessage({ stickerId, autoPlay = false }: StickerMessageProps) {
   const sticker = getSticker(stickerId);
   const [playing, setPlaying] = useState(false);
   const [remote, setRemote] = useState(false);

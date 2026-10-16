@@ -96,3 +96,12 @@
 @keyframes si-unroll { from { clip-path:inset(0 0 6% 0); transform:translateY(5px); } to { clip-path:inset(0); transform:translateY(0); } }
 @keyframes si-paint-arrive { from { clip-path:inset(0 0 24% 0); } to { clip-path:inset(0); } }
 @media(prefers-reduced-motion:reduce) { :root[data-terminal-visual=si] .terminal-content.route-enter,.si-painted-world { animation:none!important; } :root[data-terminal-visual=si] .hub-plate-surface { transition:none; } }
+
+/* Six static reactions and optional draft-only kaomoji, separate from the message history. */
+.si-sticker-picker .sticker-picker__grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.si-kaomoji { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+.si-kaomoji button { min-height:44px; min-width:64px; padding:6px 8px; background:var(--chat-bubble); color:var(--chat-text); border:1px solid var(--chat-rule); border-radius:4px; font-size:13px; }
+.si-kaomoji button:focus-visible { outline:2px solid var(--color-focus); outline-offset:2px; }
+:root[data-terminal-visual=si] .sticker-preview { padding:8px 10px; align-self:flex-start; background:var(--chat-raised); border:1px solid var(--chat-rule); border-radius:4px; }
+.sticker-preview-close { min-height:44px; margin-top:4px; font-size:12px; }
+:root[data-terminal-visual=si] .sticker-message--static { background:var(--chat-raised); border-radius:4px; padding:4px; }
