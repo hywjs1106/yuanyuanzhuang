@@ -17,3 +17,8 @@ Prompt: portrait Chinese scroll landscape; warm ivory paper, charcoal ink mounta
 si-brush.ttf: Google Fonts Ma Shan Zheng, subset containing only 画中行祀. Used only for the decorative title. Functional text retains the existing readable font.
 https://fonts.google.com/specimen/Ma+Shan+Zheng
 License: font-OFL.txt (SIL Open Font License 1.1).
+
+2026-10-17 — Illustrated shortcut dragons (adaptations, not four official game stickers)
+Original game references: Doodled Lung portrait (umbrella), assets/beyond/dynamicassets/gameplay/ui/sprites/playeravatar/icon_user_avatar_bp_1_6.png; lantern scroll assets/beyond/dynamicassets/gameplay/ui/sprites/factory/buildingimage/image_ugly_paint_1.png. Retrieved via https://endfield-assets.fffdan.com/ asset mirror. Portrait identification: https://endfield.wiki.gg/wiki/Doodled_Lung_(Portrait) . Original character/art belongs to its game rights holders.
+Derived with built-in image generation from those two reference images: dragons/ledger.png, reminders.png, weather.png, almanac.png. The notebook and almanac poses are functional adaptations, not claimed official artwork.
+Prompt: faithful comical ink dragon, wobbly black S-shaped brush body, stick arms and feet, thin branched horns, two very large round white eyes and little pupils, long rounded snout and curved whiskers. One full character, transparent background, generous edge clearance, no lettering or badge. Match reference dry brush texture; props respectively blank notebook and brush / pale-yellow lantern / paper umbrella and two rain drops / unfurled blank scroll. Readable at 75px. No 3D, scales, clothes or landscape.

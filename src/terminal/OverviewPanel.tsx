@@ -60,11 +60,10 @@ export function OverviewPanel({date,onNavigate,visualTheme='fangyi'}:OverviewPan
       {visualTheme==='si'?<>
         <div className="si-painted-world"><img className="si-painted-mountains" src="/themes/si/painted-mountains.png" alt="祀主题山水画" width="1024" height="1536" draggable="false"/></div>
         <div className="hub-map-stage si-scroll-window" aria-hidden="true"><span className="si-scroll-title">画中行</span><span className="si-scroll-seal">祀</span></div>
-        <img className="si-ink-companion" src="/characters/ink-spirit-number-one.png" width="128" height="128" alt="" draggable="false"/>
       </>:<><HubSceneFrame/><img className="hub-ship" src="/branding/dijiang-ship.png" alt="帝江号飞船" width="1536" height="1024" draggable="false"/></>}
     <div className="hub-modules">
       {modules.map(({page,label})=><button key={page} type="button" className={`hub-plate hub-plate-${page}`} aria-label={`打开${label}`} onClick={()=>onNavigate(page)}>
-        <span className="hub-plate-surface"><span className="hub-plate-content"><TerminalIcon name={page}/><strong>{label}</strong></span></span>
+        <span className="hub-plate-surface"><span className="hub-plate-content">{visualTheme==='si'?<img className="si-dragon-glyph" src={`/themes/si/dragons/${page}.png`} alt="" width="128" height="128" draggable="false"/>:<TerminalIcon name={page}/>}<strong>{label}</strong></span></span>
       </button>)}
     </div>
     </HubMotion>
