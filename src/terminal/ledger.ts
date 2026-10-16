@@ -3,9 +3,10 @@ import type { WeatherConfig } from '@/utils/weather';
 import type { AIConfig } from '@/utils/aiClient';
 import { validateReminder, type Reminder } from './reminders';
 import { isKnownStickerId } from './stickerCatalog';
-export interface TerminalSettings { id: 'main'; budget: number; ai?: AIConfig; weather?: WeatherConfig; theme?: 'light' | 'dark'; weatherBriefing?:boolean; weatherBriefingTime?:string; }
+export type VisualTheme = 'fangyi' | 'si';
+export interface TerminalSettings { id: 'main'; budget: number; ai?: AIConfig; weather?: WeatherConfig; theme?: 'light' | 'dark'; visualTheme?:VisualTheme; weatherBriefing?:boolean; weatherBriefingTime?:string; }
 export interface Note { id: string; text: string; createdAt: string; }
-export interface Message { id: string; role: 'user' | 'assistant'; text: string; createdAt: string; stickerId?:string; }
+export interface Message { id: string; role: 'user' | 'assistant'; text: string; createdAt: string; stickerId?:string; character?:VisualTheme; }
 export interface Snapshot { entries: LedgerEntry[]; reminders: Reminder[]; notes: Note[]; messages: Message[]; settings: TerminalSettings; }
 export function localDateKey(d = new Date()): string { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 export function validDateKey(s: string): boolean {
@@ -67,10 +68,12 @@ export function validateBackup(value: unknown): Snapshot {
   const messages = uniqueRows(b.messages.map(m=>{
     if(!['user','assistant'].includes(m.role)||typeof m.text!=='string'||m.text.length>30000||!Number.isFinite(Date.parse(m.createdAt))) throw new Error('聊天格式不正确');
     if(m.stickerId!==undefined && !isKnownStickerId(m.stickerId))throw new Error('聊天表情编号不正确');
-    return {id:m.id,role:m.role,text:m.text,createdAt:m.createdAt,...(m.stickerId?{stickerId:m.stickerId}:{})};
+    if(m.character!==undefined && m.character!=='fangyi' && m.character!=='si')throw new Error('聊天角色不正确');
+    return {id:m.id,role:m.role,text:m.text,createdAt:m.createdAt,...(m.stickerId?{stickerId:m.stickerId}:{}),...(m.character?{character:m.character}:{})};
   }));
   const s = b.settings;
   if(!s || s.id!=='main' || !Number.isFinite(s.budget) || s.budget<0 || s.budget>100000000) throw new Error('预算设置不正确');
+  if(s.visualTheme!==undefined && s.visualTheme!=='fangyi' && s.visualTheme!=='si')throw new Error('角色风格不正确');
   if(s.weatherBriefingTime && !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(s.weatherBriefingTime))throw new Error('天气早报时间不正确');
   if(s.ai && (typeof s.ai.model!=='string' || typeof s.ai.baseUrl!=='string' || !/^https:\/\//.test(s.ai.baseUrl))) throw new Error('AI 地址或模型不正确');
   if(s.weather?.city && (!Number.isFinite(s.weather.city.lat)||Math.abs(s.weather.city.lat)>90 || !Number.isFinite(s.weather.city.lon)||Math.abs(s.weather.city.lon)>180 || typeof s.weather.city.name!=='string')) throw new Error('天气城市不正确');

@@ -3,7 +3,7 @@ import {useLiveQuery} from 'dexie-react-hooks';
 import {App as NativeApp} from '@capacitor/app';
 import {Capacitor,registerPlugin} from '@capacitor/core';
 import type {LedgerExpenseType} from '@/types';
-import {terminalDb,defaultSettings,initializeTerminal,saveEntry,saveReminder,saveSettings} from './data';
+import {terminalDb,defaultSettings,initializeTerminal,saveEntry,saveReminder,saveSettingsKeepingVisualTheme,setVisualTheme} from './data';
 import {summarizeLedger,localDateKey,type TerminalSettings} from './ledger';
 import {LedgerPanel} from './LedgerPanel';import {AssistantPanel} from './AssistantPanel';import {SettingsPanel} from './SettingsPanel';import {ReminderPanel} from './ReminderPanel';import {WeatherPanel,WeatherRefresh} from './WeatherPanel';import {AlmanacPanel} from './AlmanacPanel';
 import {getAlmanacSummary} from './almanac';
@@ -16,6 +16,7 @@ import './sticker-gallery.css';
 import './overview-hub.css';
 import './reminder-missions.css';
 import './terminal-polish.css';
+import './si-theme.css';
 import {OverviewPanel} from './OverviewPanel';
 import {readWeatherCache,type WeatherBundle} from './weather';
 import {syncWeatherBriefing} from './weatherBriefing';
@@ -35,12 +36,13 @@ export default function TerminalApp(){
   useEffect(()=>{if(ready)void refreshNotifications();},[reminders,ready,refreshNotifications]);
   const weatherUpdated=useCallback((bundle:WeatherBundle)=>{void terminalDb.settings.get('main').then(s=>syncWeatherBriefing(bundle,!!s?.weatherBriefing,s?.weatherBriefingTime)).catch(e=>setNotice(String(e)));},[]);
   useEffect(()=>{if(ready)void syncWeatherBriefing(readWeatherCache(settings.weather??{provider:'openmeteo'}),!!settings.weatherBriefing,settings.weatherBriefingTime).catch(e=>setNotice(String(e)));},[ready,settings.weather,settings.weatherBriefing,settings.weatherBriefingTime]);
+  useEffect(()=>{document.documentElement.dataset.terminalVisual=settings.visualTheme==='si'?'si':'fangyi';},[settings.visualTheme]);
   useEffect(()=>{document.documentElement.dataset.terminalTheme=settings.theme??'light';document.documentElement.style.colorScheme=settings.theme??'light';},[settings.theme]);
   useEffect(()=>{const viewport=window.visualViewport;let fullHeight=window.innerHeight;
     const update=()=>{const editable=document.activeElement?.matches('textarea,input:not([type=checkbox]):not([type=button]):not([type=submit]),[contenteditable=true]')??false;const height=viewport?.height??window.innerHeight;if(!editable||height>fullHeight)fullHeight=Math.max(window.innerHeight,height);const inset=editable&&(viewport?.scale??1)===1?Math.max(0,fullHeight-height,window.innerHeight-height-(viewport?.offsetTop??0)):0;setKeyboardOpen(inset>120);document.documentElement.style.setProperty('--keyboard-inset',`${inset}px`);};
     const orient=()=>{fullHeight=window.innerHeight;update();};viewport?.addEventListener('resize',update);viewport?.addEventListener('scroll',update);window.addEventListener('resize',update);window.addEventListener('orientationchange',orient);document.addEventListener('focusout',update);update();return()=>{viewport?.removeEventListener('resize',update);viewport?.removeEventListener('scroll',update);window.removeEventListener('resize',update);window.removeEventListener('orientationchange',orient);document.removeEventListener('focusout',update);};},[]);
   useEffect(()=>{if(!Capacitor.isNativePlatform())return;let disposed=false;let remove:undefined|(()=>void);void NativeApp.addListener('backButton',()=>{const event=new Event('terminal-back',{cancelable:true});window.dispatchEvent(event);if(event.defaultPrevented)return;if(keyboardOpen){(document.activeElement as HTMLElement|null)?.blur();return;}if(page!=='today'){setPage('today');window.scrollTo(0,0);}else void NativeApp.exitApp();}).then(handler=>{if(disposed)void handler.remove();else remove=()=>void handler.remove();});return()=>{disposed=true;remove?.();};},[page,keyboardOpen]);
-  async function updateSettings(next:TerminalSettings){await saveSettings(next);}
+  async function updateSettings(next:TerminalSettings){await saveSettingsKeepingVisualTheme(next);}
   async function confirm(proposal:Proposal,operationId:string=crypto.randomUUID(),signal?:AbortSignal):Promise<string>{
     const cancelled=()=>{if(signal?.aborted)throw new DOMException('已停止','AbortError');};cancelled();
     if(proposal.kind==='ledger'){
@@ -60,15 +62,15 @@ export default function TerminalApp(){
   const upcoming=(reminders??[]).map(r=>({r,at:nextReminderOccurrence(r)})).filter((x):x is {r:Reminder;at:Date}=>!!x.at).sort((a,b)=>a.at.getTime()-b.at.getTime()).slice(0,4);
   const navigate=(next:Page)=>{if(next!==page){setNavigationMotion(true);setPage(next);}window.scrollTo({top:0,behavior:'instant'});};
   const weatherPanel=<WeatherPanel config={settings.weather??{provider:'openmeteo'}} onConfigChange={weather=>updateSettings({...settings,weather})} onBundleChange={weatherUpdated}/>;
-  return <div className={`terminal-shell ${page==='assistant'?'is-assistant':''} ${keyboardOpen?'keyboard-open':''}`}><header className="terminal-header"><div className="terminal-brand"><img className="brand-sigil brand-ink-spirit" src="/characters/ink-spirit-brand.png" width="30" height="30" alt=""/><h1>帝江号</h1></div><button className="theme-button" aria-label="切换深浅模式" onClick={()=>void updateSettings({...settings,theme:settings.theme==='dark'?'light':'dark'}).catch(e=>setNotice(String(e)))}>{settings.theme==='dark'?'浅色':'深色'}</button></header>
+  return <div className={`terminal-shell ${page==='assistant'?'is-assistant':''} ${keyboardOpen?'keyboard-open':''}`}><header className="terminal-header"><div className="terminal-brand"><span className="brand-mascot"><img className="brand-sigil brand-ink-spirit" src="/characters/ink-spirit-number-one.png" width="44" height="44" alt=""/></span><h1>帝江号</h1></div><div className="terminal-header-actions"><button type="button" className="edition-toggle" aria-label="切换角色风格" aria-pressed={settings.visualTheme==='si'} onClick={()=>void setVisualTheme(settings.visualTheme==='si'?'fangyi':'si').catch(e=>setNotice(String(e)))}><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h13l-3-3M17 14H4l3 3"/></svg>{settings.visualTheme==='si'?'祀':'方宜'}</button><button className="theme-button" aria-label="切换深浅模式" onClick={()=>void updateSettings({...settings,theme:settings.theme==='dark'?'light':'dark'}).catch(e=>setNotice(String(e)))}>{settings.theme==='dark'?'浅色':'深色'}</button></div></header>
     {notice&&<div className="notice toast" role="status"><p>{notice}</p><button aria-label="关闭提示" onClick={()=>setNotice('')}>关闭</button></div>}
     <main key={page} className={`terminal-content page-${page}${navigationMotion?' route-enter':''}`}>
-    {page==='today'&&<><OverviewPanel date={date} onNavigate={navigate}/><WeatherRefresh config={settings.weather??{provider:'openmeteo'}} onBundleChange={weatherUpdated}/></>}
+    {page==='today'&&<><OverviewPanel date={date} onNavigate={navigate} visualTheme={settings.visualTheme}/><WeatherRefresh config={settings.weather??{provider:'openmeteo'}} onBundleChange={weatherUpdated}/></>}
     {page==='ledger'&&<LedgerPanel entries={entries??[]} onSave={saveEntry} onDelete={async id=>{await terminalDb.entries.delete(id);}}/>}
     {page==='reminders'&&<><ReminderPanel reminders={reminders??[]} onSave={async r=>{await saveReminder(r);await refreshNotifications();}} onDelete={async id=>{await terminalDb.reminders.delete(id);await refreshNotifications();}} notificationStatus={notif} onRequestPermission={async()=>{setNotif(await reminderNotifications.requestPermission());await refreshNotifications();}} onTestNotification={()=>reminderNotifications.test()}/>{Capacitor.isNativePlatform()&&<div className="notice"><p>准点提醒权限：{exact===undefined?'检查中':exact?'已允许':'尚未允许，提醒可能延迟'}</p>{exact===false&&<button onClick={()=>void TerminalAlarms.request().then(s=>setExact(s.granted)).catch(e=>setNotice(String(e)))}>允许准点提醒</button>}<p className="muted">手机强行停止应用、限制后台或省电设置可能影响通知。可用“测试通知”检查。</p></div>}</>}
     {page==='weather'&&weatherPanel}{page==='almanac'&&<AlmanacPanel/>}
-    {page==='assistant'&&<AssistantPanel config={settings.ai} context={`今日${getAlmanacSummary(date)}；本月支出${summary.expense}元；待提醒事项：${upcoming.map(x=>`${x.r.title} ${x.r.startAt}`).join('；')}。`} messages={messages??[]} onMessage={async m=>{await terminalDb.messages.put(m);}} onConfirm={confirm}/>}
+    {page==='assistant'&&<AssistantPanel key={settings.visualTheme??'fangyi'} character={settings.visualTheme??'fangyi'} config={settings.ai} context={`今日${getAlmanacSummary(date)}；本月支出${summary.expense}元；待提醒事项：${upcoming.map(x=>`${x.r.title} ${x.r.startAt}`).join('；')}。`} messages={(messages??[]).filter(m=>(m.character??'fangyi')===(settings.visualTheme??'fangyi'))} onMessage={async m=>{await terminalDb.messages.put({...m,character:settings.visualTheme??'fangyi'});}} onConfirm={confirm}/>}
     {page==='notes'&&<section className="panel"><h2>备忘与购物清单</h2><label>写点什么<textarea value={note} maxLength={10000} rows={4} onChange={e=>setNote(e.target.value)} placeholder="要买的东西、临时想法…"/></label><button disabled={!note.trim()} onClick={()=>void addNote()}>保存备忘</button>{(notes??[]).map(n=><article className="note-item" key={n.id}><p>{n.text}</p><small>{new Date(n.createdAt).toLocaleString('zh-CN')}</small><button className="danger" onClick={()=>void terminalDb.notes.delete(n.id).catch(e=>setNotice(String(e)))}>删除</button></article>)}</section>}
-    {page==='settings'&&<SettingsPanel settings={settings} onSave={updateSettings} onNotice={setNotice} onOpenNotes={()=>navigate('notes')}/>}
+    {page==='settings'&&<SettingsPanel onVisualTheme={visualTheme=>setVisualTheme(visualTheme)} settings={settings} onSave={updateSettings} onNotice={setNotice} onOpenNotes={()=>navigate('notes')}/>}
     </main><BottomNavigation currentPage={page} onNavigate={navigate} keyboardOpen={keyboardOpen}/></div>;
 }

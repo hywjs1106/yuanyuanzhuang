@@ -104,8 +104,8 @@ components:
 **Key Characteristics:**
 
 - 暖纸背景、碳色通讯和提醒详情、局部信号色。
-- 真实本地时间与日期一起位于标题右侧，圆心只显示原创动态地形，四个功能按钮独立位于外侧四角。
-- 紧凑信息行、细线分区、舒适触控区域和五项底部导航。
+- 真实本地时间与日期一起位于标题右侧，中央显示轻微漂浮的帝江号飞船，四个功能按钮独立位于外侧四角。
+- 紧凑信息行、细线分区、舒适触控区域和三项底部导航。
 - 浅深主题维持同一信息层级；减少动态时仍更新真实时间。
 
 ## Colors
@@ -145,7 +145,7 @@ components:
 
 ## Layout
 
-外壳居中，最大宽度（820px），常规横向留白（24px），窄屏缩为（18px），最窄断点缩为（14px）。页面考虑上下安全区域。底部五项导航固定，导航基础高度（76px），页面底部为导航与安全区预留空间。
+外壳居中，最大宽度（820px），常规横向留白（24px），窄屏缩为（18px），最窄断点缩为（14px）。页面考虑上下安全区域。底部三项导航固定，导航基础高度（76px），页面底部为导航与安全区预留空间。
 
 首页圆形地图居中，外圈保留秒标记，直径为 `min(200px,64%)`，外层区域最大宽度（480px）、高度（332px）。四个独立按钮位于左上、右上、左下、右下，置于圆外，按钮最大宽度为区域的（37%）。最窄屏区域高度（320px）。日期与本地时间共同位于总览标题右侧，地图中央不放文字。联系人入口之后依次为提醒数量和紧凑最近安排、账簿摘要、黄历摘要。
 
@@ -181,7 +181,7 @@ components:
 
 ### Navigation
 
-固定五项导航，目的项最小高度（60px）。选中项是纸色底与黄色短线，通讯图标可显示通讯青。更多目的地使用两列入口和清晰名称。键盘打开时隐藏底部导航。
+固定三项导航，目的项最小高度（60px）。选中项是纸色底与黄色短线，通讯图标可显示通讯青。更多目的地使用两列入口和清晰名称。键盘打开时隐藏底部导航。
 
 ### Map Clock
 
@@ -250,3 +250,7 @@ StartupGate keeps application initialization mounted, temporarily makes the cont
 ## Three destination dock
 
 The user's latest navigation requirement supersedes the five-item descriptions above: only 今日, 助手 and 设置 remain in the dock. Settings opens directly; daily subpages belong to Today's group, with `aria-current="location"` on Today when a tool is open rather than announcing the actual page as 今日总览. The fixed dock uses three equal columns, two 8px gaps and 12px side padding; the sliding marker slot is `(100% - 40px) / 3`. The four floating home shortcuts retain their routes. A labelled 48px 备忘 row on the home page preserves the former More-only note destination. No business feature or persisted data is deleted, and the keyboard still hides the entire dock.
+
+
+## 2026-10-17 可切换角色版本
+默认庄方宜保留现有工业界面。祀版用宣纸米白、玉绿、墨色与少量朱砂，中央改为原创山水画卷，四角入口与底部三项导航不变。书法子集只用于“画中行”装饰标题，正文/金额/时间仍用原有字体。深浅模式与角色版本独立。顶部角色按钮和设置中的两张选择项即时保存；切换会更换对话头像与人格，聊天按角色分别保留，旧记录默认归方宜，生活数据共用。墨魉采用用户提供的1号形象并以脸部裁切显示。主题插画不是官方画面，不表示实际环境。

@@ -1,0 +1,19 @@
+Si / 祀 visual edition, 2026-10-17
+
+Character identity verified on official operator roster:
+https://endfield.hypergryph.com/operator
+Official character narrative and version videos:
+https://endfield.hypergryph.com/video
+Game operator profile / voice transcript reference (community transcription):
+https://warfarin.wiki/cn/operators/si
+
+portrait.png: unchanged game UI artwork, chr_0036_jsspsi.
+https://endfield-assets.fffdan.com/vfs/Bundle/file/assets/beyond/dynamicassets/gameplay/ui/sprites/charremoteicon700/icon_chr_0036_jsspsi.png
+Original game art belongs to Hypergryph / GRYPHLINE and respective rights holders; excluded from the application code's GPL license.
+
+painted-mountains.png: original decorative landscape generated using built-in image_gen. It is a theme illustration, not official artwork or a screenshot, and does not represent live location, weather or progress.
+Prompt: portrait Chinese scroll landscape; warm ivory paper, charcoal ink mountains, jade river, red autumn trees, floating cliffs and a tiny pavilion; expressive dry brush marks and playful simplified forms; quiet top/bottom behind functional controls; no text, logo, UI or human figure.
+
+si-brush.ttf: Google Fonts Ma Shan Zheng, subset containing only 画中行祀. Used only for the decorative title. Functional text retains the existing readable font.
+https://fonts.google.com/specimen/Ma+Shan+Zheng
+License: font-OFL.txt (SIL Open Font License 1.1).

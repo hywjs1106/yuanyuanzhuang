@@ -2,10 +2,12 @@ import type {TerminalPage} from './BottomNavigation';
 import {TerminalIcon} from './TerminalVisuals';
 import {LiveClock} from './LiveClock';
 import {useEffect,useRef,useState,type ReactNode} from 'react';
+import type {VisualTheme} from './ledger';
 
 export interface OverviewPanelProps {
   date:string;
   onNavigate:(page:TerminalPage)=>void;
+  visualTheme?:VisualTheme;
 }
 
 const modules = [
@@ -51,12 +53,15 @@ function HubSceneFrame() {
   </>;
 }
 
-export function OverviewPanel({date,onNavigate}:OverviewPanelProps) {
+export function OverviewPanel({date,onNavigate,visualTheme='fangyi'}:OverviewPanelProps) {
   return <section className="overview-hub" aria-labelledby="overview-hub-title">
     <header className="hub-heading"><h2 id="overview-hub-title">今日总览</h2><div className="hub-heading-meta"><time className="overview-date" dateTime={date}><span>{date.slice(0,4)}</span><strong>{date.slice(5,7)}月{date.slice(8)}日</strong></time><LiveClock/></div></header>
     <HubMotion>
-      <HubSceneFrame/>
-      <img className="hub-ship" src="/branding/dijiang-ship.png" alt="帝江号飞船" width="1536" height="1024" draggable="false"/>
+      {visualTheme==='si'?<>
+        <div className="si-painted-world"><img className="si-painted-mountains" src="/themes/si/painted-mountains.png" alt="祀主题山水画" width="1024" height="1536" draggable="false"/></div>
+        <div className="hub-map-stage si-scroll-window" aria-hidden="true"><span className="si-scroll-title">画中行</span><span className="si-scroll-seal">祀</span></div>
+        <img className="si-ink-companion" src="/characters/ink-spirit-number-one.png" width="128" height="128" alt="" draggable="false"/>
+      </>:<><HubSceneFrame/><img className="hub-ship" src="/branding/dijiang-ship.png" alt="帝江号飞船" width="1536" height="1024" draggable="false"/></>}
     <div className="hub-modules">
       {modules.map(({page,label})=><button key={page} type="button" className={`hub-plate hub-plate-${page}`} aria-label={`打开${label}`} onClick={()=>onNavigate(page)}>
         <span className="hub-plate-surface"><span className="hub-plate-content"><TerminalIcon name={page}/><strong>{label}</strong></span></span>

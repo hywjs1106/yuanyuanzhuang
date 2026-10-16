@@ -32,3 +32,6 @@ ink-spirit-brand.png: unchanged game portrait, Doodled Lung / 龙的简约线条
 Catalog: https://endfield.wiki.gg/wiki/Doodled_Lung_(Portrait)
 Game asset mirror: https://endfield-assets.fffdan.com/vfs/Bundle/file/assets/beyond/dynamicassets/gameplay/ui/sprites/playeravatar/icon_user_avatar_bp_1_6.png
 Original game artwork belongs to Hypergryph / GRYPHLINE and respective rights holders; excluded from GPL code licensing.
+
+ink-spirit-number-one.png: adapted transparent cutout from user-supplied in-game screenshot of the dark/ivory green-eyed Ink Spirit with a number-1 tag. This replaces the mistaken Doodled Lung masthead selection. Built-in image_gen removed landscape/UI and reconstructed minor occluded details; not an untouched official standalone asset. Original game art rights belong to their respective owners, excluded from GPL.
+Reference: references/ui-25/ink-spirit-user-reference.png, supplied 2026-10-17. Header uses CSS face framing for legibility.

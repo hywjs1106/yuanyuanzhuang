@@ -1,6 +1,6 @@
 import Dexie, { type Table } from 'dexie';
 import type { LedgerEntry } from '@/types';
-import {validateEntry,validateBackup,type Snapshot,type TerminalSettings,type Note,type Message} from './ledger';
+import {validateEntry,validateBackup,type Snapshot,type TerminalSettings,type VisualTheme,type Note,type Message} from './ledger';
 import {validateReminder,type Reminder} from './reminders';
 class TerminalDatabase extends Dexie {
   entries!:Table<LedgerEntry,string>;reminders!:Table<Reminder,string>;notes!:Table<Note,string>;messages!:Table<Message,string>;settings!:Table<TerminalSettings,string>;
@@ -11,7 +11,21 @@ export const defaultSettings:TerminalSettings={id:'main',budget:0,theme:'light',
 export async function initializeTerminal(){await terminalDb.open();await terminalDb.transaction('rw',terminalDb.settings,async()=>{if(!await terminalDb.settings.get('main'))await terminalDb.settings.put(defaultSettings);});}
 export async function saveEntry(entry:LedgerEntry){await terminalDb.entries.put(validateEntry(entry));}
 export async function saveReminder(reminder:Reminder){await terminalDb.reminders.put(validateReminder(reminder));}
-export async function saveSettings(settings:TerminalSettings){if(!Number.isFinite(settings.budget)||settings.budget<0||settings.budget>100000000)throw new Error('预算不正确');await terminalDb.settings.put({...settings,id:'main'});}
+export async function saveSettings(settings:TerminalSettings){if(!Number.isFinite(settings.budget)||settings.budget<0||settings.budget>100000000)throw new Error('预算不正确');if(settings.visualTheme!==undefined&&!['fangyi','si'].includes(settings.visualTheme))throw new Error('角色风格不正确');await terminalDb.settings.put({...settings,id:'main'});}
+export async function setVisualTheme(visualTheme:VisualTheme){
+  if(visualTheme!=='fangyi'&&visualTheme!=='si')throw new Error('角色风格不正确');
+  await terminalDb.transaction('rw',terminalDb.settings,async()=>{
+    const latest=await terminalDb.settings.get('main')??defaultSettings;
+    await terminalDb.settings.put({...latest,visualTheme,id:'main'});
+  });
+}
+/** Ordinary settings saves may finish after the user has switched companions. */
+export async function saveSettingsKeepingVisualTheme(settings:TerminalSettings){
+  await terminalDb.transaction('rw',terminalDb.settings,async()=>{
+    const latest=await terminalDb.settings.get('main');
+    await saveSettings({...settings,visualTheme:latest?.visualTheme});
+  });
+}
 export async function exportSnapshot():Promise<Snapshot>{
   const [entries,reminders,notes,messages,settings]=await Promise.all([terminalDb.entries.toArray(),terminalDb.reminders.toArray(),terminalDb.notes.toArray(),terminalDb.messages.toArray(),terminalDb.settings.get('main')]);
   return {entries,reminders,notes,messages,settings:settings??defaultSettings};
