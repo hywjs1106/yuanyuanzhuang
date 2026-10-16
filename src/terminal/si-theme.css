@@ -1,4 +1,6 @@
 /* Character edition and brightness are independent. Existing industrial rules stay intact. */
+@font-face { font-family:'Si WenKai'; src:url('/themes/si/fonts/wenkai-regular.v1.woff2') format('woff2'); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Si WenKai'; src:url('/themes/si/fonts/wenkai-medium.v1.woff2') format('woff2'); font-weight:500; font-style:normal; font-display:swap; }
 @font-face { font-family:'Si Brush'; src:url('/themes/si/si-brush.ttf') format('truetype'); font-weight:400; font-style:normal; font-display:swap; }
 .terminal-header { gap:10px; }
 .terminal-header-actions { display:flex; align-items:center; gap:4px; }
@@ -18,6 +20,9 @@
 @media(max-width:350px) { .visual-theme-choices { grid-template-columns:1fr; } .terminal-brand { gap:7px; } .terminal-brand h1 { font-size:20px; } }
 
 :root[data-terminal-visual=si] {
+  --font-body:'Si WenKai','Terminal Sans','Microsoft YaHei',system-ui,sans-serif;
+  --font-display:'Si WenKai','Terminal Sans','Microsoft YaHei',system-ui,sans-serif;
+  --si-font-figures:'Terminal Sans','Segoe UI',system-ui,sans-serif;
   --color-base:#f3eedf; --color-paper:#fcf8ec; --color-panel-end:#fcf8ec;
   --color-paper-2:#e7e9d7; --color-paper-3:#d6ddc7;
   --color-ink:#24372f; --color-ink-2:#566658; --color-rule:#b8c3ad; --color-rule-strong:#697e6c;
@@ -105,3 +110,17 @@
 :root[data-terminal-visual=si] .sticker-preview { padding:8px 10px; align-self:flex-start; background:var(--chat-raised); border:1px solid var(--chat-rule); border-radius:4px; }
 .sticker-preview-close { min-height:44px; margin-top:4px; font-size:12px; }
 :root[data-terminal-visual=si] .sticker-message--static { background:var(--chat-raised); border-radius:4px; padding:4px; }
+
+/* The inn reads like a friendly handwritten page; precision data retains sans figures. */
+:root[data-terminal-visual=si] .terminal-brand h1 { font-size:28px; font-weight:500; letter-spacing:.06em; }
+:root[data-terminal-visual=si] .hub-plate-content strong { font-size:20px; font-weight:500; line-height:1.3; letter-spacing:.08em; }
+:root[data-terminal-visual=si] .assistant-chat .chat-bubble p { font-size:16px; line-height:1.9; letter-spacing:.015em; }
+:root[data-terminal-visual=si] .assistant-chat .assistant-composer textarea { font-size:16px; line-height:24px; padding:11px 10px; }
+:root[data-terminal-visual=si] .hub-heading-meta,
+:root[data-terminal-visual=si] time,
+:root[data-terminal-visual=si] input:is([inputmode=decimal],[type=date],[type=month],[type=datetime-local],[type=time]),
+:root[data-terminal-visual=si] .ledger-panel .stat-row strong,
+:root[data-terminal-visual=si] .ledger-item>strong { font-family:var(--si-font-figures); font-variant-numeric:tabular-nums; }
+:root[data-terminal-visual=si] .si-kaomoji button { font-family:'Segoe UI',system-ui,sans-serif; }
+:root[data-terminal-visual=si][data-terminal-theme=dark] .assistant-chat .chat-bubble p { font-weight:500; }
+@media(max-width:350px) { :root[data-terminal-visual=si] .terminal-brand h1 { font-size:24px; } }

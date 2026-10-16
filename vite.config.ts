@@ -4,7 +4,7 @@ import path from 'node:path';
 import {VitePWA} from 'vite-plugin-pwa';
 export default defineConfig({
   publicDir:'terminal-public',
-  plugins:[react(),VitePWA({registerType:'autoUpdate',includeAssets:['terminal-icon.svg','LICENSE.txt','SOURCE.txt'],manifest:{id:'/daily-terminal',name:'帝江号',short_name:'帝江号',description:'记账、天气、提醒和黄历',lang:'zh-CN',theme_color:'#e6ed32',background_color:'#eeefeb',display:'standalone',start_url:'/',icons:[{src:'terminal-icon.svg',sizes:'any',type:'image/svg+xml',purpose:'any'}]},workbox:{globPatterns:['**/*.{js,css,html,svg,txt,woff2,png,gif,jpg,webp}'],maximumFileSizeToCacheInBytes:5*1024*1024}})],
+  plugins:[react(),VitePWA({registerType:'autoUpdate',includeAssets:['terminal-icon.svg','LICENSE.txt','SOURCE.txt'],manifest:{id:'/daily-terminal',name:'帝江号',short_name:'帝江号',description:'记账、天气、提醒和黄历',lang:'zh-CN',theme_color:'#e6ed32',background_color:'#eeefeb',display:'standalone',start_url:'/',icons:[{src:'terminal-icon.svg',sizes:'any',type:'image/svg+xml',purpose:'any'}]},workbox:{globPatterns:['**/*.{js,css,html,svg,txt,woff2,png,gif,jpg,webp}'],maximumFileSizeToCacheInBytes:6*1024*1024}})],
   resolve:{alias:{'@':path.resolve(__dirname,'./src')}},
   define:{'import.meta.env.PACKAGE_VERSION':JSON.stringify('0.6.6')},
   build:{target:'es2020',sourcemap:false,rollupOptions:{output:{manualChunks:{vendor:['react','react-dom'],calendar:['lunar-javascript'],db:['dexie','dexie-react-hooks']}}}},
