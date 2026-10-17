@@ -34,3 +34,7 @@
 .startup-screen.startup-si.startup-dark .startup-ink-framing{filter:brightness(2) saturate(.4);opacity:.15}
 .startup-screen.startup-si.startup-dark .startup-ink-sun{filter:grayscale(1) brightness(1.9);opacity:.62}
 @media(max-width:350px){.si-heading-companion{flex-basis:76px;gap:5px}.si-heading-companion::after{width:22px}}
+/* White ink on the night paper. Filter the painting only: pupils remain dark and animated. */
+:root[data-terminal-visual=si][data-terminal-theme=dark] .ink-dragon{filter:none}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .ink-dragon>img{filter:grayscale(1) invert(1) brightness(1.18)}
+.startup-screen.startup-si.startup-dark .ink-dragon>img{filter:grayscale(1) invert(1) brightness(1.18)}
