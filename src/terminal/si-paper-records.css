@@ -1,0 +1,77 @@
+/* A functional notebook in Si's painted world. Text and touch targets stay level. */
+:root[data-terminal-visual=si] {--paper-record-wash:#e8ebda;--paper-record-soft:#566b56;--paper-record-seal:#93412f}
+:root[data-terminal-visual=si][data-terminal-theme=dark] {--paper-record-wash:#2a4147;--paper-record-soft:#bac9c9;--paper-record-seal:#e6b49d}
+:root[data-terminal-visual=si] :is(.ledger-panel,.reminder-missions){position:relative;border:0;border-radius:0;background:transparent;padding:0 4px 24px}
+:root[data-terminal-visual=si] :is(.ledger-panel,.reminder-missions)>.panel-heading {border:0;padding-bottom:4px;align-items:center}
+:root[data-terminal-visual=si] :is(.ledger-panel,.reminder-missions)>.panel-heading h2{font-size:27px;letter-spacing:.08em}
+:root[data-terminal-visual=si] .paper-icon{width:26px;height:26px;flex-shrink:0;overflow:visible;color:var(--ink)}
+:root[data-terminal-visual=si] .paper-scene{position:relative;display:flex;align-items:center;gap:8px;min-height:118px;margin:4px 0 14px;isolation:isolate}
+:root[data-terminal-visual=si] .paper-scene::before{content:'';position:absolute;z-index:-1;inset:12px -6px 8px;background:var(--paper-record-wash);mask:var(--si-brush) center/125% 220% no-repeat;opacity:.78}
+:root[data-terminal-visual=si] .paper-scene .ink-dragon{width:116px;height:116px;flex-shrink:0;transform:rotate(-5deg)}
+:root[data-terminal-visual=si] .paper-scene-title{font-size:20px;line-height:1.9;max-width:8em;text-wrap:balance;letter-spacing:.08em;color:var(--ink)}
+:root[data-terminal-visual=si] .paper-seal{align-self:flex-end;margin:0 4px 19px auto;border:1.5px solid currentColor;border-radius:3px 1px 4px 2px;font-size:17px;line-height:1;padding:5px;color:var(--paper-record-seal);transform:rotate(7deg)}
+:root[data-terminal-visual=si] .ledger-panel .stat-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 24px;margin:8px 0 12px;padding:0}
+:root[data-terminal-visual=si] .ledger-panel .stat-row>div:first-child{grid-column:1/-1;background:transparent;color:var(--ink);padding:0 0 14px;gap:2px;border-bottom:1px solid var(--color-rule);border-radius:0}
+:root[data-terminal-visual=si] .ledger-panel .stat-row>div:first-child small{color:var(--paper-record-soft)}
+:root[data-terminal-visual=si] .ledger-panel .stat-row>div:first-child strong{font-size:32px;letter-spacing:-.02em}
+:root[data-terminal-visual=si] .ledger-panel .stat-row>div:not(:first-child){border:0;padding:0;gap:3px}
+:root[data-terminal-visual=si] .ledger-panel .stat-row>div:not(:first-child) strong{font-size:21px}
+:root[data-terminal-visual=si] .ledger-panel>.muted{font-size:12px;line-height:1.8;margin:12px 0 18px;color:var(--paper-record-soft)}
+:root[data-terminal-visual=si] .filter-row{gap:12px;margin:20px 0 24px;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+:root[data-terminal-visual=si] :is(input:not([type=checkbox]):not([type=radio]),select,textarea){background:var(--color-paper);border-width:1px 1.5px 2px 1px;border-style:solid;border-color:var(--color-rule-strong);border-radius:6px 3px 8px 3px / 3px 7px 3px 9px;min-height:46px;box-shadow:none;color:var(--ink);caret-color:var(--paper-record-seal);font-size:16px}
+:root[data-terminal-visual=si] :is(input,select,textarea):focus-visible{outline:2px solid var(--color-focus);outline-offset:3px}
+:root[data-terminal-visual=si] :is(input,textarea)::placeholder{color:var(--paper-record-soft);opacity:1}
+:root[data-terminal-visual=si] :is(input[type=checkbox],input[type=radio]){accent-color:var(--paper-record-seal);min-width:22px;min-height:22px;border-radius:4px}
+:root[data-terminal-visual=si] .terminal-form{position:relative;border:1px solid var(--color-rule);border-width:1px 1px 2px 1px;border-radius:6px 12px 4px 9px;padding:20px 17px;margin:22px 0 28px;background:var(--color-paper);gap:18px;box-shadow:3px 7px 16px #1328200a}
+:root[data-terminal-visual=si] .terminal-form h3{display:flex;align-items:center;gap:9px;font-size:22px;margin:0 0 2px}
+:root[data-terminal-visual=si] .terminal-form label{gap:7px;font-size:15px;color:var(--ink)}
+:root[data-terminal-visual=si] .terminal-form .button-row{margin-top:4px;gap:14px}
+:root[data-terminal-visual=si] .terminal-form .button-row button{flex:1}
+:root[data-terminal-visual=si] .paper-day-heading{display:flex;align-items:center;justify-content:space-between;position:relative;font-size:17px;font-weight:500;line-height:1.8;margin:24px 0 4px;padding:0 0 9px;letter-spacing:.04em}
+:root[data-terminal-visual=si] .paper-day-heading::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--color-rule-strong);mask:var(--si-brush) center/100% 300% no-repeat;opacity:.7}
+:root[data-terminal-visual=si] .paper-day-heading span{font-size:13px;color:var(--paper-record-soft)}
+:root[data-terminal-visual=si] .ledger-item{border-bottom:1px dashed var(--color-rule);padding:17px 0 13px;align-items:center;gap:4px 12px}
+:root[data-terminal-visual=si] .ledger-entry-name{display:flex;align-items:center;gap:10px;min-width:0}
+:root[data-terminal-visual=si] .ledger-entry-name>div{min-width:0}
+:root[data-terminal-visual=si] .ledger-item h3{font-size:17px;font-weight:500;overflow-wrap:anywhere;line-height:1.6;margin:0 0 1px}
+:root[data-terminal-visual=si] .ledger-item small{font-size:13px;color:var(--paper-record-soft);line-height:1.7;overflow-wrap:anywhere}
+:root[data-terminal-visual=si] .ledger-item>strong{font-size:18px;max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:right;line-height:1.6}
+:root[data-terminal-visual=si] .ledger-item .button-row{justify-content:flex-end;gap:14px;margin-top:6px}
+:root[data-terminal-visual=si] .ledger-item .button-row button{font-size:13px;min-width:54px;min-height:44px;padding:8px 12px}
+:root[data-terminal-visual=si] .empty-state{border:0;background:transparent;text-align:center;padding:30px 12px;color:var(--paper-record-soft)}
+:root[data-terminal-visual=si] .empty-state>.paper-icon{width:40px;height:40px;margin:0 auto 10px;transform:rotate(-7deg)}
+:root[data-terminal-visual=si] .empty-state h3{font-size:20px;font-weight:500;color:var(--ink);margin:0 0 8px}
+:root[data-terminal-visual=si] .empty-state p{font-size:14px;line-height:1.9;margin:0}
+:root[data-terminal-visual=si] .paper-save-feedback{display:table;border:1px solid var(--paper-record-seal);border-radius:3px 7px 2px 5px;color:var(--paper-record-seal);font-size:15px;line-height:1.7;padding:4px 11px;transform:rotate(-2deg);animation:paper-stamp 260ms ease-out}
+:root[data-terminal-visual=si] .reminder-missions>.notice{background:transparent;border:0;padding:0;margin:8px 0 16px;color:var(--paper-record-soft);line-height:1.8}
+:root[data-terminal-visual=si] .reminder-missions .mission-help{border-bottom:1px dashed var(--color-rule);font-size:13px;color:var(--paper-record-soft)}
+:root[data-terminal-visual=si] .reminder-missions .mission-workspace{display:block}
+:root[data-terminal-visual=si] .reminder-missions .mission-list-caption{font-size:13px;border:0;margin:2px 0 -15px;color:var(--paper-record-soft);font-weight:400}
+:root[data-terminal-visual=si] .reminder-day{min-width:0}
+:root[data-terminal-visual=si] .reminder-missions .mission-row{display:grid;grid-template-columns:32px minmax(0,1fr);width:100%;gap:5px 9px;margin:11px 0 15px;padding:16px 13px 15px;border:1px solid var(--color-rule);border-width:1px 1px 2px 1px;border-radius:4px 13px 6px 9px / 8px 5px 13px 3px;background:var(--color-paper);color:var(--ink);box-shadow:none;transition:background 160ms ease-out}
+:root[data-terminal-visual=si] .reminder-missions .mission-row:hover{background:var(--color-paper-2)}
+:root[data-terminal-visual=si] .reminder-missions .mission-row::before,:root[data-terminal-visual=si] .reminder-missions .mission-row::after{display:none}
+:root[data-terminal-visual=si] .reminder-missions .mission-row>.paper-icon{grid-row:1/4;margin-top:3px;transform:rotate(-7deg)}
+:root[data-terminal-visual=si] .reminder-missions .mission-row-title{font-size:18px;font-weight:500;color:var(--ink);line-height:1.7}
+:root[data-terminal-visual=si] .reminder-missions .mission-row-meta{font-size:13px;color:var(--paper-record-soft);line-height:1.7}
+:root[data-terminal-visual=si] .reminder-missions .mission-row time{grid-column:2;font-size:15px;font-family:var(--si-font-figures);color:var(--ink);line-height:1.7}
+:root[data-terminal-visual=si] .reminder-missions .mission-detail{min-height:0;margin:22px 0;padding:18px 17px 23px;background:var(--color-paper);border:1px solid var(--color-rule);border-radius:6px 12px 4px 9px;color:var(--ink);animation:paper-unfold 240ms ease-out}
+:root[data-terminal-visual=si] .reminder-missions .mission-detail-header{border-color:var(--color-rule);padding-bottom:17px;gap:10px}
+:root[data-terminal-visual=si] .reminder-missions .mission-status{color:var(--paper-record-seal);font-size:14px;width:fit-content;border:1px solid currentColor;border-radius:2px 6px 2px 4px;padding:3px 8px;transform:rotate(-3deg);margin:3px 0 7px}
+:root[data-terminal-visual=si] .reminder-missions .mission-detail h3{font-size:25px;font-weight:500}
+:root[data-terminal-visual=si] .reminder-missions :is(.toggle-label,.mission-next p,.mission-recurrence,.mission-detail>.muted){color:var(--paper-record-soft);font-size:13px}
+:root[data-terminal-visual=si] .reminder-missions .mission-next time{font-family:var(--si-font-figures);font-size:24px;font-weight:500}
+:root[data-terminal-visual=si] .reminder-missions .mission-body{font-size:17px;line-height:1.9}
+:root[data-terminal-visual=si] .reminder-missions .mission-actions{border-color:var(--color-rule);gap:12px;margin-top:8px}
+:root[data-terminal-visual=si] .reminder-missions .mission-actions button{font-size:14px;flex:1 0 calc(50% - 12px)}
+:root[data-terminal-visual=si] .reminder-missions .paper-back{margin:0 0 22px;align-self:start}
+:root[data-terminal-visual=si] .reminder-missions .mission-detail :focus-visible{outline-color:var(--color-focus)}
+:root[data-terminal-visual=si] ::selection{background:var(--paper-record-seal);color:var(--color-base)}
+@keyframes paper-stamp{from{opacity:.45;transform:scale(1.12) rotate(-8deg)}to{opacity:1;transform:scale(1) rotate(-2deg)}}
+@keyframes paper-unfold{from{opacity:.65;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:350px){:root[data-terminal-visual=si] .paper-scene .ink-dragon{width:94px;height:94px}:root[data-terminal-visual=si] .paper-scene-title{font-size:18px}:root[data-terminal-visual=si] .ledger-item>strong{font-size:16px}:root[data-terminal-visual=si] .ledger-entry-name{gap:7px}:root[data-terminal-visual=si] .ledger-item{grid-template-columns:minmax(0,1fr) minmax(0,110px)}:root[data-terminal-visual=si] .terminal-form{padding:18px 12px}}
+@media(prefers-reduced-motion:reduce){:root[data-terminal-visual=si] :is(.paper-save-feedback,.mission-detail){animation:none}:root[data-terminal-visual=si] .reminder-missions .mission-row{transition:none}}
+:root[data-terminal-visual=si] .bottom-destination.active .destination-icon{border-radius:5px 3px 8px 2px / 2px 7px 3px 6px;border-width:1px 1.5px 2px 1px}
+:root[data-terminal-visual=si] .bottom-destination .paper-icon{width:24px;height:24px;color:inherit}
+:root[data-terminal-visual=si] .terminal-shell :is(.button-row>button,.quick-actions>button,.panel-heading>button,.mission-actions>button){border-bottom-width:1.5px;border-radius:4px 2px 8px 3px}
+:root[data-terminal-visual=si] .ledger-panel .stat-row small{color:var(--paper-record-soft)}

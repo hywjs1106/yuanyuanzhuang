@@ -20,6 +20,7 @@ import './terminal-polish.css';
 import './si-theme.css';
 import './si-ink-surfaces.css';
 import './si-night-ink.css';
+import './si-paper-records.css';
 import {OverviewPanel} from './OverviewPanel';
 import {readWeatherCache,type WeatherBundle} from './weather';
 import {syncWeatherBriefing} from './weatherBriefing';
@@ -73,11 +74,11 @@ export default function TerminalApp(){
     {notice&&<div className="notice toast" role="status"><p>{notice}</p><button aria-label="关闭提示" onClick={()=>setNotice('')}>关闭</button></div>}
     <main key={page} data-route-direction={routeDirection} onAnimationEnd={event=>{if(event.target===event.currentTarget)setNavigationMotion(false);}} className={`terminal-content page-${page}${navigationMotion?' route-enter':''}`}>
     {page==='today'&&<><OverviewPanel date={date} onNavigate={navigate} visualTheme={settings.visualTheme} theme={settings.theme}/><WeatherRefresh config={settings.weather??{provider:'openmeteo'}} onBundleChange={weatherUpdated}/></>}
-    {page==='ledger'&&<LedgerPanel entries={entries??[]} onSave={saveEntry} onDelete={async id=>{await terminalDb.entries.delete(id);}}/>}
-    {page==='reminders'&&<><ReminderPanel reminders={reminders??[]} onSave={async r=>{await saveReminder(r);await refreshNotifications();}} onDelete={async id=>{await terminalDb.reminders.delete(id);await refreshNotifications();}} notificationStatus={notif} onRequestPermission={async()=>{setNotif(await reminderNotifications.requestPermission());await refreshNotifications();}} onTestNotification={()=>reminderNotifications.test()}/>{Capacitor.isNativePlatform()&&<div className="notice"><p>准点提醒权限：{exact===undefined?'检查中':exact?'已允许':'尚未允许，提醒可能延迟'}</p>{exact===false&&<button onClick={()=>void TerminalAlarms.request().then(s=>setExact(s.granted)).catch(e=>setNotice(String(e)))}>允许准点提醒</button>}<p className="muted">手机强行停止应用、限制后台或省电设置可能影响通知。可用“测试通知”检查。</p></div>}</>}
+    {page==='ledger'&&<LedgerPanel visualTheme={settings.visualTheme} entries={entries??[]} onSave={saveEntry} onDelete={async id=>{await terminalDb.entries.delete(id);}}/>}
+    {page==='reminders'&&<><ReminderPanel visualTheme={settings.visualTheme} reminders={reminders??[]} onSave={async r=>{await saveReminder(r);await refreshNotifications();}} onDelete={async id=>{await terminalDb.reminders.delete(id);await refreshNotifications();}} notificationStatus={notif} onRequestPermission={async()=>{setNotif(await reminderNotifications.requestPermission());await refreshNotifications();}} onTestNotification={()=>reminderNotifications.test()}/>{Capacitor.isNativePlatform()&&<div className="notice"><p>准点提醒权限：{exact===undefined?'检查中':exact?'已允许':'尚未允许，提醒可能延迟'}</p>{exact===false&&<button onClick={()=>void TerminalAlarms.request().then(s=>setExact(s.granted)).catch(e=>setNotice(String(e)))}>允许准点提醒</button>}<p className="muted">手机强行停止应用、限制后台或省电设置可能影响通知。可用“测试通知”检查。</p></div>}</>}
     {page==='weather'&&weatherPanel}{page==='almanac'&&<AlmanacPanel/>}
     {page==='assistant'&&<AssistantPanel key={settings.visualTheme??'fangyi'} character={settings.visualTheme??'fangyi'} config={settings.ai} context={`今日${getAlmanacSummary(date)}；本月支出${summary.expense}元；待提醒事项：${upcoming.map(x=>`${x.r.title} ${x.r.startAt}`).join('；')}。`} messages={(messages??[]).filter(m=>(m.character??'fangyi')===(settings.visualTheme??'fangyi'))} onMessage={async m=>{await terminalDb.messages.put({...m,character:settings.visualTheme??'fangyi'});}} onConfirm={confirm}/>}
     {page==='notes'&&<section className="panel"><h2>备忘与购物清单</h2><label>写点什么<textarea value={note} maxLength={10000} rows={4} onChange={e=>setNote(e.target.value)} placeholder="要买的东西、临时想法…"/></label><button disabled={!note.trim()} onClick={()=>void addNote()}>保存备忘</button>{(notes??[]).map(n=><article className="note-item" key={n.id}><p>{n.text}</p><small>{new Date(n.createdAt).toLocaleString('zh-CN')}</small><button className="danger" onClick={()=>void terminalDb.notes.delete(n.id).catch(e=>setNotice(String(e)))}>删除</button></article>)}</section>}
     {page==='settings'&&<SettingsPanel onVisualTheme={visualTheme=>setVisualTheme(visualTheme)} settings={settings} onSave={updateSettings} onNotice={setNotice} onOpenNotes={()=>navigate('notes')}/>}
-    </main><BottomNavigation currentPage={page} onNavigate={navigate} keyboardOpen={keyboardOpen}/></div>;
+    </main><BottomNavigation visualTheme={settings.visualTheme} currentPage={page} onNavigate={navigate} keyboardOpen={keyboardOpen}/></div>;
 }
