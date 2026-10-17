@@ -14,7 +14,7 @@ await nav('今日');await page.getByRole('button',{name:'切换角色风格',exa
 await page.waitForFunction(()=>document.documentElement.dataset.terminalVisual==='si');
 await page.locator('.si-painted-mountains').evaluate(async el=>{await el.decode();});
 await page.evaluate(()=>document.fonts.ready);await shot('si-home-light');
-await page.locator('.si-dragon-glyph').evaluateAll(async nodes=>{await Promise.all(nodes.map(el=>el.decode()));});
+await page.locator('.si-dragon-glyph img').evaluateAll(async nodes=>{await Promise.all(nodes.map(el=>el.decode()));});
 await brightness();await shot('si-home-dark');await brightness();
 await nav('助手');await shot('si-chat-light');await brightness();await shot('si-chat-dark');await brightness();
 await page.setViewportSize({width:320,height:740});await shot('si-chat-320');

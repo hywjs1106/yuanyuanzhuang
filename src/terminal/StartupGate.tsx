@@ -2,6 +2,7 @@ import {useEffect,useRef,useState,type ReactNode} from 'react';
 import './startup.css';
 import {useLiveQuery} from 'dexie-react-hooks';
 import {terminalDb} from './data';
+import {InkDragon} from './InkDragon';
 
 /* MIT SplashScreen lifecycle adaptation; whole-mark television ghosting.
  * Copyright (c) 2026 球球; terminal-public/licenses/endfield-ui-MIT.txt.
@@ -45,7 +46,7 @@ export function StartupGate({children}:{children:ReactNode}) {
           <img className="startup-ink-framing" src="/themes/si/opening-ink-framing.png" alt="" aria-hidden="true" onError={event=>{event.currentTarget.style.visibility='hidden';}}/>
           <img className="startup-ink-sun" src="/themes/si/opening-ink-sun.png" alt="" aria-hidden="true" onError={event=>{event.currentTarget.style.visibility='hidden';}}/>
           <div className="startup-brand startup-inn-brand">
-            <div className="startup-inn-art"><img className="startup-inn" src="/themes/si/ink-dragon-opening.png" width="1280" height="1280" alt="缘缘庄水墨小龙" onError={event=>{event.currentTarget.style.visibility='hidden';}}/></div>
+            <div className="startup-inn-art"><InkDragon kind="opening" alt="缘缘庄水墨小龙"/></div>
             <div className="startup-inn-signature"><strong className="startup-name">缘缘庄</strong><span className="startup-inn-seal" aria-hidden="true">缘</span></div>
           </div>
         </>:visualTheme==='fangyi'?<div className="startup-brand"><img className="startup-emblem" src="/branding/endfield-lockup-dark.png" width="594" height="512" alt="终末地工业完整徽标"/><svg className="startup-emblem-frame" viewBox="0 0 594 512" aria-hidden="true"><path d="M32 20H562L297 492Z"/><path d="M28 16h14M552 16h14M294 487l3 5 3-5"/></svg><strong className="startup-name">{brandName}</strong><span className="startup-subtitle">O.M.V. DIJIANG</span></div>:null}

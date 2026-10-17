@@ -3,6 +3,7 @@ import {TerminalIcon} from './TerminalVisuals';
 import {LiveClock} from './LiveClock';
 import {useEffect,useRef,useState,type ReactNode} from 'react';
 import type {VisualTheme} from './ledger';
+import {InkDragon} from './InkDragon';
 
 export interface OverviewPanelProps {
   date:string;
@@ -63,7 +64,7 @@ export function OverviewPanel({date,onNavigate,visualTheme='fangyi'}:OverviewPan
       </>:<><HubSceneFrame/><img className="hub-ship" src="/branding/dijiang-ship.png" alt="帝江号飞船" width="1536" height="1024" draggable="false"/></>}
     <div className="hub-modules">
       {modules.map(({page,label})=><button key={page} type="button" className={`hub-plate hub-plate-${page}`} aria-label={`打开${label}`} onClick={()=>onNavigate(page)}>
-        <span className="hub-plate-surface"><span className="hub-plate-content">{visualTheme==='si'?<img className="si-dragon-glyph" src={`/themes/si/dragons/${page}.png`} alt="" width="128" height="128" draggable="false"/>:<TerminalIcon name={page}/>}<strong>{label}</strong></span></span>
+        <span className="hub-plate-surface"><span className="hub-plate-content">{visualTheme==='si'?<InkDragon className="si-dragon-glyph" kind={page}/>:<TerminalIcon name={page}/>}<strong>{label}</strong></span></span>
       </button>)}
     </div>
     </HubMotion>
