@@ -1,5 +1,5 @@
 import {chromium} from '@playwright/test';import fs from 'node:fs';
-const out='../references/ui-37';fs.mkdirSync(out,{recursive:true});const browser=await chromium.launch({channel:'chromium'});const page=await browser.newPage({viewport:{width:390,height:844}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+const out='../references/ui-38';fs.mkdirSync(out,{recursive:true});const browser=await chromium.launch({channel:'chromium'});const page=await browser.newPage({viewport:{width:390,height:844}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.goto('http://127.0.0.1:5180');await page.getByRole('button',{name:'切换角色风格',exact:true}).click();await page.getByRole('heading',{name:'缘缘庄',exact:true}).waitFor();await page.evaluate(()=>document.fonts.ready);
 async function shot(name){await page.waitForTimeout(450);if(!await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth))throw Error(`Overflow ${name}`);await page.screenshot({path:`${out}/${name}.png`});}
 const nav=async(name)=>page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name,exact:true}).click();

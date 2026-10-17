@@ -3,6 +3,9 @@ import {test,expect} from '@playwright/test';
 test('Si paper entrances fit above navigation on a short phone and all tools still open',async({page})=>{
  await page.setViewportSize({width:320,height:568});await page.goto('/');await page.getByRole('button',{name:'切换角色风格',exact:true}).click();
  const nav=await page.getByRole('navigation',{name:'功能导航'}).boundingBox();
+ const background=await page.locator('.si-painted-world').boundingBox();
+ for(const surface of await page.locator('.hub-plate-surface').all())expect(await surface.evaluate(el=>getComputedStyle(el,'::before').content)).toBe('none');
+ const scene=await page.locator('.hub-orbit').boundingBox();expect(background).toEqual(scene);
  for(const button of await page.locator('.hub-plate').all()){const box=await button.boundingBox();expect(box!.height).toBeGreaterThanOrEqual(44);expect(box!.y+box!.height).toBeLessThanOrEqual(nav!.y);}
  for(const [name,heading] of [['记账','记账'],['提醒','提醒与生日'],['天气','天气'],['黄历','黄历']]){await page.getByRole('button',{name:`打开${name}`,exact:true}).click();await expect(page.getByRole('heading',{name:heading,exact:true}).first()).toBeVisible();await page.getByRole('navigation',{name:'功能导航'}).getByRole('button',{name:'今日',exact:true}).click();}
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
