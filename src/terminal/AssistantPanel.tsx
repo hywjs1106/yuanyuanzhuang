@@ -69,7 +69,7 @@ export function AssistantPanel({config,context,messages,onMessage,onConfirm,char
     <form className="assistant-composer" onSubmit={submit}>
       <button className="expression-toggle" type="button" onPointerDown={event=>{if(isSi&&document.activeElement===composer.current)event.preventDefault();}} aria-label={`${shortName}表情`} aria-expanded={drawer} onClick={()=>setDrawer(!drawer)}><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M8 14c1 4 7 4 8 0M8 9h.01M16 9h.01" strokeLinecap="round"/></svg></button>
       <textarea ref={composer} aria-label={`和${shortName}说说`} maxLength={6000} value={text} onChange={e=>setText(e.target.value)} placeholder={`和${shortName}说说…`} rows={2}/>
-      {busy?<button type="button" className="send-message" onClick={()=>ctrl.current?.abort()}>停止</button>:<button type="submit" className="send-message" disabled={!text.trim()}>发送</button>}
+      {busy?<button type="button" className="send-message" onClick={()=>ctrl.current?.abort()}><span>停止</span></button>:<button type="submit" className="send-message" disabled={!text.trim()}><span>发送</span></button>}
     </form>
   </section>;
 }
