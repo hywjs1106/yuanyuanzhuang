@@ -43,7 +43,7 @@ export function StartupGate({children}:{children:ReactNode}) {
         {visualTheme==='si'?<>
           <div className="startup-ink-landscape" aria-hidden="true"><img src="/themes/si/painted-mountains.png" alt="" width="1024" height="1536"/></div>
           <div className="startup-brand startup-inn-brand">
-            <div className="startup-inn-art"><img className="startup-inn" src="/themes/si/inn-mark.png" width="1280" height="1280" alt="缘缘庄小客栈" onError={event=>{event.currentTarget.style.visibility='hidden';}}/><span className="startup-window-light" aria-hidden="true"/></div>
+            <div className="startup-inn-art"><img className="startup-inn" src="/themes/si/ink-dragon-opening.png" width="1280" height="1280" alt="缘缘庄水墨小龙" onError={event=>{event.currentTarget.style.visibility='hidden';}}/></div>
             <div className="startup-inn-signature"><strong className="startup-name">缘缘庄</strong><span className="startup-inn-seal" aria-hidden="true">缘</span></div>
           </div>
         </>:visualTheme==='fangyi'?<div className="startup-brand"><img className="startup-emblem" src="/branding/endfield-lockup-dark.png" width="594" height="512" alt="终末地工业完整徽标"/><svg className="startup-emblem-frame" viewBox="0 0 594 512" aria-hidden="true"><path d="M32 20H562L297 492Z"/><path d="M28 16h14M552 16h14M294 487l3 5 3-5"/></svg><strong className="startup-name">{brandName}</strong><span className="startup-subtitle">O.M.V. DIJIANG</span></div>:null}
