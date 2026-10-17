@@ -42,6 +42,7 @@ export function StartupGate({children}:{children:ReactNode}) {
       <div className="startup-visual">
         {visualTheme==='si'?<>
           <div className="startup-ink-landscape" aria-hidden="true"><img src="/themes/si/painted-mountains.png" alt="" width="1024" height="1536"/></div>
+          <img className="startup-ink-framing" src="/themes/si/opening-ink-framing.png" alt="" aria-hidden="true" onError={event=>{event.currentTarget.style.visibility='hidden';}}/>
           <div className="startup-brand startup-inn-brand">
             <div className="startup-inn-art"><img className="startup-inn" src="/themes/si/ink-dragon-opening.png" width="1280" height="1280" alt="缘缘庄水墨小龙" onError={event=>{event.currentTarget.style.visibility='hidden';}}/></div>
             <div className="startup-inn-signature"><strong className="startup-name">缘缘庄</strong><span className="startup-inn-seal" aria-hidden="true">缘</span></div>
