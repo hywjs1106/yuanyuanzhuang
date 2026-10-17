@@ -1,0 +1,7 @@
+import {chromium} from '@playwright/test';import fs from 'node:fs';
+const out='../references/ui-40';fs.mkdirSync(out,{recursive:true});const browser=await chromium.launch({channel:'chromium'});
+const context=await browser.newContext({viewport:{width:640,height:360},timezoneId:'Asia/Shanghai',recordVideo:{dir:out,size:{width:640,height:360}}});
+const page=await context.newPage();await page.clock.install({time:new Date('2026-10-17T14:59:57+08:00')});await page.goto('http://127.0.0.1:5180');await page.getByRole('dialog',{name:'帝江号开场',exact:true}).waitFor();await page.keyboard.press('Escape');await page.getByRole('button',{name:'切换角色风格',exact:true}).click();await page.getByRole('heading',{name:'缘缘庄',exact:true}).waitFor();
+// Magnify the actual mounted clock for a clear demonstration; no product styles change.
+await page.addStyleTag({content:'.terminal-header,.hub-orbit,.bottom-navigation,.overview-date{display:none!important}.hub-heading{position:fixed;inset:0;margin:0;display:grid;place-items:center;justify-content:center!important}.hub-heading-meta{display:block}.hub-clock-readout{font-size:72px!important}.hub-clock-readout .clock-second-value{font-size:54px!important}.terminal-shell{background:#f3eedf!important}'});
+await page.waitForTimeout(700);await page.screenshot({path:`${out}/clock-digits.png`});await page.waitForTimeout(5500);const video=page.video();await page.close();await video.saveAs(`${out}/clock-digits-preview.webm`);await context.close();await browser.close();console.log('Magnified live-clock rollover demonstration captured.');

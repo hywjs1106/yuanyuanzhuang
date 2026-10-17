@@ -7,7 +7,10 @@
 .hub-heading .overview-date span{margin-top:0}
 .hub-heading .overview-date strong{font-size:14px;font-weight:500;color:var(--ink)}
 .hub-clock-readout{display:flex;align-items:baseline;font-size:16px;line-height:1.35;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
-.hub-clock-readout .clock-second-value{font-size:12px;color:var(--muted);font-weight:400;animation:clock-tick-in 240ms ease-out}
+.hub-clock-readout .clock-second-value{font-size:12px;color:var(--muted);font-weight:400}
+.hub-clock-readout .clock-digit{display:inline-block;width:1ch;text-align:center}
+.hub-clock-readout .clock-digit-value{display:inline-block}
+.hub-clock-readout .clock-digit-changing{animation:clock-tick-in 240ms ease-out both}
 @keyframes clock-tick-in{from{transform:translateY(3px);opacity:.6}to{transform:translateY(0);opacity:1}}
 .hub-orbit{--hub-scene-height:clamp(512px,calc(100dvh - 232px),640px);position:relative;height:var(--hub-scene-height);max-width:480px;margin:0 auto;isolation:isolate;border-radius:3px;background:radial-gradient(ellipse at 50% 50%,#303733 0,#141918 60%,#101413 100%);box-shadow:inset 0 0 0 1px #68736840}
 .hub-orbit::before{content:'';position:absolute;inset:12px;pointer-events:none;background:radial-gradient(circle,#c4cec344 1px,transparent 1.5px) 0 0/24px 24px;mask-image:radial-gradient(ellipse,#000,transparent 75%)}
@@ -45,4 +48,4 @@
 .hub-plate:not(:disabled):active .hub-plate-content>svg{transform:translateY(1px) scale(.94)}
 .overview-hub .hub-plate:focus-visible{outline:3px solid var(--color-focus);outline-offset:3px}
 @media(max-width:350px){.overview-hub .hub-plate{width:100px}}
-@media(prefers-reduced-motion:reduce){.hub-ship,.hub-plate-surface,.clock-second-value{animation:none!important}.hub-plate-surface,.hub-plate-content>svg{transition:none!important}.hub-plate-surface{transform:none!important}}
+@media(prefers-reduced-motion:reduce){.hub-ship,.hub-plate-surface,.clock-second-value,.clock-digit-changing{animation:none!important}.hub-plate-surface,.hub-plate-content>svg{transition:none!important}.hub-plate-surface{transform:none!important}}

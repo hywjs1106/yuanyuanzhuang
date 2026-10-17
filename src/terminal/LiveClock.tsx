@@ -2,17 +2,20 @@ import {useEffect,useState} from 'react';
 
 /** A foreground display clock. Reminder delivery remains the native scheduler's job. */
 export function LiveClock({variant='readout'}:{variant?:'readout'|'dial'}){
-  const [now,setNow]=useState(()=>new Date());
+  const [{now,previous},setClock]=useState(()=>{const date=new Date();return {now:date,previous:date};});
   useEffect(()=>{
     let timer:ReturnType<typeof setTimeout>|undefined;
-    const tick=()=>{setNow(new Date());timer=setTimeout(tick,1000-Date.now()%1000);};
+    const tick=()=>{const date=new Date();setClock(state=>({now:date,previous:state.now}));timer=setTimeout(tick,1000-Date.now()%1000);};
     const resume=()=>{clearTimeout(timer);if(!document.hidden)tick();};
     resume();document.addEventListener('visibilitychange',resume);window.addEventListener('focus',resume);
     return()=>{clearTimeout(timer);document.removeEventListener('visibilitychange',resume);window.removeEventListener('focus',resume);};
   },[]);
   const pad=(value:number)=>String(value).padStart(2,'0');
   const time=`${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-  if(variant==='readout')return <time className="hub-clock-readout" dateTime={now.toISOString()} aria-label={`当前时间 ${time}`}><span>{pad(now.getHours())}:{pad(now.getMinutes())}</span><small key={time} className="clock-second-value">:{pad(now.getSeconds())}</small></time>;
+  const digits=`${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+  const previousDigits=`${pad(previous.getHours())}${pad(previous.getMinutes())}${pad(previous.getSeconds())}`;
+  const renderDigits=(start:number,end:number)=>digits.slice(start,end).split('').map((digit,i)=><span className="clock-digit" key={start+i}><span key={digit} className={`clock-digit-value${digit!==previousDigits[start+i]?' clock-digit-changing':''}`}>{digit}</span></span>);
+  if(variant==='readout')return <time className="hub-clock-readout" dateTime={now.toISOString()} aria-label={`当前时间 ${time}`}><span aria-hidden="true">{renderDigits(0,2)}<span className="clock-colon">:</span>{renderDigits(2,4)}</span><small className="clock-second-value" aria-hidden="true"><span className="clock-colon">:</span>{renderDigits(4,6)}</small></time>;
   return <div className="hub-clock">
     <svg className="hub-clock-dial" viewBox="0 0 200 200" aria-hidden="true">
       <circle cx="100" cy="100" r="97"/>
