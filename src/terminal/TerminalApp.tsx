@@ -17,6 +17,7 @@ import './overview-hub.css';
 import './reminder-missions.css';
 import './terminal-polish.css';
 import './si-theme.css';
+import './si-ink-surfaces.css';
 import {OverviewPanel} from './OverviewPanel';
 import {readWeatherCache,type WeatherBundle} from './weather';
 import {syncWeatherBriefing} from './weatherBriefing';
