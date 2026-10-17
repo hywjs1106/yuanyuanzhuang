@@ -1,0 +1,36 @@
+/* A cool ink night with warm paper lettering. Manual theme controls every surface. */
+:root[data-terminal-visual=si][data-terminal-theme=dark]{
+ --color-base:#17262c;--color-paper:#22343c;--color-panel-end:#22343c;
+ --color-paper-2:#30474e;--color-paper-3:#3d565d;
+ --color-ink:#ede7d9;--color-ink-2:#bac9c9;--color-rule:#587078;--color-rule-strong:#819d9f;
+ --color-accent:#b8d7cf;--color-accent-ink:#1c3037;--color-focus:#d0e8dd;
+ --color-communication:#a4d7d0;--color-measure:#afd6e0;--color-error:#ffb7aa;--color-success:#b0d7bf;
+ --color-glass:#22343c;--color-carbon:#192b33;--color-on-carbon:#ede7d9;--color-on-carbon-muted:#bac9c9;
+ --si-cinnabar:#dca78f;--si-scroll-edge:#779b98;--si-wash:#243d4526;
+}
+:root[data-terminal-visual=si] .hub-heading{justify-content:space-between;gap:12px;min-height:46px}
+:root[data-terminal-visual=si] .hub-heading-meta{min-width:0;margin-left:auto}
+.si-heading-companion{display:flex;align-items:center;flex:0 0 90px;height:44px;pointer-events:none;gap:8px}
+.si-heading-companion img{display:block;width:44px;height:44px;object-fit:contain}
+.si-heading-companion::after{content:'';width:28px;height:5px;background:var(--si-scroll-edge);opacity:.42;mask:var(--si-brush) center/120% 220% no-repeat;transform:rotate(-9deg)}
+:root[data-terminal-visual=si] :is(.panel-heading h2,.panel:not(.assistant-chat)>h2)::after{content:'';display:inline-block;vertical-align:middle;width:28px;height:5px;margin-left:11px;background:var(--si-scroll-edge);mask:var(--si-brush) center/120% 220% no-repeat;opacity:.55;transform:rotate(-8deg)}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .hub-orbit{background:var(--color-paper)}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .si-painted-world{opacity:.94}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .si-painted-world::after{background:transparent}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .si-painted-mountains{filter:none}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .si-home-framing{filter:brightness(2) saturate(.4);opacity:.13}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .si-home-sun{filter:grayscale(1) brightness(1.9);opacity:.62}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .hub-plate-surface{color:var(--color-ink)}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .si-dragon-glyph{filter:drop-shadow(0 .7px .7px #e7e0cbb3) drop-shadow(0 -.7px .7px #e7e0cb99)}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .hub-plate-content strong{text-shadow:0 1px 3px #13232b}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .hub-plate-content strong::after{background:var(--si-cinnabar)}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .si-scroll-title{color:var(--color-ink);text-shadow:0 1px 3px #13232b}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .si-scroll-seal{color:var(--si-cinnabar);border-color:var(--si-cinnabar);background:var(--color-paper)}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .assistant-chat .chat-log{background-image:linear-gradient(to bottom,var(--chat-ground) 15%,transparent 80%),linear-gradient(115deg,var(--chat-ground) 35%,color-mix(in srgb,var(--chat-ground) 84%,transparent)),url('/themes/si/painted-mountains-night.png')}
+:root[data-terminal-visual=si][data-terminal-theme=dark] :is(.fangyi-contact,.assistant-composer){background:var(--color-paper)}
+:root[data-terminal-visual=si][data-terminal-theme=dark] .panel::after,:root[data-terminal-visual=si][data-terminal-theme=dark] .terminal-panel::after{background:var(--si-scroll-edge)}
+.startup-screen.startup-si.startup-dark{--inn-paper:#17262c;--inn-ink:#ede7d9;--inn-seal:#dca78f;--inn-landscape-opacity:.55}
+.startup-si.startup-dark .startup-inn{filter:drop-shadow(0 .8px .8px #e7e0cb99) drop-shadow(0 -.8px .8px #e7e0cb80)}
+.startup-screen.startup-si.startup-dark .startup-ink-framing{filter:brightness(2) saturate(.4);opacity:.15}
+.startup-screen.startup-si.startup-dark .startup-ink-sun{filter:grayscale(1) brightness(1.9);opacity:.62}
+@media(max-width:350px){.si-heading-companion{flex-basis:76px;gap:5px}.si-heading-companion::after{width:22px}}

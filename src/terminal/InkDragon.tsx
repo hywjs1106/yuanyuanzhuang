@@ -1,5 +1,4 @@
 import {useId,useState,type CSSProperties} from 'react';
-import './ink-dragon.css';
 
 type DragonKind='ledger'|'reminders'|'weather'|'almanac'|'opening';
 // Eye interiors in the original square artwork's 1280-unit display coordinates.

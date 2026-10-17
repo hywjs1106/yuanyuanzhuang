@@ -42,7 +42,7 @@ export function StartupGate({children}:{children:ReactNode}) {
     {phase!=='done'&&<div ref={opening} tabIndex={-1} className={`startup-screen startup-${phase} startup-${visualTheme??'pending'}${settings?.theme==='dark'?' startup-dark':''}`} role="dialog" aria-modal="true" aria-label={editionResolved?`${brandName}开场`:'正在打开应用'} onKeyDown={event=>{if(event.key==='Escape')setPhase('done');if(event.key==='Tab'){event.preventDefault();opening.current?.focus({preventScroll:true});}}}>
       <div className="startup-visual">
         {visualTheme==='si'?<>
-          <div className="startup-ink-landscape" aria-hidden="true"><img src="/themes/si/painted-mountains.png" alt="" width="1024" height="1536"/></div>
+          <div className="startup-ink-landscape" aria-hidden="true"><img src={settings?.theme==='dark'?'/themes/si/painted-mountains-night.png':'/themes/si/painted-mountains.png'} alt="" width="1024" height="1536"/></div>
           <img className="startup-ink-framing" src="/themes/si/opening-ink-framing.png" alt="" aria-hidden="true" onError={event=>{event.currentTarget.style.visibility='hidden';}}/>
           <img className="startup-ink-sun" src="/themes/si/opening-ink-sun.png" alt="" aria-hidden="true" onError={event=>{event.currentTarget.style.visibility='hidden';}}/>
           <div className="startup-brand startup-inn-brand">

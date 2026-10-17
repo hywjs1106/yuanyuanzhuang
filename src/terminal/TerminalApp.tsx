@@ -14,10 +14,12 @@ import './terminal.css';
 import './assistant-chat.css';
 import './sticker-gallery.css';
 import './overview-hub.css';
+import './ink-dragon.css';
 import './reminder-missions.css';
 import './terminal-polish.css';
 import './si-theme.css';
 import './si-ink-surfaces.css';
+import './si-night-ink.css';
 import {OverviewPanel} from './OverviewPanel';
 import {readWeatherCache,type WeatherBundle} from './weather';
 import {syncWeatherBriefing} from './weatherBriefing';
@@ -70,7 +72,7 @@ export default function TerminalApp(){
   return <div className={`terminal-shell ${page==='assistant'?'is-assistant':''} ${keyboardOpen?'keyboard-open':''}`}><header className="terminal-header"><div className="terminal-brand"><span className="brand-mascot"><img className={`brand-sigil ${settings.visualTheme==='si'?'brand-inn':'brand-ink-spirit'}`} src={settings.visualTheme==='si'?'/themes/si/scroll-brush-mark.png':'/characters/ink-spirit-number-one.png'} width="44" height="44" alt=""/></span><h1>{brandName}</h1></div><div className="terminal-header-actions"><button type="button" className="edition-toggle" aria-label="切换角色风格" aria-pressed={settings.visualTheme==='si'} onClick={()=>void setVisualTheme(settings.visualTheme==='si'?'fangyi':'si').catch(e=>setNotice(String(e)))}><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h13l-3-3M17 14H4l3 3"/></svg>{settings.visualTheme==='si'?'祀':'方宜'}</button><button className="theme-button" aria-label="切换深浅模式" onClick={()=>void updateSettings({...settings,theme:settings.theme==='dark'?'light':'dark'}).catch(e=>setNotice(String(e)))}>{settings.theme==='dark'?'浅色':'深色'}</button></div></header>
     {notice&&<div className="notice toast" role="status"><p>{notice}</p><button aria-label="关闭提示" onClick={()=>setNotice('')}>关闭</button></div>}
     <main key={page} data-route-direction={routeDirection} onAnimationEnd={event=>{if(event.target===event.currentTarget)setNavigationMotion(false);}} className={`terminal-content page-${page}${navigationMotion?' route-enter':''}`}>
-    {page==='today'&&<><OverviewPanel date={date} onNavigate={navigate} visualTheme={settings.visualTheme}/><WeatherRefresh config={settings.weather??{provider:'openmeteo'}} onBundleChange={weatherUpdated}/></>}
+    {page==='today'&&<><OverviewPanel date={date} onNavigate={navigate} visualTheme={settings.visualTheme} theme={settings.theme}/><WeatherRefresh config={settings.weather??{provider:'openmeteo'}} onBundleChange={weatherUpdated}/></>}
     {page==='ledger'&&<LedgerPanel entries={entries??[]} onSave={saveEntry} onDelete={async id=>{await terminalDb.entries.delete(id);}}/>}
     {page==='reminders'&&<><ReminderPanel reminders={reminders??[]} onSave={async r=>{await saveReminder(r);await refreshNotifications();}} onDelete={async id=>{await terminalDb.reminders.delete(id);await refreshNotifications();}} notificationStatus={notif} onRequestPermission={async()=>{setNotif(await reminderNotifications.requestPermission());await refreshNotifications();}} onTestNotification={()=>reminderNotifications.test()}/>{Capacitor.isNativePlatform()&&<div className="notice"><p>准点提醒权限：{exact===undefined?'检查中':exact?'已允许':'尚未允许，提醒可能延迟'}</p>{exact===false&&<button onClick={()=>void TerminalAlarms.request().then(s=>setExact(s.granted)).catch(e=>setNotice(String(e)))}>允许准点提醒</button>}<p className="muted">手机强行停止应用、限制后台或省电设置可能影响通知。可用“测试通知”检查。</p></div>}</>}
     {page==='weather'&&weatherPanel}{page==='almanac'&&<AlmanacPanel/>}
