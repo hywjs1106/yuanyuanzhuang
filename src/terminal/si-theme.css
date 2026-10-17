@@ -124,3 +124,7 @@
 :root[data-terminal-visual=si] .si-kaomoji button { font-family:'Segoe UI',system-ui,sans-serif; }
 :root[data-terminal-visual=si][data-terminal-theme=dark] .assistant-chat .chat-bubble p { font-weight:500; }
 @media(max-width:350px) { :root[data-terminal-visual=si] .terminal-brand h1 { font-size:24px; } }
+
+/* The Si edition uses an uncropped little inn instead of the character portrait crop. */
+:root[data-terminal-visual=si] .brand-mascot { background:transparent; border-radius:0; overflow:visible; }
+.terminal-brand .brand-inn { display:block; width:40px; height:40px; max-width:100%; object-fit:contain; border-radius:0; }
