@@ -1,0 +1,48 @@
+/* Common control semantics; each companion keeps its own materials. */
+.terminal-action-label{display:inline-flex;align-items:center;justify-content:center;gap:inherit;min-width:0}
+.terminal-action-busy{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;animation:ink-control-wait 1.1s linear infinite}
+.terminal-action[aria-busy=true]{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.terminal-action:disabled{cursor:default}
+.terminal-action-label>img{flex:none}
+.assistant-memory{scroll-margin-top:16px}
+.memory-heading{display:flex;align-items:center;gap:10px}
+.memory-heading>svg{width:27px;height:27px;color:var(--ink)}
+.memory-heading h3{margin:0}
+.memory-heading small{margin-left:auto;color:var(--muted);font-variant-numeric:tabular-nums}
+.memory-list{list-style:none;margin:20px 0;padding:0}
+.memory-list li{padding:14px 0;border-bottom:1px solid var(--color-rule);overflow-wrap:anywhere}
+.memory-list li>p{margin:0 0 8px;white-space:pre-wrap}
+.memory-list .button-row{justify-content:flex-end;gap:12px}
+.memory-list .terminal-action{min-width:64px}
+.memory-form{display:flex;flex-direction:column;gap:8px;margin-top:20px}
+.memory-form textarea{width:100%;min-height:96px;padding:13px;resize:vertical;font:inherit;color:var(--ink);background:var(--color-paper);border:1px solid var(--color-rule-strong)}
+.memory-counter{align-self:flex-end;color:var(--muted);font-variant-numeric:tabular-nums}
+.memory-form .button-row{margin-top:6px}
+.memory-status{min-height:1.6em;color:var(--ink);margin:10px 0}
+.memory-disclosure{font-size:13px;line-height:1.8}
+.memory-empty{padding:18px 0;color:var(--muted)}
+:root[data-terminal-visual=si] .terminal-shell .terminal-action{
+ --si-button-fill:var(--color-paper-2);--si-button-text:var(--ink);
+ position:relative;isolation:isolate;min-height:44px;padding:10px 16px;clip-path:none;border:0;border-radius:2px;background:transparent;color:var(--si-button-text);box-shadow:none;transform:none;transition:color 150ms ease-out;
+}
+:root[data-terminal-visual=si] .terminal-shell .terminal-action::before{
+ content:'';position:absolute;inset:-4px -5px;z-index:-1;pointer-events:none;background:var(--si-button-fill);mask:var(--si-brush) center/125% 220% no-repeat;opacity:.96;transform:rotate(-.45deg);transition:transform 180ms ease-out,opacity 180ms ease-out;
+}
+:root[data-terminal-visual=si] .terminal-action-label{transition:transform 180ms ease-out}
+:root[data-terminal-visual=si] .terminal-shell .terminal-action:not(:disabled):active::before{transform:rotate(.7deg) scale(.97);opacity:.8}
+:root[data-terminal-visual=si] .terminal-shell .terminal-action:not(:disabled):active>.terminal-action-label{transform:translateY(1px)}
+:root[data-terminal-visual=si] .terminal-shell .terminal-action:is([data-tone=primary],[type=submit],.send-message):not(:disabled){--si-button-fill:var(--si-action);--si-button-text:var(--si-on-action)}
+:root[data-terminal-visual=si] .terminal-shell .terminal-action:is([data-tone=danger],.danger){--si-button-text:var(--error)}
+:root[data-terminal-visual=si] .terminal-shell .terminal-action:disabled{--si-button-fill:var(--color-paper-2);--si-button-text:var(--muted);opacity:.65}
+:root[data-terminal-visual=si] .terminal-shell .terminal-action[aria-busy=true]{opacity:.85}
+:root[data-terminal-visual=si] .terminal-shell :is(input,select,textarea):focus-visible{outline:2px solid var(--si-action);outline-offset:3px}
+:root[data-terminal-visual=si] .terminal-shell .terminal-action:focus-visible{outline:2px solid var(--si-action);outline-offset:5px}
+:root[data-terminal-visual=si] .terminal-shell :is(input,select,textarea){accent-color:var(--si-action);caret-color:var(--si-action)}
+:root[data-terminal-visual=si] .memory-form textarea{border-radius:5px 11px 6px 9px;border-width:1px 1px 2px 1px;background:var(--color-paper-2)}
+:root[data-terminal-visual=si] .memory-heading>svg{color:var(--si-action);transform:rotate(-9deg)}
+:root[data-terminal-visual=si] .memory-list li{border-bottom-style:dashed}
+:root[data-terminal-visual=si] .memory-list li[data-editing]{text-decoration:underline;text-decoration-color:var(--si-action);text-underline-offset:6px}
+:root[data-terminal-visual=si] .memory-status{color:var(--si-action)}
+@media(hover:hover){:root[data-terminal-visual=si] .terminal-shell .terminal-action:not(:disabled):hover::before{transform:rotate(.45deg) translateY(-1px)}}
+@keyframes ink-control-wait{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.terminal-action-busy{animation:none}:root[data-terminal-visual=si] .terminal-shell .terminal-action::before,:root[data-terminal-visual=si] .terminal-action-label{transition:none}:root[data-terminal-visual=si] .terminal-shell .terminal-action:not(:disabled):is(:hover,:active)::before,:root[data-terminal-visual=si] .terminal-shell .terminal-action:not(:disabled):active>.terminal-action-label{transform:none}}

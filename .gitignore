@@ -86,3 +86,20 @@ tests-local/
 test-results/
 playwright-report/
 .impeccable/
+
+# Private machine state and publication exclusions
+.env
+.env.*
+!.env.example
+android/local.properties
+*.key
+*.pfx
+*.p12
+*.jks
+*.keystore
+references/
+coverage/
+*.tsbuildinfo
+
+# Original upstream introduction retained alongside the fork README
+!README.upstream.md

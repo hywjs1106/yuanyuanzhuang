@@ -1,0 +1,54 @@
+/* Compact identity, generous reading area, with the original portrait gesture. */
+.terminal-shell .assistant-chat .fangyi-contact{min-height:78px;padding:8px 14px;gap:12px}
+.terminal-shell .assistant-chat .fangyi-contact-copy{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.terminal-shell .assistant-chat .fangyi-contact-copy h2{margin:0;font-size:23px;line-height:1.35}
+.terminal-shell .assistant-chat .fangyi-contact .fangyi-presence{width:56px;gap:2px;min-height:44px}
+.terminal-shell .assistant-chat .fangyi-contact .fangyi-presence-frame{width:48px;height:48px;padding:2px}
+.terminal-shell .assistant-chat .fangyi-contact .fangyi-presence-art{width:44px;height:44px}
+.terminal-shell .assistant-chat .fangyi-contact .fangyi-presence-hint{font-size:10px;line-height:1.4}
+.terminal-shell .assistant-chat .fangyi-contact .fangyi-presence-orbit{display:none}
+.chat-link-status{display:inline-flex;align-items:center;gap:5px;color:var(--chat-muted);font-size:11px;line-height:1.5;white-space:nowrap}
+.chat-link-status::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--color-success)}
+:root[data-terminal-visual=si] .terminal-shell .assistant-chat .fangyi-contact{min-height:78px;padding:8px 14px}
+:root[data-terminal-visual=si] .terminal-shell .assistant-chat .fangyi-contact-copy h2{margin:0;font-size:23px}
+:root[data-terminal-visual=si] .terminal-shell .assistant-chat .fangyi-contact .fangyi-presence{width:56px}
+:root[data-terminal-visual=si] .terminal-shell .assistant-chat .fangyi-contact .fangyi-presence-frame{width:48px;height:48px;padding:2px}
+:root[data-terminal-visual=si] .terminal-shell .assistant-chat .fangyi-contact .fangyi-presence-art{width:44px;height:44px}
+.terminal-shell.keyboard-open .assistant-chat .fangyi-contact,:root[data-terminal-visual=si] .terminal-shell.keyboard-open .assistant-chat .fangyi-contact{min-height:60px;padding:6px 12px}
+.terminal-shell.keyboard-open .assistant-chat .fangyi-contact .fangyi-presence{width:44px;height:44px;gap:0}
+.terminal-shell.keyboard-open .assistant-chat .fangyi-contact .fangyi-presence-frame{width:44px;height:44px;padding:2px}
+.terminal-shell.keyboard-open .assistant-chat .fangyi-contact .fangyi-presence-art{width:40px;height:40px}
+.terminal-shell.keyboard-open .assistant-chat .fangyi-contact .fangyi-presence-hint{display:none}
+.chat-receipt-detail{margin-top:6px;border-top:1px solid var(--chat-rule)}
+.chat-receipt-detail>summary{color:var(--chat-muted);font-size:12px;min-height:44px;line-height:24px;padding:10px 0;font-weight:400}
+.assistant-chat .chat-receipt-detail>p{padding:4px 0 8px;font-size:13px;line-height:1.8;color:var(--chat-text)}
+.settings-appearance{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px}
+.settings-appearance h3{width:100%;margin:0}
+.settings-appearance>span{color:var(--muted);flex:1}
+.settings-budget{margin:22px 0}
+.settings-group{margin:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.settings-group>summary{display:flex;align-items:center;gap:10px;list-style:none;min-height:64px;padding:15px 2px;color:var(--ink);cursor:pointer}
+.settings-group>summary::-webkit-details-marker{display:none}
+.settings-group-title{font-size:17px;font-weight:500;flex-shrink:0}
+.settings-group>summary small{font-size:12px;font-weight:400;line-height:1.6;margin-left:auto;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.settings-group>summary svg{width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform 160ms ease-out}
+.settings-group[open]>summary svg{transform:rotate(180deg)}
+.settings-group>summary:focus-visible{outline:2px solid var(--color-focus);outline-offset:3px}
+.settings-group-content{padding:0 0 18px}
+.settings-group-content>.terminal-form,.settings-group-content>.settings-section{margin-top:0}
+:root[data-terminal-visual=si] .settings-group{border-bottom-style:dashed}
+:root[data-terminal-visual=si] .settings-group>summary svg{color:var(--si-cinnabar)}
+@media(prefers-reduced-motion:reduce){.settings-group>summary svg{transition:none}}
+
+.ledger-budget{margin:20px 0 24px;padding:14px 0;border-block:1px solid var(--line)}
+.ledger-budget-heading{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px 14px}
+.ledger-budget-heading h3{margin:0;font-size:15px;font-weight:500}
+.ledger-budget-heading>span{font-size:15px;color:var(--ink)}
+.ledger-budget p{margin:8px 0 0;font-size:12px;line-height:1.6;color:var(--muted)}
+.ledger-budget-track{height:6px;margin-top:12px;background:var(--line);overflow:hidden;border-radius:2px}
+.ledger-budget-track>span{display:block;height:100%;background:var(--color-success)}
+.ledger-budget[data-over] .ledger-budget-track>span{background:var(--color-error)}
+.ledger-budget[data-over] .ledger-budget-heading>span{color:var(--color-error)}
+:root[data-terminal-visual=si] .ledger-budget{border-block-style:dashed}
+:root[data-terminal-visual=si] .ledger-budget-track{border-radius:40% 8% 30% 5%}
+:root[data-terminal-visual=si] .ledger-budget-track>span{background:var(--si-cinnabar);border-radius:5% 30% 10% 40%}

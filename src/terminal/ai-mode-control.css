@@ -1,0 +1,9 @@
+.ai-source-bar{display:flex;flex:0 0 auto;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:7px 12px;border-bottom:1px solid var(--chat-rule,var(--line));background:var(--chat-raised,transparent)}
+.ai-mode-control{display:inline-flex;flex-shrink:0;gap:3px;padding:3px;border:1px solid var(--line);border-radius:7px;background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.ai-mode-control button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:7px 13px;border:0;border-radius:4px;background:transparent;color:var(--muted);font:inherit;font-size:13px;box-shadow:none;transform:none}
+.ai-mode-control button[aria-pressed=true]{background:var(--ink);color:var(--paper,#f4f0e7)}
+.ai-mode-control button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.ai-mode-dot{width:5px;height:5px;border:1px solid currentColor;border-radius:50%}.ai-mode-control [aria-pressed=true] .ai-mode-dot{background:currentColor}
+.ai-source-caption{min-width:0;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:var(--muted)}
+:root[data-terminal-visual=si] .ai-mode-control{border-radius:12px 7px 10px 5px}:root[data-terminal-visual=si] .ai-mode-control button{border-radius:8px 4px 7px 4px}
+@media(max-width:350px){.ai-mode-control button{padding:6px 10px;font-size:12px}.ai-source-bar{gap:8px}}

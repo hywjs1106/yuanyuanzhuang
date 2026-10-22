@@ -15,7 +15,7 @@ test('mission list initially selects the earliest reminder and exposes one detai
   assert.match(html,/aria-label="查看提醒：较晚提醒" aria-pressed="false"/);
   assert.match(html,/<h3[^>]*>最早提醒<\/h3>/);
   assert.doesNotMatch(html,/<h3[^>]*>较晚提醒<\/h3>/);
-  assert.equal((html.match(/>10 分钟后<\/button>/g)??[]).length,1);
+  assert.equal((html.match(/>10 分钟后<\/span><\/button>/g)??[]).length,1);
 });
 
 test('mission detail distinguishes completed once reminders from paused reminders',()=>{

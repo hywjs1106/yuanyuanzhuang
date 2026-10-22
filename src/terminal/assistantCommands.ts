@@ -3,10 +3,10 @@ import { localDateKey, parseMoney, validDateKey } from './ledger';
 
 /** Deliberately conservative: quoted, hypothetical and cancelled commands need review. */
 export function unsafeCommand(text:string):boolean {
-  return /不要|不用|不必|无需|不准|禁止|别(?:帮|记|提醒|保存)|不记|不提醒|没让|取消|不需要|不想|假如|假设|如果|比如|例如|能不能|可不可以|是否|怎么|会怎样|大概|大约|差不多|好像|可能|估计|约莫|左右|[“”"'「」『』`]|他说|她说|原话/.test(text);
+  return /(?:别|不能|不得|不可以|不许|不应)(?:把|将|给我|帮我|替我|再|去|执行|自动|直接|修改|更改|改|记|保存|删除|删|提醒|安排|添加|设|暂停|停用|启用)/.test(text)||/不要|不用|不必|无需|不准|禁止|别(?:帮|记|提醒|保存)|不记|不提醒|没让|取消|不需要|不想|假如|假设|如果|比如|例如|能不能|可不可以|是否|怎么|会怎样|大概|大约|差不多|好像|可能|估计|约莫|左右|[“”"'「」『』`]|他说|她说|原话/.test(text);
 }
 const ledgerIntent = /(?:帮我|给我|替我)?(?:记一下|记一笔|记下|记录|记账|保存)(?!得|忆)/;
-export function hasLedgerIntent(text:string):boolean { return ledgerIntent.test(text); }
+export function hasLedgerIntent(text:string):boolean { return ledgerIntent.test(text)||/(?:帮我|给我|替我)记(?!忆|得|住)/.test(text); }
 export function hasReminderIntent(text:string):boolean { return /提醒我|叫我|给我.*(?:提醒|闹钟)|帮我.*(?:提醒|闹钟)/.test(text); }
 function dateFromText(text:string,now:Date):Date|undefined {
   if(/去年|前年|今年|明年|上周|上月|下周|下月|星期|周[一二三四五六日天]|礼拜|几天|前几|日前|上个|下个|今晚|昨晚|明晚|今早|昨早|明早|今晨|昨日|今日|明日|昨天晚上|\d+月\d+日/.test(text.replace(/每周[一二三四五六日天]/g,''))) return;
@@ -48,6 +48,7 @@ function chineseNumber(value:string):number {
 const num='[零〇一二两三四五六七八九十\\d]+';
 function timestamp(date:Date):string { return `${localDateKey(date)}T${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`; }
 export function parseLocalReminder(text:string,now=new Date()):Extract<Proposal,{kind:'reminder'}>|undefined {
+  text=text.replace(/明早|明晨/g,'明天早上').replace(/今早|今晨/g,'今天早上').replace(/今晚/g,'今天晚上').replace(/明晚/g,'明天晚上');
   if(unsafeCommand(text)||!hasReminderIntent(text)) return;
   const intent=text.match(/(?:提醒我|叫我)(.*)$/); if(!intent) return;
   if((text.match(/凌晨|早上|上午|中午|下午|傍晚|晚上|夜里/g)??[]).length>1 || (text.match(/今天|明天|后天|每天|每日|每周[一二三四五六日天]/g)??[]).length>1)return;

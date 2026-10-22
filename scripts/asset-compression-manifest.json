@@ -1,0 +1,86 @@
+[
+  {
+    "original": "/branding/dijiang-ship.png",
+    "asset": "/branding/dijiang-ship.webp",
+    "before": 1604536,
+    "after": 962304,
+    "pixelsSHA256": "27bdccd0f255e899a8c8c6e9533eb31d4c42d0a8d8d3954748dd6131cad53a84"
+  },
+  {
+    "original": "/characters/fangyi-bouquet-avatar.png",
+    "asset": "/characters/fangyi-bouquet-avatar.webp",
+    "before": 1322228,
+    "after": 833848,
+    "pixelsSHA256": "587521c549f77b5325446a582aead2f7f7174869557cd670b554d4c47e3f6371"
+  },
+  {
+    "original": "/characters/ink-spirit-number-one.png",
+    "asset": "/characters/ink-spirit-number-one.webp",
+    "before": 1375801,
+    "after": 853122,
+    "pixelsSHA256": "fe3c9e7c233e7ac02088879c7da72d4fca8e32c6e51787ace3ceffc467b5c8d5"
+  },
+  {
+    "original": "/themes/si/chibi-avatar.png",
+    "asset": "/themes/si/chibi-avatar.webp",
+    "before": 2221555,
+    "after": 1395672,
+    "pixelsSHA256": "0a8e350fec3c9455ed248ea867f5ed1a8cdc85032f200fc34cff78ee0ad6634b"
+  },
+  {
+    "original": "/themes/si/ink-brush-buddy.png",
+    "asset": "/themes/si/ink-brush-buddy.webp",
+    "before": 1657331,
+    "after": 1074346,
+    "pixelsSHA256": "8ccb5215ff79b4e8cf7c7b90004c9480907a8bc131e98a764b8e995fddb39c33"
+  },
+  {
+    "original": "/themes/si/ink-dragon-opening.png",
+    "asset": "/themes/si/ink-dragon-opening.webp",
+    "before": 1243734,
+    "after": 814994,
+    "pixelsSHA256": "442ec8516e4e125708621e9571425f7a6634b4a523ed8759326a1aeef14e79a8"
+  },
+  {
+    "original": "/themes/si/inn-mark.png",
+    "asset": "/themes/si/inn-mark.webp",
+    "before": 1637855,
+    "after": 1064084,
+    "pixelsSHA256": "a0364ad2a32e4ccc8c85dcf7f829840f57fa8b687925904e60fbba9b9e6df998"
+  },
+  {
+    "original": "/themes/si/opening-ink-framing.png",
+    "asset": "/themes/si/opening-ink-framing.webp",
+    "before": 1306925,
+    "after": 852966,
+    "pixelsSHA256": "fbbc4f489af4d702683c599344d26ef84c16e3d5dcf3db17b31fca8f65dbacee"
+  },
+  {
+    "original": "/themes/si/opening-ink-sun.png",
+    "asset": "/themes/si/opening-ink-sun.webp",
+    "before": 901453,
+    "after": 606322,
+    "pixelsSHA256": "a3368d3b7ea90b64f94762a48ab9a9e358e268a1c3014863ac3c64bec1e79c47"
+  },
+  {
+    "original": "/themes/si/painted-mountains-night.png",
+    "asset": "/themes/si/painted-mountains-night.webp",
+    "before": 2790838,
+    "after": 1802374,
+    "pixelsSHA256": "2cce007141092c010e9bf51d2e2788feb238c1efe6639f70a7505d3935afa64f"
+  },
+  {
+    "original": "/themes/si/painted-mountains.png",
+    "asset": "/themes/si/painted-mountains.webp",
+    "before": 2931826,
+    "after": 2038964,
+    "pixelsSHA256": "ac3409e88111acd609e1008a856b4a4d881d4c4fd60c8e3becf5280ce73f4753"
+  },
+  {
+    "original": "/themes/si/scroll-brush-mark.png",
+    "asset": "/themes/si/scroll-brush-mark.webp",
+    "before": 2017033,
+    "after": 1317516,
+    "pixelsSHA256": "b117a64d7e161e91ad03df206e9d5115c04aaf77d8a48a4fc1b350ba3888651c"
+  }
+]

@@ -1,0 +1,62 @@
+/* The page material changes; the navigation hierarchy does not. */
+main.terminal-content[data-ink-reveal=true]{position:relative;z-index:3;background:var(--color-base);--route-arrival:220ms}
+main.terminal-content[data-ink-reveal=true][data-route-kind=push]{animation:panel-push var(--route-arrival) cubic-bezier(.16,1,.3,1) both}
+main.terminal-content[data-ink-reveal=true][data-route-kind=tab]{animation:factory-tab 240ms cubic-bezier(.16,1,.3,1) both}
+main.terminal-content[data-ink-reveal=true][data-route-kind=pop]{animation:panel-under 180ms ease-out both}
+.ink-route-previous[data-route-kind=pop]{z-index:4;animation:panel-pop 180ms cubic-bezier(.4,0,1,1) both}
+.ink-route-previous:not([data-route-kind=tab])::after,:root:not([data-terminal-visual=si]) .ink-route-previous::after{display:none}
+:root[data-terminal-visual=si] main.terminal-content[data-ink-reveal=true][data-route-kind=tab]{animation:si-ink-reveal 360ms cubic-bezier(.16,1,.3,1) both}
+:root[data-terminal-visual=si] main.terminal-content[data-ink-reveal=true][data-route-kind=push]{animation:paper-push 220ms cubic-bezier(.16,1,.3,1) both}
+:root[data-terminal-visual=si] main.terminal-content[data-ink-reveal=true][data-route-kind=pop]{animation:paper-under 200ms ease-out both}
+:root[data-terminal-visual=si] .ink-route-previous[data-route-kind=pop]{animation:paper-pop 200ms cubic-bezier(.4,0,1,1) both}
+main.terminal-content[data-ink-reveal=true]::before{display:none}
+@keyframes factory-tab{from{clip-path:inset(0 0 0 100%)}to{clip-path:inset(0)}}
+@keyframes panel-push{from{transform:translateX(14px);clip-path:inset(0 0 0 10%)}to{transform:none;clip-path:inset(0)}}
+@keyframes paper-push{from{transform:translateX(8px);clip-path:inset(0 0 0 6%)}to{transform:none;clip-path:inset(0)}}
+@keyframes panel-pop{to{transform:translateX(14px);clip-path:inset(0 0 0 100%)}}
+@keyframes paper-pop{to{transform:translateX(8px);clip-path:inset(0 0 0 100%)}}
+@keyframes panel-under{from{transform:translateX(-6px)}to{transform:none}}
+@keyframes paper-under{from{transform:translateX(-4px)}to{transform:none}}
+.panel-motion{display:flow-root;flex-shrink:0}
+.panel-motion .fangyi-expression-drawer{animation:none!important}
+@media(prefers-reduced-motion:reduce){main.terminal-content[data-ink-reveal=true],.ink-route-previous{animation:none!important;clip-path:none!important;transform:none!important}}
+
+/* One focal chain: brush, signature, seal, then the already mounted home. */
+.startup-si .startup-inn-art{animation:si-opening-brush 480ms 40ms cubic-bezier(.16,1,.3,1) both}
+.startup-si .startup-ink-landscape{animation:opening-quiet-landscape 600ms ease-out both}
+.startup-si .startup-ink-framing,.startup-si .startup-ink-sun{animation:none}
+.startup-si .startup-name>span{animation-duration:220ms}
+.startup-si .startup-inn-seal{animation:si-receipt-seal 260ms 920ms cubic-bezier(.16,1,.3,1) both}
+.startup-si .ink-dragon-opening{animation:none}
+.startup-si .ink-dragon-opening .ink-dragon-pupil{animation:opening-single-glance 420ms 80ms ease-in-out both}
+@keyframes opening-single-glance{0%,100%{transform:none}35%,65%{transform:translate(18px,-6px)}}
+@keyframes opening-quiet-landscape{from{opacity:calc(var(--inn-landscape-opacity)*.8);transform:translateY(4px) scale(1.015)}to{opacity:var(--inn-landscape-opacity);transform:none}}
+.startup-content[data-startup-stage=intro] .hub-orbit *{animation-play-state:paused}
+:root[data-terminal-visual=si] .startup-content[data-startup-arrival=true] .si-painted-world{animation:home-painting-arrive 180ms ease-out both}
+:root[data-terminal-visual=si] .startup-content[data-startup-arrival=true] .hub-plate{animation:home-entry-arrive 140ms cubic-bezier(.16,1,.3,1) both}
+:root[data-terminal-visual=si] .startup-content[data-startup-arrival=true] .hub-plate:nth-child(2){animation-delay:20ms}
+:root[data-terminal-visual=si] .startup-content[data-startup-arrival=true] .hub-plate:nth-child(3){animation-delay:40ms}
+:root[data-terminal-visual=si] .startup-content[data-startup-arrival=true] .hub-plate:nth-child(4){animation-delay:60ms}
+@keyframes home-painting-arrive{from{opacity:.88}to{opacity:1}}
+@keyframes home-entry-arrive{from{transform:translateY(4px);opacity:.72}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.startup-content[data-startup-arrival] :is(.si-painted-world,.hub-plate){animation:none!important}.startup-si .ink-dragon-opening .ink-dragon-pupil{animation:none!important}}
+
+.settings-group>summary[aria-expanded=false] svg{transform:rotate(0)}
+.settings-group>summary[aria-expanded=true] svg{transform:rotate(180deg)}
+
+.ink-route-history{overflow:hidden;background:var(--color-base);contain:paint;pointer-events:none}
+
+.delete-undo{position:fixed;z-index:50;bottom:calc(92px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(360px,calc(100vw - 32px));box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:10px 16px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.delete-undo p{margin:0;flex:1}.delete-undo button{flex:none}.delete-undo [role=alert]{color:var(--error);font-size:13px}
+
+/* Phones use one composited page: no duplicate form tree or full-page mask raster. */
+:root[data-terminal-visual] main.terminal-content[data-ink-reveal=true][data-motion-render=direct][data-route-kind]{
+ --direct-route-x:var(--route-from-x,4px);clip-path:none;will-change:transform,opacity;
+ animation:touch-route-arrival 180ms cubic-bezier(.16,1,.3,1) both;
+}
+:root[data-terminal-visual] main.terminal-content[data-ink-reveal=true][data-motion-render=direct][data-route-kind=push]{--direct-route-x:10px}
+:root[data-terminal-visual] main.terminal-content[data-ink-reveal=true][data-motion-render=direct][data-route-kind=pop]{--direct-route-x:-6px}
+@keyframes touch-route-arrival{from{transform:translateX(var(--direct-route-x));opacity:.92}to{transform:none;opacity:1}}
+/* On phone returns, the page carries the landscape in the same single arrival. */
+:root[data-terminal-visual=si] main[data-motion-render=direct] .si-painted-world{animation:none;clip-path:none}
+@media(prefers-reduced-motion:reduce){:root[data-terminal-visual] main.terminal-content[data-motion-render=direct]{animation:none!important;will-change:auto}}

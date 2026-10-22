@@ -1,11 +1,12 @@
 .ink-dragon{position:relative;display:block;flex-shrink:0;line-height:0}
 .ink-dragon>img{display:block;width:100%;height:auto;object-fit:contain}
 .ink-dragon-eyes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.ink-dragon-pupil{animation:ink-pupil-roam 5.6s var(--eye-delay,0s) linear infinite}
+.ink-dragon-pupil{animation:ink-pupil-roam var(--eye-period,12s) var(--eye-delay,0s) ease-in-out infinite}
 .ink-dragon-opening{width:100%;animation:inn-brush-settle 1100ms ease-out both}
 .ink-dragon-opening .ink-dragon-pupil{animation:ink-pupil-opening 1050ms .12s ease-in-out both}
 .hub-motion-paused .ink-dragon-pupil{animation-play-state:paused}
-.hub-plate:hover .ink-dragon-pupil,.hub-plate:focus-visible .ink-dragon-pupil{animation:none;transform:translate(18px,-8px)}
-@keyframes ink-pupil-roam{0%,2%{transform:translate(0,0)}4%{transform:translate(23px,0)}7%{transform:translate(0,27px)}10%{transform:translate(-23px,0)}13%{transform:translate(0,-27px)}16%{transform:translate(23px,0)}20%,28%{transform:translate(18px,-8px)}34%,100%{transform:translate(0,0)}}
+.hub-plate:focus-visible .ink-dragon-pupil{animation:none;transform:translate(18px,-8px)}
+ .ink-dragon[data-looking=true] .ink-dragon-pupil{animation:none;transform:translate(var(--look-x),var(--look-y))}
+@keyframes ink-pupil-roam{0%,76%,94%,100%{transform:translate(0,0)}81%,86%{transform:translate(var(--glance-x,20px),var(--glance-y,-8px))}}
 @keyframes ink-pupil-opening{0%{transform:translate(0,0)}15%{transform:translate(23px,0)}30%{transform:translate(0,27px)}45%{transform:translate(-23px,0)}60%{transform:translate(0,-27px)}75%{transform:translate(23px,0)}90%,100%{transform:translate(8px,-5px)}}
 @media(prefers-reduced-motion:reduce){.ink-dragon-eyes{display:none}.ink-dragon-pupil,.ink-dragon-opening{animation:none!important}}

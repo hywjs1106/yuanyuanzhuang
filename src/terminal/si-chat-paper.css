@@ -1,0 +1,29 @@
+/* The conversation is another page in the same painted inn, not a framed console. */
+:root[data-terminal-visual=si] .panel.assistant-chat{
+ --chat-ground:var(--color-base);
+ border:0;border-radius:0;box-shadow:none;background:var(--chat-ground);
+}
+:root[data-terminal-visual=si] .assistant-chat .ai-source-bar{
+ padding:2px 10px 4px;border:0;background:var(--chat-ground);gap:10px;
+}
+:root[data-terminal-visual=si] .assistant-chat .ai-mode-control{border:0;background:transparent;padding:0;gap:2px}
+:root[data-terminal-visual=si] .assistant-chat .ai-mode-control button{padding:6px 10px;font-size:12px}
+:root[data-terminal-visual=si] .assistant-chat .ai-mode-control button[aria-pressed=true]{background:var(--color-paper-2);color:var(--ink)}
+:root[data-terminal-visual=si] .assistant-chat .ai-source-caption{color:var(--chat-muted);font-size:11px}
+:root[data-terminal-visual=si] .terminal-shell .assistant-chat .fangyi-contact{
+ background:var(--chat-ground);border:0;padding:8px 14px 12px;
+}
+:root[data-terminal-visual=si] .assistant-chat .fangyi-contact::after{content:none}
+:root[data-terminal-visual=si] .assistant-chat .chat-message-content>small,
+:root[data-terminal-visual=si] .assistant-chat .chat-message-content>time{
+ background:transparent;padding:0;color:var(--chat-muted);font-size:11px;
+}
+:root[data-terminal-visual=si] .assistant-chat .chat-message-content>small{margin-bottom:4px}
+:root[data-terminal-visual=si] .assistant-chat .chat-message-content>time{margin-top:5px}
+:root[data-terminal-visual=si] .assistant-chat :is(.fangyi-message-avatar,.admin-message-avatar){border:0;background:transparent;padding:0}
+:root[data-terminal-visual=si] .assistant-chat .chat-bubble{border:0;box-shadow:none}
+:root[data-terminal-visual=si] .terminal-shell .assistant-chat .chat-bubble p{font-weight:400}
+:root[data-terminal-visual=si] .assistant-chat .chat-starters>p{background:transparent;padding:0}
+:root[data-terminal-visual=si] .assistant-chat .assistant-composer{
+ background:var(--chat-ground);border-top-color:color-mix(in srgb,var(--chat-rule) 45%,transparent);
+}

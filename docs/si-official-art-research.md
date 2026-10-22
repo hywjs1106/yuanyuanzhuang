@@ -27,3 +27,22 @@
 X 正文及媒体地址通过公开 FX 镜像读取并保存，引用仍指向官方原贴；镜像仅作读取通道，不作为官方身份的独立认证。TikTok 的上述元数据来自主站 HTML。视频 CDN 返回 403，正常浏览器未加载视频，未继续绕过访问限制。搜索发现的第三方 TikTok 索引仅提供线索，未用于确证画作身份。
 
 交付时建议将贴纸标作“官方贴纸 #10”，将右侧海报和封面标作“官方同画作局部”，将用户截图的完整左右原图继续标作“待找到原始文件”；不要把另一个作者的相似插画、重绘或裁切补全冒充这两张精确原图。
+
+
+## Follow-up: exact doodled self-portrait confirmed
+
+The user clarified that the doodle appears when the poster is opened. A public result-post link resolved to the Japanese official account: https://x.com/AKEndfieldJP/status/2110274444816245186 . Its media metadata identifies an animated GIF, delivered as https://video.twimg.com/tweet_video/HUkyn3UbAAADgdM.mp4 . Browser playback verified duration 1.4 seconds, 1138 × 640. A screenshot at 1 second exactly matches the supplied doodle: closed eyes, pink cheeks, hands on hips, thin legs, and pink flowers. This supersedes the earlier unconfirmed status for the LEFT picture only. The complete refined illustration remains unlocated. The official video is embedded remotely in the local reference gallery; no media binary was downloaded.
+
+
+## 2026-10-19：六张同系列官方动图已定位
+
+通过官方公开嵌入数据 `cdn.syndication.twimg.com/tweet-result?id=2110582688302477560&lang=en&token=1`，读取活动帖的 `unified_card` 轮播结构。六张海报的点击目标是预填分享内容，正文中分别包含六个官方结果帖。仅解析目标地址，未触发分享或发布。六个结果帖均经公开媒体元数据确认 author=AKEndfieldJP、media.type=gif，浏览器逐段加载、播放并查看不同时间点画面。
+
+- 祀：[官方结果帖](https://x.com/AKEndfieldJP/status/2110274444816245186)；1.4 秒，1138×640；[原始动图媒体](https://video.twimg.com/tweet_video/HUkyn3UbAAADgdM.mp4)。
+- 男管理员：[官方结果帖](https://x.com/AKEndfieldJP/status/2110274520120709514)；1.65 秒，1138×640；[原始动图媒体](https://video.twimg.com/tweet_video/HUkyn33a4AAkoGf.mp4)。
+- 女管理员：[官方结果帖](https://x.com/AKEndfieldJP/status/2110274532275876337)；1.65 秒，1138×640；[原始动图媒体](https://video.twimg.com/tweet_video/HUkyokgaYAAIHY8.mp4)。
+- 明河：[官方结果帖](https://x.com/AKEndfieldJP/status/2110274488252395532)；1.65 秒，1138×640；[原始动图媒体](https://video.twimg.com/tweet_video/HUkyn4-bQAAzYt9.mp4)。
+- 佩丽卡：[官方结果帖](https://x.com/AKEndfieldJP/status/2110274547895484488)；1.65 秒，1138×640；[原始动图媒体](https://video.twimg.com/tweet_video/HUkyom8aoAAUJWr.mp4)。
+- 诀：[官方结果帖](https://x.com/AKEndfieldJP/status/2110274555726209527)；1.25 秒，1138×640；[原始动图媒体](https://video.twimg.com/tweet_video/HUkyn2dbcAEGdgl.mp4)。
+
+名称用中日官网共用英文代号核对：ミンホ / Argent Flow = 明河，オクギ / Arcane = 诀。六段 GIF 均由 X 以 MP4 承载。公开嵌入 JSON、结果帖元数据、清单、播放验证与总览截图保存在 `../references/si-doodle-series/`；`index.html` 为读取远程原始媒体的本地预览页，本轮未下载新的媒体二进制、未修改应用或生成 APK。

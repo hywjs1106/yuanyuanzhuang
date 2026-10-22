@@ -24,20 +24,20 @@
 /* Compact paper slips for secondary actions, cinnabar only for a committed action. */
 :root[data-terminal-visual=si] .terminal-shell :is(.terminal-header-actions>button,.button-row>button,.quick-actions>button,.terminal-form button,.panel-heading>button,.weather-settings>button,.date-navigation>button,.city-results button,.note-item>button,.mission-actions>button,.sheet-header>button,.chat-starters button,.send-message,.fangyi-config,.sticker-preview-close,.si-kaomoji button,.expression-choices button,.file-button){
  --si-button-fill:var(--color-paper-2);--si-button-text:var(--ink);
- position:relative;isolation:isolate;background:transparent;color:var(--si-button-text);border:0;border-bottom:1px solid var(--color-rule);border-radius:2px;clip-path:none;min-height:44px;font-weight:500;box-shadow:none;
+ position:relative;isolation:isolate;background:transparent;color:var(--si-button-text);border:0;border-radius:2px;clip-path:none;min-height:44px;font-weight:500;box-shadow:none;
 }
 :root[data-terminal-visual=si] .terminal-shell :is(.terminal-header-actions>button,.button-row>button,.quick-actions>button,.terminal-form button,.panel-heading>button,.weather-settings>button,.date-navigation>button,.city-results button,.note-item>button,.mission-actions>button,.sheet-header>button,.chat-starters button,.send-message,.fangyi-config,.sticker-preview-close,.si-kaomoji button,.expression-choices button,.file-button)::before{
  content:'';position:absolute;inset:-5px -7px;z-index:-1;pointer-events:none;background:var(--si-button-fill);mask:var(--si-brush) center/125% 220% no-repeat;opacity:.95;transition:opacity 160ms ease-out;
 }
 :root[data-terminal-visual=si] .terminal-shell :is(.terminal-header-actions>button,.button-row>button,.quick-actions>button,.terminal-form button,.panel-heading>button,.weather-settings>button,.date-navigation>button,.city-results button,.note-item>button,.mission-actions>button,.sheet-header>button,.chat-starters button,.send-message,.fangyi-config,.sticker-preview-close,.si-kaomoji button,.expression-choices button,.file-button):not(:disabled):hover{--si-button-fill:var(--color-paper-3)}
 :root[data-terminal-visual=si] :is(.terminal-form button[type=submit],.button-row>button[type=submit],.send-message:not(:disabled),.mission-actions>button:first-child:not(.danger)){
- --si-button-fill:var(--si-action);--si-button-text:var(--si-on-action);color:var(--si-button-text);border-bottom-color:var(--si-action);
+ --si-button-fill:var(--si-action);--si-button-text:var(--si-on-action);color:var(--si-button-text);
 }
 :root[data-terminal-visual=si] .terminal-shell :is(.terminal-form button[type=submit],.button-row>button[type=submit],.send-message:not(:disabled),.mission-actions>button:first-child:not(.danger)):not(:disabled):hover{--si-button-fill:#763523}
-:root[data-terminal-visual=si] .terminal-shell button.danger{--si-button-text:var(--error);--si-button-fill:var(--color-paper);color:var(--error);border-bottom-color:var(--error)}
+:root[data-terminal-visual=si] .terminal-shell button.danger{--si-button-text:var(--error);--si-button-fill:var(--color-paper);color:var(--error)}
 :root[data-terminal-visual=si] :is(.button-row>button,.mission-actions>button)[data-state=error]{--si-button-text:var(--error)}
 :root[data-terminal-visual=si] :is(.button-row>button,.mission-actions>button)[data-state=success]{--si-button-text:var(--color-success)}
-:root[data-terminal-visual=si] .send-message:disabled{--si-button-fill:var(--chat-ground);--si-button-text:var(--chat-muted);color:var(--chat-muted);background:transparent;border-bottom-color:var(--chat-rule);opacity:.65}
+:root[data-terminal-visual=si] .send-message:disabled{--si-button-fill:var(--chat-ground);--si-button-text:var(--chat-muted);color:var(--chat-muted);background:transparent;opacity:.65}
 :root[data-terminal-visual=si] .expression-toggle{background:var(--color-paper-2);border:1px solid var(--si-cinnabar);border-radius:7px 3px 6px 2px;color:var(--si-cinnabar)}
 :root[data-terminal-visual=si] .visual-theme-choices button{background:var(--color-paper);border:1px solid var(--line);border-radius:2px 9px 3px 7px}
 :root[data-terminal-visual=si] .visual-theme-choices button[aria-pressed=true]{border-color:var(--si-cinnabar);background:var(--color-paper-2)}

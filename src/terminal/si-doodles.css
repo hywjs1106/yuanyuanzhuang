@@ -1,0 +1,18 @@
+/* Preserve opaque character colors; remove only surrounding paper at render time. */
+.si-doodle{position:relative;display:block;width:104px;height:100px;overflow:hidden;flex-shrink:0;pointer-events:none}
+.si-doodle img,.si-doodle canvas{position:absolute;top:0;left:50%;height:100%;width:auto;max-width:none;transform:translateX(-50%);object-fit:contain}
+.si-doodle canvas{visibility:hidden}
+.si-doodle[data-cutout=true] canvas{visibility:visible}
+.si-doodle[data-cutout=true] img,.si-doodle video{display:none}
+.si-scene-doodle{display:block;flex-shrink:0}
+.si-scene-doodle .si-doodle{width:116px;height:116px}
+
+/* Wait for the first cutout instead of flashing the raw paper rectangle. */
+.si-doodle img{visibility:hidden}
+/* Failed frames retain the last good canvas; raw paper is never displayed. */
+
+/* A quiet fifth face in the heading; the four entry clips keep their single owner. */
+.si-heading-companion{flex-basis:124px;height:60px;pointer-events:auto}
+.si-heading-companion .si-doodle{width:84px;height:84px}
+.si-heading-companion .si-heading-greeting{display:block;flex-shrink:0;width:84px;height:84px;min-height:0;padding:0;border:0;background:transparent;transform:translateY(0);box-shadow:none;clip-path:none}
+.si-heading-companion .si-heading-greeting:active{transform:translateY(1px)}

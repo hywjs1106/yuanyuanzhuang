@@ -1,0 +1,85 @@
+/* The original ink edition remains a notebook, not the tea character stage. */
+:root[data-terminal-mode=si]{
+ --si-sheet:var(--color-paper);
+ --si-wash:var(--color-paper-2);
+ --si-rule:color-mix(in srgb,var(--color-rule) 68%,var(--color-base));
+ --muted:var(--color-ink-2);
+ --paper-record-soft:var(--color-ink-2);
+ --si-action:var(--si-cinnabar);
+ --si-on-action:var(--color-paper);
+}
+:root[data-terminal-mode=si][data-terminal-theme=dark]{--si-action:#dca78f;--si-on-action:#17262c}
+
+/* Every tool starts on the same open sheet as the ledger and reminders. */
+:root[data-terminal-mode=si] .terminal-shell :is(.panel:not(.assistant-chat),.terminal-panel){
+ padding:4px 4px 24px;background:transparent;border:0;border-radius:0;box-shadow:none;
+}
+:root[data-terminal-mode=si] .terminal-header{border-bottom:1px solid var(--si-rule)}
+:root[data-terminal-mode=si] .terminal-header::after{content:none}
+:root[data-terminal-mode=si] .terminal-shell :is(.panel:not(.assistant-chat),.terminal-panel)>.panel-heading{
+ padding:0 0 6px;margin-bottom:18px;border:0;gap:12px;align-items:center;
+}
+:root[data-terminal-mode=si] .terminal-shell :is(.panel-heading h2,.panel:not(.assistant-chat)>h2,.terminal-panel>h2){
+ font-size:26px;font-weight:500;line-height:1.45;letter-spacing:.04em;
+}
+:root[data-terminal-mode=si] .terminal-shell .panel:not(.assistant-chat)>h2{margin:0 0 22px}
+:root[data-terminal-mode=si] .panel-heading .eyebrow{color:var(--muted)}
+:root[data-terminal-mode=si] :is(.panel-heading h2,.panel:not(.assistant-chat)>h2)::after{
+ width:20px;height:4px;opacity:.4;margin-left:10px;
+}
+:root[data-terminal-mode=si] .terminal-shell h3{font-weight:500}
+
+/* Reuse the existing brush-paper asset for every action, with stable edges. */
+:root[data-terminal-mode=si] .terminal-shell :is(.terminal-action,.panel-heading>button,.terminal-header-actions>button,.date-navigation>button,.weather-settings button,.city-results button,.file-button){
+ --si-button-fill:var(--si-wash);--si-button-text:var(--ink);
+ border:0;box-shadow:none;clip-path:none;border-radius:4px 7px 3px 6px;
+ color:var(--si-button-text);font-weight:500;min-height:44px;
+}
+:root[data-terminal-mode=si] .terminal-shell :is(.terminal-action,.panel-heading>button,.terminal-header-actions>button,.date-navigation>button,.weather-settings button,.file-button)::before{
+ inset:-1px -3px;opacity:.85;transform:none;
+}
+:root[data-terminal-mode=si] .terminal-shell .terminal-action:is([data-tone=primary],[type=submit],.send-message):not(:disabled){
+ --si-button-fill:var(--si-action);--si-button-text:var(--si-on-action);
+}
+:root[data-terminal-mode=si] .terminal-shell .terminal-action:is([data-tone=danger],.danger){--si-button-text:var(--error)}
+:root[data-terminal-mode=si] .terminal-shell :is(.terminal-action,.panel-heading>button,.weather-settings button):disabled{
+ --si-button-text:var(--muted);color:var(--muted);opacity:.65;
+}
+
+/* Fields, editor sheets and reading surfaces share the same paper and ink. */
+:root[data-terminal-mode=si] .terminal-shell :is(input:not([type=checkbox]):not([type=radio]),select,textarea){
+ background:var(--si-sheet);border:1px solid var(--color-rule);border-radius:4px 7px 3px 6px;
+ color:var(--ink);box-shadow:none;font-weight:400;
+}
+:root[data-terminal-mode=si] .terminal-shell :is(input,textarea)::placeholder{color:var(--muted);opacity:1}
+:root[data-terminal-mode=si] .terminal-shell :is(input,select,textarea):focus-visible{outline-color:var(--color-focus);outline-offset:3px}
+:root[data-terminal-mode=si] .terminal-shell .terminal-form{
+ border:1px solid var(--si-rule);border-radius:5px 10px 4px 8px;background:var(--si-sheet);box-shadow:none;
+}
+:root[data-terminal-mode=si] .terminal-shell :is(.terminal-card,.weather-settings,.weather-guidance,.settings-section,.settings-group,.assistant-memory,.detail-list,.almanac-activities>div){
+ border-color:var(--si-rule);box-shadow:none;
+}
+:root[data-terminal-mode=si] .terminal-shell .terminal-card{background:transparent}
+:root[data-terminal-mode=si] .settings-group>summary{color:var(--ink);font-weight:500}
+:root[data-terminal-mode=si] .settings-group>summary small{color:var(--muted)}
+:root[data-terminal-mode=si] .visual-theme-choices>button{border-color:var(--color-rule);border-radius:4px 7px 3px 6px}
+:root[data-terminal-mode=si] .visual-theme-choices>button[aria-pressed=true]{border-color:var(--si-cinnabar);background:var(--si-wash)}
+:root[data-terminal-mode=si] .terminal-shell :is(.stat-row>div:first-child,.ledger-budget,.mission-help,.mission-list-caption,.ledger-item,.note-item){border-color:var(--si-rule)}
+:root[data-terminal-mode=si] .terminal-shell .notice{border-color:var(--si-rule);border-radius:4px 7px 3px 6px;background:var(--si-sheet)}
+
+/* Keep the original message log. One sheet edge frames the composer. */
+:root[data-terminal-mode=si] .terminal-shell .assistant-chat .assistant-composer{
+ background:var(--si-sheet);border:1px solid var(--si-rule);border-radius:5px 10px 4px 8px;
+ padding:7px;gap:6px;box-shadow:none;
+}
+:root[data-terminal-mode=si] .terminal-shell .assistant-chat .assistant-composer textarea{
+ border:0;border-radius:0;background:transparent;box-shadow:none;
+}
+:root[data-terminal-mode=si] .assistant-chat .chat-bubble{border-radius:4px 12px 3px 10px}
+:root[data-terminal-mode=si] .assistant-chat .chat-message-content>:is(small,time){color:var(--muted)}
+:root[data-terminal-mode=si] .terminal-shell .assistant-chat .fangyi-contact-copy h2{font-weight:500;letter-spacing:.04em}
+:root[data-terminal-mode=si] .bottom-navigation{border-color:var(--si-rule)}
+:root[data-terminal-mode=si] .bottom-destination{font-weight:500}
+@media(max-width:350px){
+ :root[data-terminal-mode=si] .terminal-shell :is(.panel-heading h2,.panel:not(.assistant-chat)>h2){font-size:23px;letter-spacing:.02em}
+}

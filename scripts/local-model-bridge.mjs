@@ -3,6 +3,7 @@ import {timingSafeEqual} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {augmentTerminalMessages,withTaskTurnGuidance,fitTerminalTaskPolicy} from './terminal-task-policy.mjs';
 
 const UPSTREAM='http://127.0.0.1:11434/api/chat';
 function terminalReplySchema(messages){
@@ -18,6 +19,16 @@ function terminalReplySchema(messages){
     stickerId:{enum:[null,...stickerIds]},
   },required:['reply','actions'],additionalProperties:false};
 }
+function fullTerminalReplySchema(messages){
+  const schema=terminalReplySchema(messages);
+  // The remote API must preserve the app's multi-round read and managed-action protocol.
+  schema.properties.read={type:'object',properties:{kind:{enum:['ledger','reminder','note','weather','almanac']},search:{type:'string',maxLength:200},from:{type:'string'},to:{type:'string'},date:{type:'string'},type:{type:'string'},amount:{type:'number',minimum:0},enabled:{type:'boolean'},schedule:{enum:['occurrence','start']}},required:['kind'],additionalProperties:false};
+  schema.properties.actions.items.anyOf.push({type:'object',properties:{kind:{const:'manage'},operation:{enum:['update','delete']},ref:{type:'string',minLength:1,maxLength:300},enabled:{type:'boolean'},value:{type:'object',properties:{direction:{enum:['expense','income']},amount:{type:'number',minimum:.01,maximum:100000000},date:{type:'string'},note:{type:'string',maxLength:2000},type:{enum:['food','transport','shopping','fun','home','study','other']},title:{type:'string',maxLength:200},at:{type:'string'},repeat:{enum:['none','daily','weekly','monthly','yearly']},text:{type:'string',maxLength:10000}},additionalProperties:false}},required:['kind','operation','ref'],additionalProperties:false});
+  // Both characters' identifiers are provided by the app, never arbitrary URLs.
+  const candidates=[...new Set(messages.filter(m=>m.role==='system').flatMap(m=>m.content.match(/\b(?:fy-\d{2}-\d{2}|si-[a-z0-9-]+)\b/g)??[]))].slice(0,24);
+  schema.properties.stickerId={enum:[null,...candidates]};
+  return schema;
+}
 class RequestError extends Error{constructor(status,message){super(message);this.status=status;}}
 const ipv4=s=>{const parts=s.split('.');return parts.length===4&&parts.every(x=>/^\d{1,3}$/.test(x)&&Number(x)<=255)?parts.reduce((n,x)=>(n*256+Number(x))>>>0,0):null;};
 function allowedClient(address,subnet){
@@ -28,7 +39,8 @@ function allowedClient(address,subnet){
 }
 function matchesToken(header,token){const actual=Buffer.from(typeof header==='string'?header:''),expected=Buffer.from(`Bearer ${token}`);return actual.length===expected.length&&timingSafeEqual(actual,expected);}
 function normalizeMessages(messages){
-  if(!Array.isArray(messages)||!messages.length||messages.length>24)throw new RequestError(400,'消息数量无效');
+  // 23 initial messages + at most three two-message read round trips.
+  if(!Array.isArray(messages)||!messages.length||messages.length>29)throw new RequestError(400,'消息数量无效');
   const clean=messages.map(m=>{if(!m||!['system','user','assistant'].includes(m.role)||typeof m.content!=='string'||!m.content.trim()||m.content.length>16000)throw new RequestError(400,'只支持文本对话');return {role:m.role,content:m.content};});
   if(clean.at(-1).role!=='user'||clean.filter(m=>m.role==='system').length>1)throw new RequestError(400,'当前问题或角色顺序无效');
   const essential=new Set(clean.flatMap((m,i)=>m.role==='system'||i===clean.length-1||(i===1&&m.role==='user'&&m.content.startsWith('终端上下文'))?[i]:[]));
@@ -51,8 +63,9 @@ async function defaultFetchOllama(payload,signal){
 }
 
 /** TLS listener is created only by the CLI. Tests can exercise the pure HTTP handler locally. */
-export function createBridgeHandler({token,model,clientSubnet,fetchOllama=defaultFetchOllama,maxBodyBytes=128*1024,timeoutMs=90000}){
-  if(typeof token!=='string'||!/^dt-local-[A-Za-z0-9_-]{32,}$/.test(token)||typeof model!=='string'||!model)throw new Error('桥接配置无效');
+export function createBridgeHandler({token,model,clientSubnet,credentialScope='local',replyFormat='schema',taskPolicyEnabled=true,fetchOllama=defaultFetchOllama,maxBodyBytes=128*1024,timeoutMs=90000}){
+  const pattern=credentialScope==='local'?/^dt-local-[A-Za-z0-9_-]{32,}$/:credentialScope==='remote'?/^dt-remote-[A-Za-z0-9_-]{32,}$/:null;
+  if(!pattern||typeof token!=='string'||!pattern.test(token)||typeof model!=='string'||!model||!['schema','json','terminal'].includes(replyFormat)||(credentialScope==='remote'&&clientSubnet))throw new Error('桥接配置无效');
   let busy=false;
   return async(req,res)=>{
     const send=(status,body)=>{if(res.destroyed||res.writableEnded)return;res.writeHead(status,{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'});res.end(JSON.stringify(body));};
@@ -64,12 +77,12 @@ export function createBridgeHandler({token,model,clientSubnet,fetchOllama=defaul
       if(!String(req.headers['content-type']??'').includes('application/json'))throw new RequestError(415,'请使用JSON请求');
       const input=await readBody(req,maxBodyBytes);
       if(!input||input.model!==model||input.stream===true||input.tools!==undefined||input.tool_choice!==undefined)throw new RequestError(400,'仅支持已配置模型的普通文本聊天');
-      const messages=normalizeMessages(input.messages);
+      const messages=normalizeMessages(replyFormat==='terminal'&&taskPolicyEnabled?fitTerminalTaskPolicy(withTaskTurnGuidance(augmentTerminalMessages(input.messages??[]))):input.messages);
       const requested=input.max_tokens??input.max_completion_tokens??2048;
       if(!Number.isFinite(requested)||requested<1||!Number.isFinite(input.temperature??.7))throw new RequestError(400,'生成参数无效');
       if(busy)throw new RequestError(503,'模型正在回答上一条消息，请稍后再试');
       const payload={model,messages,stream:false,think:false,options:{num_ctx:16384,num_predict:Math.min(2048,Math.floor(requested)),temperature:Math.min(1,Math.max(0,input.temperature??.7))}};
-      if(messages.some(m=>m.role==='system'&&m.content.includes('"reply"')&&m.content.includes('"actions"')))payload.format=terminalReplySchema(messages);
+      if(messages.some(m=>m.role==='system'&&m.content.includes('"reply"')&&m.content.includes('"actions"')))payload.format=replyFormat==='json'?'json':replyFormat==='terminal'?fullTerminalReplySchema(messages):terminalReplySchema(messages);
       busy=true;const controller=new AbortController();let expired=false;
       const timeout=setTimeout(()=>{expired=true;controller.abort(new Error('模型回复超时'));},timeoutMs);
       try{

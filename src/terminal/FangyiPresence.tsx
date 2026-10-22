@@ -1,7 +1,8 @@
+import {useBackLayer} from './useBackLayer';
 import {useEffect,useRef,useState} from 'react';
 import {getSticker} from './stickerCatalog';
 
-const portrait='/characters/fangyi-bouquet-avatar.png';
+const portrait='/characters/fangyi-bouquet-avatar.webp';
 const greetings=['fy-01-06','fy-01-08','fy-01-17'] as const;
 
 /** A local, user-triggered character gesture; never an AI message or inferred emotion. */
@@ -27,6 +28,7 @@ export function FangyiPresence({busy}:{busy:boolean}){
   useEffect(()=>{if(busy)setReaction(undefined);},[busy]);
   const sticker=getSticker(reaction??(busy?'fy-01-02':''));
   const src=failed?portrait:sticker?(reaction&&visible&&!reduced?sticker.localAsset:sticker.poster):portrait;
+  useBackLayer(!!reaction,()=>setReaction(undefined));
   return <button ref={target} type="button" className="fangyi-presence" disabled={busy}
     aria-label={reaction?'停止人物表情':'和方宜打个招呼'} aria-pressed={!!reaction}
     onClick={()=>{setFailed(false);setReaction(current=>current?undefined:greetings[count.current++%greetings.length]);}}>

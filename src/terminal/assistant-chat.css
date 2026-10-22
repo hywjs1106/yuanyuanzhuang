@@ -73,6 +73,10 @@
 .assistant-chat .chat-starters > p,.assistant-chat .chat-expression p,.assistant-chat .sticker-message figcaption { width:fit-content; padding:3px 5px; background:var(--chat-raised); border-radius:2px; }
 @media(min-width:600px) { .assistant-chat .chat-log { background-size:auto,auto max(125%,65vw); } }
 .assistant-chat .chat-thinking { font-size:13px; color:var(--chat-muted); }
+.assistant-chat .chat-log{overflow-anchor:none}
+.assistant-chat .chat-history-more{align-self:center;min-width:176px;margin-bottom:6px}
+.assistant-chat .chat-history-status{text-align:center;color:var(--chat-muted);font-size:13px}
+:root[data-terminal-visual=si] .terminal-shell .assistant-chat>.terminal-action.chat-latest{position:absolute;right:16px;bottom:86px;width:max-content;max-width:160px;min-height:44px;padding:10px 14px;--si-button-fill:var(--color-paper-3);--si-button-text:var(--ink)}
 .assistant-chat .proposal { margin:0; padding:16px; border:1px solid var(--chat-rule); border-left:3px solid var(--accent); background:var(--chat-raised); color:var(--chat-text); flex-shrink:0; }
 .assistant-chat .proposal h3 { font-size:16px; margin:0 0 6px; }
 .assistant-chat .proposal p { font-size:13px; margin-bottom:12px; overflow-wrap:anywhere; }
@@ -101,7 +105,7 @@
 .chat-expression p { font-size:11px; color:var(--chat-muted); margin-bottom:8px; }
 .chat-expression button { font-size:12px; padding:8px 10px; }
 .assistant-chat .chat-latest { position:absolute; right:16px; bottom:86px; z-index:2; min-height:48px; font-size:12px; background:var(--chat-bubble); color:var(--chat-text); border:1px solid var(--chat-rule); border-radius:3px; box-shadow:0 3px 12px #0002; }
-.keyboard-open .assistant-chat { height:calc(100dvh - 116px - env(safe-area-inset-top)); min-height:0; }
+.keyboard-open .assistant-chat { height:calc(var(--keyboard-viewport-height,100dvh) - 116px - env(safe-area-inset-top)); min-height:0; }
 .keyboard-open .assistant-chat .fangyi-contact { min-height:64px; padding:8px 12px; gap:10px; }
 .keyboard-open .assistant-chat .fangyi-presence { width:44px; min-height:44px; height:44px; }
 .keyboard-open .fangyi-presence-frame { width:44px; height:44px; padding:3px; border-radius:2px 8px 2px 8px; }

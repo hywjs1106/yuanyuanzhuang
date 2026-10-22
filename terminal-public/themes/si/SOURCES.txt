@@ -69,3 +69,31 @@ Used only by Si edition body/headings and inherited controls. Existing Si Brush 
 2026-10-17 night ink refinement: painted-mountains-night.png is a built-in image_gen night adaptation of the original generated painted-mountains.png, preserving mountains/river/pavilion composition with blue-gray ink, silver-jade mist and a few warm window lights. Full prompt painted-mountains-night.prompt.txt; original output C:/Users/12860/.codex/generated_images/01a1367b-6b4e-77f1-be1b-40953333f900/exec-200f9733-aa82-4c40-98d9-a25626361189.png. ink-brush-buddy.png is an original transparent jade ink-drop spirit hugging a brush, created with built-in image_gen without reference images; not an official character or in-game item. Full prompt ink-brush-buddy.prompt.txt; original output C:/Users/12860/.codex/generated_images/01a1367b-6b4e-77f1-be1b-40953333f900/exec-b91d48d5-f525-487e-b8a7-1e34aef9dbee.png. Alpha/source pixels preserved without raster edits. Night art follows manual theme, buddy44px decorative in Si home heading; original dragon artwork unchanged, subtle warm-gray edge aid only in night UI.
 
 2026-10-17 — White night ink: at the user's explicit request, Si night mode renders the original dragon PNGs with runtime CSS grayscale/invert/brightness. Only the painting image is filtered; animated pupil overlay remains dark on its light eye interior. Covers four home shortcuts, ledger/reminder illustrations and startup; day assets/source pixels unchanged. Not new official artwork.
+
+Official pack 10 (01–08 Si), original PNGs, unchanged, including copyright marks:
+https://www.taptap.cn/moment/857006468283501226
+https://x.com/AKEndfield/status/2108044719796154846
+https://drive.google.com/drive/folders/1hOIi4psxFPpvAZQFWBcTPPGAFbJLpcrI
+Local: official/01.png through 08.png. Artwork HYPERGRYPH / GRYPHLINE; no GPL artwork license inferred.
+Official Si selfportrait, unchanged original MP4 (GIF-class on X) and thumbnail:
+https://x.com/AKEndfieldJP/status/2110274444816245186
+https://video.twimg.com/tweet_video/HUkyn3UbAAADgdM.mp4
+https://pbs.twimg.com/tweet_video_thumb/HUkyn3UbAAADgdM.jpg
+Local: official/selfportrait.mp4 and official/selfportrait-poster.jpg.
+Plays once only on portrait activation; reduced motion uses the original thumbnail.
+
+2026-10-18 performance derivatives: selected non-official large PNG assets converted to lossless WebP at identical dimensions and pixel RGBA values. Official pack files unchanged. Original files retained outside the app public directory in references/asset-originals-ui53. Exact mappings, byte sizes and pixel hashes: scripts/asset-compression-manifest.json. Character and historic sticker IDs unchanged.
+
+Official six-character doodle activity (original JPG and MP4 bytes; X labels these as animated GIF media):
+Activity: https://x.com/AKEndfieldJP/status/2110582688302477560
+Local assets: doodles/{si,endmin-male,endmin-female,minghe,perlica,arcane}.{jpg,mp4}
+Si: https://x.com/AKEndfieldJP/status/2110274444816245186
+Male Endministrator: https://x.com/AKEndfieldJP/status/2110274520120709514
+Female Endministrator: https://x.com/AKEndfieldJP/status/2110274532275876337
+Minghe: https://x.com/AKEndfieldJP/status/2110274488252395532
+Perlica: https://x.com/AKEndfieldJP/status/2110274547895484488
+Arcane: https://x.com/AKEndfieldJP/status/2110274555726209527
+Original URLs, byte sizes and SHA256: references/si-doodle-assets.json.
+Only CSS presentation cropping, edge blending and palette filters are applied. Original copyrights remain with the respective rights holders.
+
+2026-10-19 ink-sparrow-{rest,flutter}.png: original transparent ink sparrow generated with built-in image_gen after the user chose an independent ink animal. NOT official Endfield artwork or an established character. Source raised-wing file: C:/Users/12860/.codex/generated_images/01a1367b-6b4e-77f1-be1b-40953333f900/exec-c12bb0c5-4c01-4e54-beb4-8161a3693885.png. Source folded-wing edit: exec-5b4b61b9-ed20-45f0-b065-f855b42725a4.png in the same folder. Full prompts: ink-sparrow.prompt.txt. Original PNG bytes and alpha copied unchanged, no raster postprocessing. Two CSS pose opacities and a small transform animate only on hover or a 1.52s tap greeting; reduced motion, hidden/offscreen and startup pause guards apply. No video decoder for the bird.

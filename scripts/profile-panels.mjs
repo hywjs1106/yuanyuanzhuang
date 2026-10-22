@@ -1,0 +1,10 @@
+import {chromium} from '@playwright/test';import{writeFile,mkdir}from'node:fs/promises';
+const b=await chromium.launch({channel:'chromium'});const c=await b.newContext({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true});const p=await c.newPage();await p.goto('http://127.0.0.1:5182');await p.getByRole('heading',{name:'帝江号',exact:true}).waitFor();await p.waitForTimeout(2200);await p.getByRole('button',{name:'切换角色风格',exact:true}).click();await p.getByRole('button',{name:'设置',exact:true}).click();await p.waitForTimeout(800);
+const cdp=await c.newCDPSession(p);await cdp.send('Emulation.setCPUThrottlingRate',{rate:6});
+if(process.env.PROFILE_CSS)await p.addStyleTag({content:process.env.PROFILE_CSS});
+const events=[];cdp.on('Tracing.dataCollected',e=>events.push(...e.value));await cdp.send('Tracing.start',{categories:'devtools.timeline,disabled-by-default-devtools.timeline',transferMode:'ReportEvents'});
+await p.evaluate(()=>{window.__frames=[];window.__sample=true;let last=performance.now();function tick(t){if(!window.__sample)return;window.__frames.push(t-last);last=t;requestAnimationFrame(tick)}requestAnimationFrame(tick)});
+for(let i=0;i<3;i++){await p.locator('[data-settings-group=ai] summary').click();await p.waitForTimeout(300)}
+const frames=await p.evaluate(()=>{window.__sample=false;return window.__frames.slice(1)});const done=new Promise(r=>cdp.once('Tracing.tracingComplete',r));await cdp.send('Tracing.end');await done;
+const cost={};for(const e of events){if(e.ph==='X'&&['Layout','Paint','UpdateLayoutTree','FunctionCall'].includes(e.name)){const x=cost[e.name]??={n:0,ms:0,max:0};x.n++;x.ms+=(e.dur??0)/1000;x.max=Math.max(x.max,(e.dur??0)/1000)}}
+console.log(JSON.stringify({frames:frames.length,max:Math.max(...frames),over34:frames.filter(x=>x>34).length,cost}));await mkdir('references/performance-0.7',{recursive:true});await writeFile('references/performance-0.7/panel-'+(process.env.PROFILE_TAG??'baseline')+'.json',JSON.stringify({traceEvents:events}));await b.close();

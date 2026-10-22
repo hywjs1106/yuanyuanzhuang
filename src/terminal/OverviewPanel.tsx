@@ -3,7 +3,8 @@ import {TerminalIcon} from './TerminalVisuals';
 import {LiveClock} from './LiveClock';
 import {useEffect,useRef,useState,type ReactNode} from 'react';
 import type {VisualTheme} from './ledger';
-import {InkDragon} from './InkDragon';
+import {SiDoodle,useDoodlePlayback,type DoodleKind} from './SiDoodle';
+import {InkSparrow} from './InkSparrow';
 
 export interface OverviewPanelProps {
   date:string;
@@ -56,20 +57,22 @@ function HubSceneFrame() {
 }
 
 export function OverviewPanel({date,onNavigate,visualTheme='fangyi',theme='light'}:OverviewPanelProps) {
-  return <section className="overview-hub" aria-labelledby="overview-hub-title">
-    <header className="hub-heading"><h2 id="overview-hub-title">今日总览</h2>{visualTheme==='si'&&<span className="si-heading-companion" aria-hidden="true"><img src="/themes/si/ink-brush-buddy.png" width="44" height="44" alt=""/></span>}<div className="hub-heading-meta"><time className="overview-date" dateTime={date}><span>{date.slice(0,4)}</span><strong>{date.slice(5,7)}月{date.slice(8)}日</strong></time><LiveClock/></div></header>
+  const content=<section className="overview-hub" aria-labelledby="overview-hub-title">
+    <header className="hub-heading"><h2 id="overview-hub-title">今日总览</h2>{visualTheme==='si'&&<InkSparrow/>}<div className="hub-heading-meta"><time className="overview-date" dateTime={date}><span>{date.slice(0,4)}</span><strong>{date.slice(5,7)}月{date.slice(8)}日</strong></time><LiveClock/></div></header>
     <HubMotion>
       {visualTheme==='si'?<>
-        <img className="si-home-framing" src="/themes/si/opening-ink-framing.png" alt="" aria-hidden="true"/>
-        <img className="si-home-sun" src="/themes/si/opening-ink-sun.png" alt="" aria-hidden="true"/>
-        <div className="si-painted-world"><img className="si-painted-mountains" src={theme==='dark'?'/themes/si/painted-mountains-night.png':'/themes/si/painted-mountains.png'} alt="祀主题山水画" width="1024" height="1536" draggable="false"/></div>
-        <div className="hub-map-stage si-scroll-window" aria-hidden="true"><span className="si-scroll-title">画中行</span><span className="si-scroll-seal">祀</span></div>
-      </>:<><HubSceneFrame/><img className="hub-ship" src="/branding/dijiang-ship.png" alt="帝江号飞船" width="1536" height="1024" draggable="false"/></>}
-    <div className="hub-modules">
-      {modules.map(({page,label})=><button key={page} type="button" className={`hub-plate hub-plate-${page}`} aria-label={`打开${label}`} onClick={()=>onNavigate(page)}>
-        <span className="hub-plate-surface"><span className="hub-plate-content">{visualTheme==='si'?<InkDragon className="si-dragon-glyph" kind={page}/>:<TerminalIcon name={page}/>}<strong>{label}</strong></span></span>
-      </button>)}
-    </div>
+        <img className="si-home-framing" src="/themes/si/opening-ink-framing.webp" alt="" aria-hidden="true"/>
+        <img className="si-home-sun" src="/themes/si/opening-ink-sun.webp" alt="" aria-hidden="true"/>
+        <div className="si-painted-world"><img className="si-painted-mountains" src={theme==='dark'?'/themes/si/painted-mountains-night.webp':'/themes/si/painted-mountains.webp'} alt="祀主题山水画" width="1024" height="1536" draggable="false"/></div>
+      </>:<><HubSceneFrame/><img className="hub-ship" src="/branding/dijiang-ship.webp" alt="帝江号飞船" width="1536" height="1024" draggable="false"/></>}
+    {visualTheme==='si'?<SiHubModules onNavigate={onNavigate}/>:<div className="hub-modules">{modules.map(({page,label})=><button key={page} type="button" className={`hub-plate hub-plate-${page}`} aria-label={`打开${label}`} onClick={()=>onNavigate(page)}><span className="hub-plate-surface"><span className="hub-plate-content"><TerminalIcon name={page}/><strong>{label}</strong></span></span></button>)}</div>}
     </HubMotion>
   </section>;
+  return content;
+}
+
+const doodles:DoodleKind[]=['endmin-male','endmin-female','perlica','si'];
+function SiHubModules({onNavigate}:{onNavigate:(page:TerminalPage)=>void}){
+ const host=useRef<HTMLDivElement>(null);const playback=useDoodlePlayback(host,4);
+ return <div ref={host} className="hub-modules">{modules.map(({page,label},index)=><button key={page} type="button" className={`hub-plate hub-plate-${page}`} aria-label={`打开${label}`} onPointerEnter={event=>{if(event.pointerType==='mouse')playback.request(index);}} onFocus={()=>playback.request(index)} onClick={()=>onNavigate(page)}><span className="hub-plate-surface"><span className="hub-plate-content"><SiDoodle kind={doodles[index]} playing={playback.active===index} onFinish={playback.finish}/><strong>{label}</strong></span></span></button>)}</div>;
 }

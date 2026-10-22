@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import TerminalApp from './terminal/TerminalApp';
 import {StartupGate} from './terminal/StartupGate';
+import './terminal/official-sticker-presentation.css';
 class ErrorBoundary extends React.Component<{children:React.ReactNode},{error:string}> {
   state={error:''};
   static getDerivedStateFromError(error:Error){return {error:error.message};}

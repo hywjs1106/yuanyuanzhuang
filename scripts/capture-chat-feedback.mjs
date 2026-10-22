@@ -1,0 +1,15 @@
+import {chromium} from '@playwright/test';
+import {mkdir} from 'node:fs/promises';
+const dir='../references/ui-50';await mkdir(`${dir}/video`,{recursive:true});
+const browser=await chromium.launch({channel:'chromium'});const context=await browser.newContext({viewport:{width:390,height:844},recordVideo:{dir:`${dir}/video`,size:{width:390,height:844}}});const page=await context.newPage();
+await page.goto('http://127.0.0.1:5180/');await page.getByRole('button',{name:'切换角色风格',exact:true}).click();await page.getByRole('button',{name:'设置',exact:true}).click();
+await page.getByLabel('服务地址').fill('https://example.invalid/v1');await page.getByLabel('模型名称',{exact:true}).fill('visual-test');await page.getByLabel('API Key',{exact:true}).fill('test-key');await page.getByRole('button',{name:'保存设置',exact:true}).click();await page.getByRole('button',{name:'关闭提示',exact:true}).click();
+await page.route('https://example.invalid/**',async route=>{await new Promise(resolve=>setTimeout(resolve,850));await route.fulfill({json:{choices:[{message:{content:JSON.stringify({reply:'先核对一下，茶钱和点心都在这里。',actions:[{kind:'ledger',direction:'expense',amount:28,date:'2026-10-18',note:'茉莉花茶与点心',type:'food'}]})}}]}});});
+await page.getByRole('button',{name:'助手',exact:true}).click();await page.getByLabel('和祀说说',{exact:true}).fill('帮我核对一下这笔茶钱');await page.getByRole('button',{name:'发送',exact:true}).click();await page.getByRole('status').filter({hasText:'正在想一想'}).waitFor();await page.screenshot({path:`${dir}/thinking-light.png`});
+const card=page.locator('.proposal');await card.getByRole('button',{name:'确认保存',exact:true}).waitFor();
+await page.evaluate(()=>{const put=IDBObjectStore.prototype.put;window.failWrite=true;IDBObjectStore.prototype.put=function(...args){if(this.name==='entries'&&window.failWrite)throw new Error('写入暂时失败，内容还在，请重试。');return put.apply(this,args);};});
+await card.getByRole('button',{name:'确认保存',exact:true}).click();await card.getByRole('alert').waitFor();await card.scrollIntoViewIfNeeded();await page.screenshot({path:`${dir}/error-light.png`});
+await page.getByRole('button',{name:'切换深浅模式'}).click();await page.waitForTimeout(220);await page.screenshot({path:`${dir}/error-dark.png`});
+await page.evaluate(()=>window.failWrite=false);await card.getByRole('button',{name:'确认保存',exact:true}).click();await card.locator('.proposal-saved-seal').waitFor();await page.waitForTimeout(650);await card.scrollIntoViewIfNeeded();await page.screenshot({path:`${dir}/saved-dark.png`});
+await page.setViewportSize({width:320,height:568});await card.scrollIntoViewIfNeeded();await page.screenshot({path:`${dir}/saved-small.png`});
+await context.close();await browser.close();

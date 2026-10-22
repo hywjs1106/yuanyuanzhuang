@@ -1,0 +1,7 @@
+import {chromium} from '@playwright/test';
+const b=await chromium.launch({channel:'chromium'});const p=await b.newPage({viewport:{width:390,height:844}});await p.goto('http://127.0.0.1:5180/');await p.getByRole('button',{name:'切换角色风格',exact:true}).click();await p.getByRole('button',{name:'助手',exact:true}).click();
+await p.getByLabel('和祀说说',{exact:true}).fill('你画得真好看');await p.getByRole('button',{name:'发送',exact:true}).click();await p.locator('.chat-message.assistant .sticker-message img').waitFor();await p.screenshot({path:'../references/ui-45/chat-light.png'});
+await p.getByRole('button',{name:'和祀打个招呼',exact:true}).click();await p.locator('.si-selfportrait video').waitFor();await p.screenshot({path:'../references/ui-45/gesture-light.png'});await p.getByRole('button',{name:'收起祀的随笔画',exact:true}).click();
+await p.getByRole('button',{name:'祀表情',exact:true}).click();await p.getByRole('region',{name:'祀表情库'}).locator('img').evaluateAll(imgs=>Promise.all(imgs.map(i=>i.decode())));await p.screenshot({path:'../references/ui-45/stickers-light.png'});await p.getByRole('button',{name:'祀表情',exact:true}).click();
+await p.getByRole('button',{name:'切换深浅模式'}).click();await p.getByRole('button',{name:'和祀打个招呼',exact:true}).click();await p.screenshot({path:'../references/ui-45/gesture-dark.png'});await p.getByRole('button',{name:'收起祀的随笔画',exact:true}).click();
+await p.setViewportSize({width:320,height:568});await p.screenshot({path:'../references/ui-45/chat-small.png'});await b.close();

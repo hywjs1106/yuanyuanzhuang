@@ -50,5 +50,5 @@ test('local model omitted actions use only independently unambiguous explicit co
  for(const text of ['今天午饭花了28元','明天九点提醒我交电费','不必帮我记一下午饭花了28元','帮我记一下花了28元和30元']) {
    const reply=await askAssistant(text,config,'',[],new AbortController().signal,transport);assert.deepEqual(reply.actions,[]);
  }
- const remote=await askAssistant('帮我记一下，今天午饭花了28元。',{...config,apiKey:'ordinary-key'},'',[],new AbortController().signal,transport);assert.deepEqual(remote.actions,[]);
+ const remote=await askAssistant('帮我记一下，今天午饭花了28元。',{...config,apiKey:'ordinary-key'},'',[],new AbortController().signal,transport);assert.equal(remote.actions.length,1);
 });

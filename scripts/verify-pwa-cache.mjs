@@ -1,0 +1,12 @@
+import {chromium} from '@playwright/test';import assert from 'node:assert/strict';
+const base='http://127.0.0.1:5197';const browser=await chromium.launch({channel:'chromium'});const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});const page=await context.newPage();
+try{
+ await page.goto(base);await page.evaluate(()=>navigator.serviceWorker.ready);await page.waitForFunction(()=>!!navigator.serviceWorker.controller);await page.reload();await page.getByRole('button',{name:'助手',exact:true}).click();await page.getByRole('heading',{name:'庄方宜',exact:true}).waitFor();
+ await page.getByRole('button',{name:'切换角色风格',exact:true}).click();await page.getByRole('heading',{name:'祀',exact:true}).waitFor();await page.getByRole('button',{name:'今日',exact:true}).click();await page.evaluate(()=>document.fonts.ready);await page.waitForLoadState('networkidle');
+ await page.evaluate(async()=>{await fetch('/themes/si/official/01.png');await fetch('/api/cache-probe');});
+ await page.waitForFunction(async()=>!!await(await caches.open('terminal-art-v1')).match('/themes/si/official/01.png'));
+ const cache=await page.evaluate(async()=>{const names=await caches.keys();const precache=names.find(n=>n.includes('precache'));const store=await caches.open(precache);const keys=await store.keys();let bytes=0;for(const key of keys)bytes+=(await(await store.match(key)).arrayBuffer()).byteLength;let apiCached=false;for(const name of names)if(await(await caches.open(name)).match('/api/cache-probe'))apiCached=true;return {names,precacheEntries:keys.length,precacheBytes:bytes,precacheUrls:keys.map(k=>new URL(k.url).pathname),apiCached};});
+ assert.ok(cache.precacheBytes<2*1024*1024);assert.equal(cache.apiCached,false);assert.ok(!cache.precacheUrls.some(p=>/^\/(themes|characters|fonts|branding)\//.test(p)));
+ await context.setOffline(true);const status=await page.evaluate(async()=>{const r=await fetch('/themes/si/official/01.png');return r.status;});assert.equal(status,200);await page.reload();await page.getByRole('button',{name:'助手',exact:true}).click();await page.getByRole('heading',{name:'祀',exact:true}).waitFor();await page.waitForFunction(()=>[...document.images].filter(i=>i.getClientRects().length).every(i=>i.complete&&i.naturalWidth>0));
+ console.log(JSON.stringify({precacheEntries:cache.precacheEntries,precacheBytes:cache.precacheBytes,runtimeCaches:cache.names.filter(n=>n.startsWith('terminal-')),apiCached:cache.apiCached,offlineReload:true,offlineVisitedArt:true}));
+}finally{await browser.close();}

@@ -72,7 +72,7 @@ test('configured AI supports multiple confirmed actions and rejects malformed pr
 test('backup exports, restore previews counts, and bad input does not replace live data',async({page})=>{
   await page.goto('/');await more(page,'备忘');await page.getByLabel('写点什么').fill('测试备忘');await page.getByRole('button',{name:'保存备忘'}).click();await expect(page.getByText('测试备忘',{exact:true})).toBeVisible();
   await more(page,'设置');
-  const downloaded=page.waitForEvent('download');await page.getByRole('button',{name:'导出备份'}).click();const download=await downloaded;const file=await download.path();expect(file).toBeTruthy();
+  await page.locator('details[data-settings-group=backup]>summary').click();const downloaded=page.waitForEvent('download');await page.getByRole('button',{name:'导出备份'}).click();const download=await downloaded;const file=await download.path();expect(file).toBeTruthy();
   await page.getByLabel('选择备份文件').setInputFiles(file!);await expect(page.getByText(/准备恢复：0 笔流水、0 个提醒、1 条备忘/)).toBeVisible();await page.getByRole('button',{name:'确认替换并恢复'}).click();await expect(page.getByText('已恢复备份，系统提醒正在重新排程',{exact:true})).toBeVisible();
   await page.getByLabel('选择备份文件').setInputFiles({name:'bad.json',mimeType:'application/json',buffer:Buffer.from('{"format":"broken"}')});await expect(page.getByRole('alert')).toContainText('完整备份');await more(page,'备忘');await expect(page.getByText('测试备忘',{exact:true})).toBeVisible();
 });

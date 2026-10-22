@@ -1,4 +1,4 @@
-import {SI_STICKER_CATALOG,chooseSiOfflineSticker} from './siStickers';
+import {SI_STICKER_CATALOG,SI_LEGACY_STICKERS,chooseSiOfflineSticker} from './siStickers';
 export type StickerCharacter='fangyi'|'si';
 /** Source attribution belongs to the sticker artwork; no software license is inferred for it. */
 export interface StickerDefinition {
@@ -198,13 +198,18 @@ export const STICKER_CATALOG: readonly StickerDefinition[] = Object.freeze([
   Object.freeze({"id":"fy-11-18","part":11,"index":18,"label":"火焰背景抬手","tags":["火焰","抬手"],"localAsset":"/characters/stickers/fy-11-18.webp","poster":"/characters/stickers/fy-11-18.jpg","remoteUrl":"https://i0.hdslb.com/bfs/new_dyn/c40ad753d6042c59d082a97010966b5f183856206.gif","source":"https://www.bilibili.com/opus/1228165161257271315","author":"夏雪NazuYuki"}),
 ]);
 
-const byId = new Map([...STICKER_CATALOG,...SI_STICKER_CATALOG].map(sticker => [sticker.id, sticker]));
+const byId = new Map([...STICKER_CATALOG,...SI_LEGACY_STICKERS,...SI_STICKER_CATALOG].map(sticker => [sticker.id, sticker]));
 export function getSticker(id: string,character?:StickerCharacter): StickerDefinition | undefined {
   const sticker=byId.get(id);
   return sticker&&(!character||(sticker.character??'fangyi')===character)?sticker:undefined;
 }
 export function isKnownStickerId(id: unknown,character?:StickerCharacter): id is string {
   return typeof id === 'string' && !!getSticker(id,character);
+}
+
+/** Retired art stays readable in history, but cannot be selected by a new model reply. */
+export function isReplyStickerId(id:unknown,character:StickerCharacter='fangyi'):id is string {
+ return character==='si'?SI_STICKER_CATALOG.some(sticker=>sticker.id===id):isKnownStickerId(id,character);
 }
 
 /** Only a few semantic candidates enter the AI prompt, never the full asset catalog. */

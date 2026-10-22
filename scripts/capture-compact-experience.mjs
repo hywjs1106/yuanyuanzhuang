@@ -1,0 +1,11 @@
+import {chromium} from '@playwright/test';
+import {mkdir} from 'node:fs/promises';
+const dir='../references/ui-51';await mkdir(dir,{recursive:true});
+const browser=await chromium.launch({channel:'chromium'});const page=await browser.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'});
+await page.goto('http://127.0.0.1:5180/');await page.getByRole('button',{name:'切换角色风格',exact:true}).click();await page.getByRole('button',{name:'助手',exact:true}).click();
+await page.getByLabel('和祀说说',{exact:true}).fill('帮我记一下午饭花了28元');await page.getByRole('button',{name:'发送',exact:true}).click();await page.getByText('查看完整回执',{exact:true}).waitFor();await page.screenshot({path:`${dir}/chat-light.png`});
+await page.getByRole('button',{name:'切换深浅模式'}).click();await page.waitForFunction(()=>document.documentElement.dataset.theme==='dark'||document.documentElement.dataset.terminalTheme==='dark'||document.querySelector('.terminal-shell')?.classList.contains('dark'));await page.screenshot({path:`${dir}/chat-dark.png`});
+await page.setViewportSize({width:320,height:568});await page.screenshot({path:`${dir}/chat-small.png`});await page.setViewportSize({width:390,height:844});
+await page.getByRole('button',{name:'设置',exact:true}).click();await page.getByLabel('服务地址').fill('https://example.invalid/v1');await page.getByLabel('模型名称',{exact:true}).fill('visual-test');await page.getByLabel('API Key',{exact:true}).fill('test-key');await page.getByRole('button',{name:'保存设置',exact:true}).click();await page.getByText('设置已保存',{exact:true}).waitFor();await page.getByRole('button',{name:'今日',exact:true}).click();await page.getByRole('button',{name:'设置',exact:true}).click();await page.screenshot({path:`${dir}/settings-top.png`});await page.locator('[data-settings-group="backup"]').scrollIntoViewIfNeeded();await page.screenshot({path:`${dir}/settings-groups.png`});
+await page.getByRole('button',{name:'切换角色风格',exact:true}).click();await page.getByRole('button',{name:'助手',exact:true}).click();await page.screenshot({path:`${dir}/fangyi-chat.png`});
+await browser.close();

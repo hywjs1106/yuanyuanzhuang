@@ -79,7 +79,7 @@
   --chat-text:var(--ink); --chat-muted:var(--muted); --chat-rule:var(--line);
   --chat-outgoing:var(--color-carbon); --chat-outgoing-text:var(--color-on-carbon);
 }
-:root[data-terminal-visual=si] .assistant-chat .chat-log { background-image:linear-gradient(to bottom,var(--chat-ground) 10%,transparent 80%),linear-gradient(115deg,var(--chat-ground) 35%,color-mix(in srgb,var(--chat-ground) 86%,transparent)),url('/themes/si/painted-mountains.png'); background-size:auto,auto,240px 360px; background-position:center,center,right bottom; }
+:root[data-terminal-visual=si] .assistant-chat .chat-log { background-image:linear-gradient(to bottom,var(--chat-ground) 10%,transparent 80%),linear-gradient(115deg,var(--chat-ground) 35%,color-mix(in srgb,var(--chat-ground) 86%,transparent)),url('/themes/si/painted-mountains.webp'); background-size:auto,auto,240px 360px; background-position:center,center,right bottom; }
 :root[data-terminal-visual=si] .assistant-chat .fangyi-contact { min-height:92px; padding:12px 16px; gap:12px; }
 :root[data-terminal-visual=si] .fangyi-contact::before { display:none; }
 :root[data-terminal-visual=si] .fangyi-contact::after { background:var(--si-cinnabar); width:22px; height:2px; }
@@ -129,3 +129,10 @@
 /* The Si edition uses an uncropped little inn instead of the character portrait crop. */
 :root[data-terminal-visual=si] .brand-mascot { background:transparent; border-radius:0; overflow:visible; }
 .terminal-brand .brand-inn { display:block; width:40px; height:40px; max-width:100%; object-fit:contain; border-radius:0; }
+
+/* The official drawing keeps its own paper, including in the night edition. */
+.si-presence-wrap{position:relative;flex-shrink:0;z-index:4}
+.si-selfportrait{position:absolute;right:0;top:calc(100% + 8px);width:min(290px,calc(100vw - 68px));margin:0;padding:8px 8px 10px;background:#f3f1e9;color:#283d37;box-shadow:0 8px 22px #081e2633;border-radius:2px 9px 3px 6px}
+.si-selfportrait :is(video,img){display:block;width:100%;height:auto;aspect-ratio:1138/640;object-fit:contain;background:#f3f1e9}
+.si-selfportrait figcaption{padding-top:6px;text-align:center;font-size:13px;line-height:1.6}
+:root[data-terminal-visual=si] .si-presence .fangyi-presence-art{object-fit:contain}

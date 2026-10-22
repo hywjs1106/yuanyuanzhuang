@@ -44,7 +44,8 @@ test('configured outgoing request includes persona, safe context and conversatio
   const reply = await assistant.askAssistant('想喝茶', config, 'available notes: tea', history, new AbortController().signal, transport);
   assert.deepEqual(reply.actions, []);
   const system = String(outbound[0].content);
-  assert.ok(system.startsWith(characterPersona.prompt), 'the configured request must carry the entire current persona, not just its name');
+  assert.ok(system.includes(characterPersona.prompt), 'the configured request must carry the entire current persona, not just its name');
+  assert.ok(system.startsWith('【任务执行规范'), 'operation rules must be read before persona');
   assert.match(system, /庄方宜/);
   assert.match(system, /普通.*聊天.*actions/);
   assert.match(system, /确认/);
@@ -69,7 +70,8 @@ test('assistant surface shows character identity and honest incomplete configura
   const { AssistantPanel } = await import('../src/terminal/AssistantPanel');
   const html = renderToStaticMarkup(createElement(AssistantPanel, {config: {...config,model:''},context:'',messages:[],onMessage:async()=>{},onConfirm:async()=>{}}));
   assert.match(html, /庄方宜/);
-  assert.match(html, /角色风格/);
+  assert.match(html, /庄方宜/);
+  assert.doesNotMatch(html, /角色风格 · 武陵/);
   assert.doesNotMatch(html, /离线预设/);
   assert.doesNotMatch(html, /AI 已配置|已配置 AI/);
   assert.match(html, /闲聊/);

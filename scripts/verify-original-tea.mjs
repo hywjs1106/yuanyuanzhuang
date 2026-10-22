@@ -1,0 +1,21 @@
+import {chromium} from '@playwright/test';
+import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
+const browser=await chromium.launch({channel:'chromium'});
+const page=await browser.newPage({viewport:{width:390,height:844}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.goto('http://127.0.0.1:5180/inn-preview.html');
+await page.getByRole('button',{name:'暂停原片',exact:true}).waitFor();
+await page.waitForFunction(()=>document.querySelector('.original-tea video').currentTime>.4);
+const metadata=await page.locator('.original-tea video').evaluate(v=>({duration:v.duration,width:v.videoWidth,height:v.videoHeight,loop:v.loop,muted:v.muted}));
+assert.equal(metadata.width,576);assert.equal(metadata.height,1024);assert.equal(metadata.loop,false);assert.equal(metadata.muted,true);
+await page.getByRole('button',{name:'暂停原片',exact:true}).click();assert.equal(await page.locator('video').evaluate(v=>v.paused),true);
+await page.locator('video').evaluate(v=>new Promise(resolve=>{v.onseeked=resolve;v.currentTime=v.duration-.15}));await page.getByRole('button',{name:'播放原片',exact:true}).click();await page.waitForFunction(()=>{const v=document.querySelector('video');return !v.paused&&v.currentTime>=12&&v.currentTime<12.8});
+// Verify a second natural loop too: no replay of the opening or camera push-in.
+await page.waitForFunction(()=>document.querySelector('video').currentTime>13.5);await page.waitForFunction(()=>{const v=document.querySelector('video');return !v.paused&&v.currentTime>=12&&v.currentTime<12.8});
+await page.screenshot({path:'references/inn-preview/tail-loop.png',fullPage:true});
+await page.getByRole('button',{name:'助手',exact:true}).click();assert.equal(await page.locator('video').count(),0);
+await page.getByRole('button',{name:'设置',exact:true}).click();await page.getByRole('switch').click();await page.getByRole('button',{name:'今日',exact:true}).click();assert.equal(await page.locator('video').evaluate(v=>v.paused),true);
+const reduced=await browser.newPage({viewport:{width:320,height:720},reducedMotion:'reduce'});await reduced.goto('http://127.0.0.1:5180/inn-preview.html');await reduced.getByRole('button',{name:'播放原片',exact:true}).waitFor();assert.equal(await reduced.locator('video').evaluate(v=>v.paused),true);await reduced.getByRole('button',{name:'播放原片',exact:true}).click();await reduced.waitForFunction(()=>!document.querySelector('video').paused);
+assert.equal(await reduced.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);assert.deepEqual(errors,[]);
+const result={metadata,tailLoopStart:12,checks:['native playback advances','pause/play','first ending seeks to 12s instead of opening','second natural ending repeats only tail','unmounts on leaving Today','quiet mode pauses','reduced-motion waits for explicit play','320px no horizontal overflow'],errors};
+await writeFile('references/inn-preview/original-video-verification.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));await browser.close();

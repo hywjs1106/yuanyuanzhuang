@@ -1,0 +1,5 @@
+/* Present the official square stickers without their bottom lettering strip.
+   Original files and their source/credit metadata remain unchanged. */
+img[src^="/themes/si/official/0"][src$=".png"] {
+  clip-path: inset(0 0 8% 0);
+}

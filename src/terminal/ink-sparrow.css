@@ -1,0 +1,12 @@
+/* Original ink bird: opaque watercolor plumage, native transparent edges, no paper tile. */
+.si-heading-companion .ink-sparrow{-webkit-tap-highlight-color:transparent}
+.ink-sparrow-poses{position:relative;display:block;width:84px;height:84px;transform-origin:52% 86%;pointer-events:none}
+.si-heading-companion .ink-sparrow-image{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
+.ink-sparrow-flutter{opacity:0}
+.ink-sparrow[data-animating=true] .ink-sparrow-poses{animation:ink-sparrow-bounce 760ms cubic-bezier(.22,.65,.3,1) infinite}
+.ink-sparrow[data-animating=true] .ink-sparrow-rest{animation:ink-sparrow-folded 760ms steps(1,end) infinite}
+.ink-sparrow[data-animating=true] .ink-sparrow-flutter{animation:ink-sparrow-raised 760ms steps(1,end) infinite}
+@keyframes ink-sparrow-bounce{0%,100%{transform:translateY(0) rotate(0)}42%{transform:translateY(-3px) rotate(-2deg)}70%{transform:translateY(-1px) rotate(1deg)}}
+@keyframes ink-sparrow-folded{0%,30%,70%,100%{opacity:1}31%,69%{opacity:0}}
+@keyframes ink-sparrow-raised{0%,30%,70%,100%{opacity:0}31%,69%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.ink-sparrow .ink-sparrow-poses,.ink-sparrow .ink-sparrow-image{animation:none!important}.ink-sparrow .ink-sparrow-rest{opacity:1}.ink-sparrow .ink-sparrow-flutter{opacity:0}}

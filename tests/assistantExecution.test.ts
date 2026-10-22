@@ -47,6 +47,7 @@ test('a failed execution remains retryable and its receipt explicitly says it wa
   const result = await executeAssistantActions(text, [ledger], 'failure', async () => { throw new Error('存储不可用'); }, new AbortController().signal, now);
   assert.deepEqual(result.states, {});
   assert.equal(result.receipts.length, 1);
+  assert.deepEqual(result.errors, {0:'存储不可用'});
   assert.match(result.receipts[0], /未完成/);
   assert.match(result.receipts[0], /存储不可用/);
   assert.doesNotMatch(result.receipts[0], /已保存/);

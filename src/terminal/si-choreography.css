@@ -1,0 +1,29 @@
+/* One gesture connects the user's touch to the incoming sheet. */
+.ink-route-previous{position:fixed;z-index:2;overflow:hidden;pointer-events:none;background:var(--color-base);contain:paint}
+.ink-route-previous::after{content:'';position:absolute;left:var(--ink-touch-x);top:var(--ink-touch-y);width:70px;height:60px;background:var(--ink);mask:var(--si-brush) center/100% 100% no-repeat;transform-origin:center;animation:si-ink-touch 360ms ease-out both;pointer-events:none}
+@keyframes si-ink-touch{from{opacity:.16;transform:translate(-50%,-50%) rotate(-16deg) scale(.1)}to{opacity:0;transform:translate(-50%,-50%) rotate(-10deg) scale(24)}}
+.ink-route-copy{position:absolute;inset:0;margin:0!important;padding-top:0!important;pointer-events:none}
+.ink-route-copy,.ink-route-copy *{animation:none!important;transition:none!important;caret-color:transparent!important}
+:root[data-terminal-visual=si] main.terminal-content[data-ink-reveal=true]{position:relative;z-index:3;background:var(--color-base);animation:si-ink-reveal 360ms cubic-bezier(.16,1,.3,1) both}
+@keyframes si-ink-reveal{from{clip-path:circle(0 at var(--ink-x) var(--ink-y))}to{clip-path:circle(var(--ink-radius) at var(--ink-x) var(--ink-y))}}
+/* A receipt writes itself once, then the seal lands. Figures and reading text stay still. */
+:root[data-terminal-visual=si] .paper-receipt{display:flex;align-items:center;gap:12px;max-width:100%;width:fit-content;margin:16px 0 22px;padding:9px 16px 11px 9px;border:0;background:transparent;transform:none;animation:none}
+:root[data-terminal-visual=si] .paper-receipt-copy{position:relative;display:block;color:var(--ink);font-size:16px;padding-bottom:6px}
+.paper-receipt-stroke{position:absolute;left:-2px;bottom:-2px;width:calc(100% + 10px);height:12px;overflow:visible;color:var(--paper-record-seal)}
+.paper-receipt-stroke path{stroke:currentColor;stroke-width:2.8;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:si-receipt-write 360ms cubic-bezier(.22,1,.36,1) forwards}
+.paper-receipt-seal{display:grid;place-items:center;width:34px;height:37px;flex-shrink:0;color:var(--paper-record-seal);border:1.6px solid currentColor;border-radius:3px 5px 2px 4px;font-size:22px;line-height:1;transform:rotate(-7deg);animation:si-receipt-seal 340ms 260ms cubic-bezier(.16,1,.3,1) both}
+@keyframes si-receipt-write{to{stroke-dashoffset:0}}
+@keyframes si-receipt-seal{0%{opacity:0;transform:translateY(-9px) rotate(-14deg) scale(1.25)}65%{opacity:1;transform:translateY(1px) rotate(-7deg) scale(.95)}100%{opacity:1;transform:translateY(0) rotate(-7deg) scale(1)}}
+/* Existing paintings take turns, all inside the original opening time budget. */
+.startup-si .startup-inn-art{transform-origin:56% 68%;animation:si-opening-brush 680ms 50ms cubic-bezier(.16,1,.3,1) both}
+.startup-si .startup-ink-landscape{animation:si-opening-depth 1000ms 140ms cubic-bezier(.16,1,.3,1) both}
+.startup-si .startup-ink-framing{animation:si-opening-frame 700ms 240ms cubic-bezier(.16,1,.3,1) both}
+.startup-si .startup-ink-sun{animation:si-opening-sun 500ms 420ms ease-out both}
+.startup-si .startup-name>span{display:inline-block;animation:si-opening-letter 340ms cubic-bezier(.16,1,.3,1) both}
+.startup-si .startup-inn-seal{animation:si-receipt-seal 320ms 1000ms cubic-bezier(.16,1,.3,1) both}
+@keyframes si-opening-brush{0%{transform:translate(5px,-9px) rotate(-7deg) scale(.94)}65%{transform:translate(-1px,1px) rotate(1deg) scale(1.01)}100%{transform:none}}
+@keyframes si-opening-depth{from{opacity:.01;transform:translateY(20px) scale(1.1)}to{opacity:var(--inn-landscape-opacity);transform:none}}
+@keyframes si-opening-frame{from{opacity:.08;transform:scale(1.04) translateY(8px)}to{opacity:.48;transform:none}}
+@keyframes si-opening-sun{from{opacity:.08;transform:translateY(5px)}to{opacity:.74;transform:none}}
+@keyframes si-opening-letter{from{opacity:0;transform:translateY(7px) rotate(4deg)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.ink-route-previous{display:none}:root[data-terminal-visual=si] main.terminal-content[data-ink-reveal=true]{animation:none;clip-path:none}.paper-receipt-stroke path{animation:none;stroke-dashoffset:0}.paper-receipt-seal{animation:none}.startup-si :is(.startup-inn-art,.startup-ink-landscape,.startup-ink-framing,.startup-ink-sun,.startup-name>span,.startup-inn-seal){animation:none!important}}

@@ -1,0 +1,6 @@
+import{chromium}from'@playwright/test';import{readFile,writeFile}from'node:fs/promises';import{resolve}from'node:path';import{pathToFileURL}from'node:url';
+const root=resolve('../references/si-doodle-series');const b=await chromium.launch({channel:'chromium'});const p=await b.newPage({viewport:{width:1380,height:850},deviceScaleFactor:1});await p.goto(pathToFileURL(root+'/index.html').href);
+await p.waitForFunction(()=>[...document.querySelectorAll('video')].every(v=>v.readyState>=2),{},{timeout:35000});
+const media=await p.locator('video').evaluateAll(videos=>videos.map(v=>({duration:v.duration,width:v.videoWidth,height:v.videoHeight,ready:v.readyState,currentTime:v.currentTime})));console.log(JSON.stringify(media));
+await p.locator('video').evaluateAll(vs=>Promise.all(vs.map(v=>new Promise(resolve=>{v.pause();v.onseeked=()=>resolve();v.currentTime=Math.min(.7,v.duration*.6);}))));await p.screenshot({path:root+'/six-doodles-preview.png',fullPage:true});
+await p.locator('video').evaluateAll(vs=>Promise.all(vs.map(v=>new Promise(resolve=>{v.onseeked=()=>resolve();v.currentTime=Math.min(1.2,v.duration*.9);}))));await p.screenshot({path:root+'/six-doodles-preview-second-frame.png',fullPage:true});await writeFile(root+'/playback-verification.json',JSON.stringify(media,null,2));await b.close();

@@ -73,5 +73,9 @@
 @media(prefers-reduced-motion:reduce){:root[data-terminal-visual=si] :is(.paper-save-feedback,.mission-detail){animation:none}:root[data-terminal-visual=si] .reminder-missions .mission-row{transition:none}}
 :root[data-terminal-visual=si] .bottom-destination.active .destination-icon{border-radius:5px 3px 8px 2px / 2px 7px 3px 6px;border-width:1px 1.5px 2px 1px}
 :root[data-terminal-visual=si] .bottom-destination .paper-icon{width:24px;height:24px;color:inherit}
-:root[data-terminal-visual=si] .terminal-shell :is(.button-row>button,.quick-actions>button,.panel-heading>button,.mission-actions>button){border-bottom-width:1.5px;border-radius:4px 2px 8px 3px}
+:root[data-terminal-visual=si] .terminal-shell :is(.button-row>button,.quick-actions>button,.panel-heading>button,.mission-actions>button){border-radius:4px 2px 8px 3px}
 :root[data-terminal-visual=si] .ledger-panel .stat-row small{color:var(--paper-record-soft)}
+/* Native month/date fields need their own line on narrow phones. */
+@media(max-width:380px){
+ .ledger-panel .filter-row,:root[data-terminal-visual=si] .ledger-panel .filter-row{grid-template-columns:minmax(0,1fr)}
+}
